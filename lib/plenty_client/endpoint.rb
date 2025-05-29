@@ -11,6 +11,7 @@ module PlentyClient
         endpoint_parameters = {
           account:                    /\{accountId\}/,
           address:                    /\{addressId\}/,
+          address_contact_relation:   /\{addressContactRelationId\}/,
           address_type:               /\{addressTypeId\}/,
           account_ype:                /\{accountType\}/,
           attribute:                  /\{attributeId\}/,
