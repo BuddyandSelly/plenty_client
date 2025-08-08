@@ -1,5 +1,7 @@
 require 'typhoeus'
-require 'typhoeus/adapters/faraday'
+require 'faraday'
+require 'faraday/typhoeus'
+require 'faraday/retry'
 
 module PlentyClient
   module Request
