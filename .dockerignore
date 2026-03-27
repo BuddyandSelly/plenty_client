@@ -1,0 +1,5 @@
+Gemfile.lock
+.git
+.idea
+tmp
+pkg

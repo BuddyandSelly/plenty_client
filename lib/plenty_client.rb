@@ -214,4 +214,10 @@ module PlentyClient
       autoload :Level,      'plenty_client/warehouse/location/level'
     end
   end
+
+  module V2
+    module Item
+      autoload :PropertyGroup, 'plenty_client/v2/item/property_group'
+    end
+  end
 end
