@@ -74,4 +74,53 @@ RSpec.describe PlentyClient::V2::Item::PropertyGroup do
       end
     end
   end
+
+  describe '.find' do
+    it 'calls get with the correct endpoint and params' do
+      expect(described_class).to receive(:get)
+        .with('/v2/properties/groups/42', { 'with' => 'names' })
+      described_class.find(42, 'with' => 'names')
+    end
+
+    it 'calls get with default empty params' do
+      expect(described_class).to receive(:get).with('/v2/properties/groups/42', {})
+      described_class.find(42)
+    end
+  end
+
+  describe '.create' do
+    it 'calls post with the correct endpoint and body' do
+      body = { 'position' => 1, 'names' => [{ 'lang' => 'en', 'name' => 'Test Group' }] }
+      expect(described_class).to receive(:post)
+        .with('/v2/properties/groups', body)
+      described_class.create(body)
+    end
+
+    it 'calls post with default empty body' do
+      expect(described_class).to receive(:post).with('/v2/properties/groups', {})
+      described_class.create
+    end
+  end
+
+  describe '.update' do
+    it 'calls put with the correct endpoint and body' do
+      body = { 'position' => 2, 'names' => [{ 'lang' => 'en', 'name' => 'Updated Group' }] }
+      expect(described_class).to receive(:put)
+        .with('/v2/properties/groups/42', body)
+      described_class.update(42, body)
+    end
+
+    it 'calls put with default empty body' do
+      expect(described_class).to receive(:put).with('/v2/properties/groups/42', {})
+      described_class.update(42)
+    end
+  end
+
+  describe '.destroy' do
+    it 'calls delete with the correct endpoint' do
+      expect(described_class).to receive(:delete)
+        .with('/v2/properties/groups/42')
+      described_class.destroy(42)
+    end
+  end
 end
