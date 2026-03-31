@@ -32,6 +32,7 @@ module PlentyClient
           directory:                  /\{directoryId\}/,
           document:                   /\{documentId\}/,
           fitment:                    /\{fitmentId\}/,
+          group:                      /\{groupId\}/,
           image:                      /\{imageId\}/,
           item:                       /\{itemId\}/,
           item_set:                   /\{itemSetId\}/,
