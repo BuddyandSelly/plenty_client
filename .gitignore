@@ -22,3 +22,4 @@ test/version_tmp
 tmp
 vendor/bundle
 .idea/
+docs/
