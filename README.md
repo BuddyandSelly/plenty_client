@@ -116,6 +116,46 @@ PlentyClient::Item::Variation.routes
 - update all modules to classes and make it inherit from a base class to remove `extend PlentyClient::Request` etc
 - create a configure block to set authentication parameters
 
+## Testing with Docker
+
+You can test the gem endpoints in an interactive Ruby console without installing it into a project.
+
+### Prerequisites
+
+- [Docker](https://docs.docker.com/get-docker/) and [Docker Compose](https://docs.docker.com/compose/install/)
+
+### Usage
+
+Build and start the console:
+
+```bash
+docker compose run console
+```
+
+This drops you into an IRB session with `plenty_client` pre-loaded. Configure your credentials and start testing:
+
+```ruby
+PlentyClient::Config.site_url     = 'https://your-instance.plentymarkets.com'
+PlentyClient::Config.api_user     = 'your_user'
+PlentyClient::Config.api_password = 'your_password'
+
+# v1 example
+PlentyClient::Item.list
+
+# v2 example
+PlentyClient::V2::Item::PropertyGroup.list(
+  'with' => 'names,options',
+  'orderBy' => 'position',
+  'itemsPerPage' => 25
+)
+```
+
+To rebuild after making changes to the Dockerfile or gemspec:
+
+```bash
+docker compose build --no-cache
+```
+
 ## Contributing
 
 Bug reports and pull requests are welcome.

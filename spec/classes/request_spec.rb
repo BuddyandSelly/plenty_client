@@ -92,29 +92,29 @@ RSpec.describe PlentyClient::Request::ClassMethods do
     describe 'wrappers for #request' do
       describe '#post' do
         it 'calls #request with :post and rest of params' do
-          expect(request_client).to receive(:request).with(:post, '/index.php', 'param1' => 'value1')
-          request_client.post('/index.php', 'param1' => 'value1')
+          expect(request_client).to receive(:request).with(:post, '/index.php', { 'param1' => 'value1' })
+          request_client.post('/index.php', { 'param1' => 'value1' })
         end
       end
 
       describe '#put' do
         it 'calls #request with :put and rest of params' do
-          expect(request_client).to receive(:request).with(:put, '/index.php', 'param1' => 'value1')
-          request_client.put('/index.php', 'param1' => 'value1')
+          expect(request_client).to receive(:request).with(:put, '/index.php', { 'param1' => 'value1' })
+          request_client.put('/index.php', { 'param1' => 'value1' })
         end
       end
 
       describe '#patch' do
         it 'calls #request with :patch and rest of params' do
-          expect(request_client).to receive(:request).with(:patch, '/index.php', 'param1' => 'value1')
-          request_client.patch('/index.php', 'param1' => 'value1')
+          expect(request_client).to receive(:request).with(:patch, '/index.php', { 'param1' => 'value1' })
+          request_client.patch('/index.php', { 'param1' => 'value1' })
         end
       end
 
       describe '#delete' do
         it 'calls #request with :delete and rest of params' do
-          expect(request_client).to receive(:request).with(:delete, '/index.php', 'param1' => 'value1')
-          request_client.delete('/index.php', 'param1' => 'value1')
+          expect(request_client).to receive(:request).with(:delete, '/index.php', { 'param1' => 'value1' })
+          request_client.delete('/index.php', { 'param1' => 'value1' })
         end
       end
 
@@ -122,8 +122,8 @@ RSpec.describe PlentyClient::Request::ClassMethods do
         context 'when called without a block' do
           context 'when called without page param' do
             it 'calls #request with :get and rest of params, merged with page: 1' do
-              expect(request_client).to receive(:request).with(:get, '/index.php', 'p1' => 'v1', 'page' => 1)
-              request_client.get('/index.php', 'p1' => 'v1')
+              expect(request_client).to receive(:request).with(:get, '/index.php', { 'p1' => 'v1', 'page' => 1 })
+              request_client.get('/index.php', { 'p1' => 'v1' })
             end
           end
 
@@ -131,8 +131,8 @@ RSpec.describe PlentyClient::Request::ClassMethods do
             it 'calls #request with :get and unchanged params' do
               expect(request_client)
                 .to receive(:request)
-                .with(:get, '/index.php', hash_including('p1' => 'v1', 'page' => 100))
-              request_client.get('/index.php', 'p1' => 'v1', 'page' => 100)
+                .with(:get, '/index.php', hash_including({ 'p1' => 'v1', 'page' => 100 }))
+              request_client.get('/index.php', { 'p1' => 'v1', 'page' => 100 })
             end
           end
         end
@@ -222,13 +222,15 @@ RSpec.describe PlentyClient::Request::ClassMethods do
         stub_request(:post, /foobar/).to_return(
           body: {}.to_json,
           headers: {
-            'X-Plenty-Global-Short-Period-Calls-Left' => 5,
+            'X-Plenty-Global-Short-Period-Calls-Left' => 1,
             'X-Plenty-Global-Short-Period-Decay' => seconds_left
           }.merge(response_headers)
         )
+        slept = false
+        allow_any_instance_of(Kernel).to receive(:sleep) { slept = true }
         _success_request = request_client.request(:post, '/foobar')
-        expect(Object).to receive(:sleep).with(seconds_left)
         _delayed_request = request_client.request(:post, '/foobar')
+        expect(slept).to be true
       end
     end
   end
