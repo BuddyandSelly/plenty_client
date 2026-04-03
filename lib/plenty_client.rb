@@ -217,6 +217,7 @@ module PlentyClient
 
   module V2
     module Item
+      autoload :Property,      'plenty_client/v2/item/property'
       autoload :PropertyGroup, 'plenty_client/v2/item/property_group'
     end
   end
