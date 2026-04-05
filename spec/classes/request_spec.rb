@@ -3,7 +3,7 @@ require 'spec_helper'
 RSpec.describe PlentyClient::Request::ClassMethods do
   let(:request_client) { Class.new { include PlentyClient::Request } }
 
-  before(:each) do
+  before do
     PlentyClient::Config.site_url = 'https://www.example.com'
     PlentyClient::Config.api_user = 'example'
     PlentyClient::Config.api_password = 'secret'
@@ -24,7 +24,7 @@ RSpec.describe PlentyClient::Request::ClassMethods do
 
   describe 'requests' do
     describe '#request' do
-      before(:each) do
+      before do
         stub_api_tokens
       end
 
@@ -142,7 +142,7 @@ RSpec.describe PlentyClient::Request::ClassMethods do
             stub_api_tokens
             stub_request(:get, /example/)
               .to_return do |r|
-              query = CGI.parse(r.uri.query)
+              query = parse_query(r.uri.query)
               page = query['page'][0].to_i
               {
                 body: {
@@ -186,7 +186,7 @@ RSpec.describe PlentyClient::Request::ClassMethods do
       end
     end
 
-      context 'when API responds with an empty text/html response' do
+    context 'when API responds with an empty text/html response' do
       it 'does not raises PlentyClient::ResponseError' do
         stub_request(:post, /index\.html/)
           .to_return(headers: response_headers('text/html'),
@@ -243,13 +243,12 @@ RSpec.describe PlentyClient::Request::ClassMethods do
         PlentyClient::Config.expiry_date = nil
         @login_request = stub_request(:post, /login/)
                          .to_return(body: {
-                                      'tokenType' => 'Bearer',
-                                      'expiresIn' => 86400,
-                                      'accessToken' => 'foo_access_token',
-                                      'refreshToken' => 'foo_refresh_token'
-                                    }.to_json,
-                                    headers: response_headers
-                                   )
+                           'tokenType' => 'Bearer',
+                           'expiresIn' => 86400,
+                           'accessToken' => 'foo_access_token',
+                           'refreshToken' => 'foo_refresh_token'
+                         }.to_json,
+                                    headers: response_headers)
         @actual_request = stub_request(:post, /index\.html/)
                           .to_return(body: {}.to_json, headers: response_headers)
       end
@@ -286,7 +285,7 @@ RSpec.describe PlentyClient::Request::ClassMethods do
         end
 
         context 'when credentials are correct' do
-          before(:each) do
+          before do
             request_client.request(:post, '/index.html')
           end
 
@@ -325,11 +324,9 @@ RSpec.describe PlentyClient::Request::ClassMethods do
           end
 
           describe 'handling' do
-            before(:each) do
-              begin
-                request_client.request(:post, '/index.html')
-              rescue PlentyClient::Config::InvalidCredentials
-              end
+            before do
+              request_client.request(:post, '/index.html')
+            rescue PlentyClient::Config::InvalidCredentials
             end
 
             it 'does not perform the actual request' do
@@ -363,8 +360,7 @@ RSpec.describe PlentyClient::Request::ClassMethods do
         'accessToken' => 'new_token',
         'refreshToken' => 'new_refresh_token'
       }.to_json, headers: response_headers)
-      @actual_request = stub_request(:post, /index\.html/).to_return(body: {
-      }.to_json, headers: response_headers)
+      @actual_request = stub_request(:post, /index\.html/).to_return(body: {}.to_json, headers: response_headers)
     end
 
     context 'when expiry_date is in the past' do

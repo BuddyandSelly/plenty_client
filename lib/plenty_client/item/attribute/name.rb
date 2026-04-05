@@ -20,14 +20,14 @@ module PlentyClient
             post(build_endpoint("#{ITEM_ATTRIBUTE_PATH}#{CREATE_ITEM_ATTRIBUTES}", attribute: attribute_id), headers)
           end
 
-          def list(attribute_id, headers = {}, &block)
+          def list(attribute_id, headers = {}, &)
             get(build_endpoint("#{ITEM_ATTRIBUTE_PATH}#{LIST_ITEM_ATTRIBUTE}", attribute: attribute_id),
-                headers, &block)
+                headers, &)
           end
 
-          def find(attribute_id, lang, headers = {}, &block)
+          def find(attribute_id, lang, headers = {}, &)
             get(build_endpoint("#{ITEM_ATTRIBUTE_PATH}#{GET_ITEMS_ATTRIBUTE}", attribute: attribute_id, lang: lang),
-                headers, &block)
+                headers, &)
           end
 
           def update(attribute_id, lang, body = {})

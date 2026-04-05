@@ -17,20 +17,20 @@ module PlentyClient
       LIST_BARCODES_BY_REFERRER = '/items/barcodes/referrer/{referrerId}'
 
       class << self
-        def list(headers = {}, &block)
-          get(build_endpoint(LIST_ALL_BARCODES), headers, &block)
+        def list(headers = {}, &)
+          get(build_endpoint(LIST_ALL_BARCODES), headers, &)
         end
 
-        def list_by_type(type_string, headers = {}, &block)
-          get(build_endpoint(LIST_BARCODES_BY_TYPE, type_string: type_string), headers, &block)
+        def list_by_type(type_string, headers = {}, &)
+          get(build_endpoint(LIST_BARCODES_BY_TYPE, type_string: type_string), headers, &)
         end
 
-        def list_by_referrer(referrer_id, headers = {}, &block)
-          get(build_endpoint(LIST_BARCODES_BY_REFERRER, referrer: referrer_id), headers, &block)
+        def list_by_referrer(referrer_id, headers = {}, &)
+          get(build_endpoint(LIST_BARCODES_BY_REFERRER, referrer: referrer_id), headers, &)
         end
 
-        def find(barcode_id, headers = {}, &block)
-          get(build_endpoint(GET_BARCODE, barcode: barcode_id), headers, &block)
+        def find(barcode_id, headers = {}, &)
+          get(build_endpoint(GET_BARCODE, barcode: barcode_id), headers, &)
         end
 
         def create(body = {})

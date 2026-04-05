@@ -17,22 +17,22 @@ module PlentyClient
         UPDATE_ITEM_VARIATIONS_STOCK_REDISTRIBUTE     = '/stock/redistribute'
 
         class << self
-          def list(item_id, variation_id, headers = {}, &block)
+          def list(item_id, variation_id, headers = {}, &)
             get(build_endpoint("#{ITEM_VARIATION_STOCK_PATH}#{LIST_ITEM_VARIATIONS_STOCK}",
                                item: item_id,
-                               variation: variation_id), headers, &block)
+                               variation: variation_id), headers, &)
           end
 
-          def list_storage_locations(item_id, variation_id, headers = {}, &block)
+          def list_storage_locations(item_id, variation_id, headers = {}, &)
             get(build_endpoint("#{ITEM_VARIATION_STOCK_PATH}#{LIST_ITEM_VARIATIONS_STOCK_STORAGE_LOCATIONS}",
                                item: item_id,
-                               variation: variation_id), headers, &block)
+                               variation: variation_id), headers, &)
           end
 
-          def list_stock_movements(item_id, variation_id, headers = {}, &block)
+          def list_stock_movements(item_id, variation_id, headers = {}, &)
             get(build_endpoint("#{ITEM_VARIATION_STOCK_PATH}#{LIST_ITEM_VARIATIONS_STOCK_MOVEMENTS}",
                                item: item_id,
-                               variation: variation_id), headers, &block)
+                               variation: variation_id), headers, &)
           end
 
           def update_incoming_items(item_id, variation_id, body = {})

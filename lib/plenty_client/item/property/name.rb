@@ -21,15 +21,15 @@ module PlentyClient
                  headers)
           end
 
-          def list(property_id, headers = {}, &block)
+          def list(property_id, headers = {}, &)
             get(build_endpoint("#{ITEM_PROPERTY_PATH}#{LIST_ITEM_PROPERTY}", property: property_id),
-                headers, &block)
+                headers, &)
           end
 
-          def find(property_id, lang, headers = {}, &block)
+          def find(property_id, lang, headers = {}, &)
             get(build_endpoint("#{ITEM_PROPERTY_PATH}#{GET_ITEMS_PROPERTY}",
                                property: property_id, lang: lang),
-                headers, &block)
+                headers, &)
           end
 
           def update(property_id, lang, body = {})

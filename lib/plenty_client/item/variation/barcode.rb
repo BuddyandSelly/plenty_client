@@ -16,10 +16,10 @@ module PlentyClient
         DELETE_ITEM_VARIATIONS_BARCODE  = "#{ITEM_VARIATION_BARCODE_PATH}/variation_barcodes/{barcodeId}".freeze
 
         class << self
-          def list(item_id, variation_id, headers = {}, &block)
+          def list(item_id, variation_id, headers = {}, &)
             get(build_endpoint("#{ITEM_VARIATION_BARCODE_PATH}#{LIST_ITEM_VARIATION_BARCODES}",
                                item: item_id,
-                               variation: variation_id), headers, &block)
+                               variation: variation_id), headers, &)
           end
 
           def find(item_id, variation_id, barcode_id, headers = {})

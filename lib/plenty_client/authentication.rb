@@ -12,8 +12,8 @@ module PlentyClient
     AUTH_CLIENT   = '/client-login'
 
     class << self
-      def access_token(headers = {}, &block)
-        get(build_endpoint(AUTH_TOKEN), headers, &block)
+      def access_token(headers = {}, &)
+        get(build_endpoint(AUTH_TOKEN), headers, &)
       end
 
       def login(body = {})

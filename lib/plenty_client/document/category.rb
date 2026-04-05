@@ -12,12 +12,12 @@ module PlentyClient
       DELTE_CATEGORY_DOCUMENTS    = '/categories/{categoryId}/documents/{documentId}'
 
       class << self
-        def download(category_id, headers = {}, &block)
-          get(build_endpoint(DOWNLOAD_CATEGORY_DOCUMENT, category: category_id), headers, &block)
+        def download(category_id, headers = {}, &)
+          get(build_endpoint(DOWNLOAD_CATEGORY_DOCUMENT, category: category_id), headers, &)
         end
 
-        def list(category_id, headers = {}, &block)
-          get(build_endpoint(LIST_CATEGORY_DOCUMENTS, category: category_id), headers, &block)
+        def list(category_id, headers = {}, &)
+          get(build_endpoint(LIST_CATEGORY_DOCUMENTS, category: category_id), headers, &)
         end
 
         def upload(category_id, body = {})

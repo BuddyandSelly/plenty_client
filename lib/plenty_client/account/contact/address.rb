@@ -16,11 +16,11 @@ module PlentyClient
         SET_PRIMARY_CONTACT_ADDRESS = '/addresses/{addressId}/types/{addressTypeId}/primary'
 
         class << self
-          def list(contact_id, address_type = '', headers = {}, &block)
+          def list(contact_id, address_type = '', headers = {}, &)
             get(build_endpoint("#{CONTACT_ADDRESS_BASE_PATH}#{LIST_A_CONTACT_ADDRESSES}",
                                contact: contact_id,
                                address_type: address_type),
-                headers, &block)
+                headers, &)
           end
 
           def create(contact_id, body = {})

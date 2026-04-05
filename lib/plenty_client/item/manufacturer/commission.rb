@@ -16,17 +16,17 @@ module PlentyClient
         DELETE_ITEMS_MANUFACTURER_COMMISSION  = '/commissions/{commissionId}'
 
         class << self
-          def list(manufacturer_id, headers = {}, &block)
+          def list(manufacturer_id, headers = {}, &)
             get(build_endpoint("#{ITEM_MANUFACTURER_COMMISSION}#{LIST_ITEM_MANUFACTURER_COMMISSION}",
                                manufacturer: manufacturer_id),
-                headers, &block)
+                headers, &)
           end
 
-          def find(manufacturer_id, commission_id, headers = {}, &block)
+          def find(manufacturer_id, commission_id, headers = {}, &)
             get(build_endpoint("#{ITEM_MANUFACTURER_COMMISSION}#{GET_ITEMS_MANUFACTURER_COMMISSION}",
                                manufacturer: manufacturer_id,
                                commission: commission_id),
-                headers, &block)
+                headers, &)
           end
 
           def create(manufacturer_id, headers = {})

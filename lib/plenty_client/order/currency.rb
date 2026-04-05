@@ -12,20 +12,20 @@ module PlentyClient
       FIND_CURRENCY_FOR_COUNTRY   = '/orders/currencies/countries/{countryId}'
 
       class << self
-        def list(headers = {}, &block)
-          get(build_endpoint(LIST_CURRENCIES), headers, &block)
+        def list(headers = {}, &)
+          get(build_endpoint(LIST_CURRENCIES), headers, &)
         end
 
-        def find(currency_iso, headers = {}, &block)
-          get(build_endpoint(FIND_CURRENCY_ISO, currency: currency_iso), headers, &block)
+        def find(currency_iso, headers = {}, &)
+          get(build_endpoint(FIND_CURRENCY_ISO, currency: currency_iso), headers, &)
         end
 
-        def find_countries(currency_iso, headers = {}, &block)
-          get(build_endpoint(FIND_COUNTRIES_FOR_CURRENCY, currency: currency_iso), headers, &block)
+        def find_countries(currency_iso, headers = {}, &)
+          get(build_endpoint(FIND_COUNTRIES_FOR_CURRENCY, currency: currency_iso), headers, &)
         end
 
-        def find_currency(country_id, headers = {}, &block)
-          get(build_endpoint(FIND_CURRENCY_FOR_COUNTRY, country: country_id), headers, &block)
+        def find_currency(country_id, headers = {}, &)
+          get(build_endpoint(FIND_CURRENCY_FOR_COUNTRY, country: country_id), headers, &)
         end
       end
     end

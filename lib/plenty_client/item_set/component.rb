@@ -15,13 +15,13 @@ module PlentyClient
       DELETE_ITEM_SETS_COMPONENTS = '/item_sets/{itemSetId}/components'
 
       class << self
-        def list_item_set_component(item_set_id, component_id, headers = {}, &block)
+        def list_item_set_component(item_set_id, component_id, headers = {}, &)
           get(build_endpoint(LIST_ITEM_SET_COMPONENT, item_set: item_set_id, component: component_id),
-              headers, &block)
+              headers, &)
         end
 
-        def list_item_sets_components(item_set_id, headers = {}, &block)
-          get(build_endpoint(LIST_ITEM_SETS_COMPONENT, item_set: item_set_id), headers, &block)
+        def list_item_sets_components(item_set_id, headers = {}, &)
+          get(build_endpoint(LIST_ITEM_SETS_COMPONENT, item_set: item_set_id), headers, &)
         end
 
         def create(item_set_id, body = {})

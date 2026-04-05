@@ -22,24 +22,24 @@ module PlentyClient
                  body)
           end
 
-          def list(attribute_value_id, headers = {}, &block)
+          def list(attribute_value_id, headers = {}, &)
             get(build_endpoint("#{ITEM_ATTRIBUTE_PATH}#{LIST_ITEM_ATTRIBUTE_VALUE}",
                                attribute_value: attribute_value_id),
-                headers, &block)
+                headers, &)
           end
 
-          def find(attribute_value_id, lang, headers = {}, &block)
+          def find(attribute_value_id, lang, headers = {}, &)
             get(build_endpoint("#{ITEM_ATTRIBUTE_PATH}#{GET_ITEMS_ATTRIBUTE_VALUE}",
                                attribute_value: attribute_value_id,
                                lang: lang),
-                headers, &block)
+                headers, &)
           end
 
-          def update(attribute_value_id, lang, body = {}, &block)
+          def update(attribute_value_id, lang, body = {}, &)
             put(build_endpoint("#{ITEM_ATTRIBUTE_PATH}#{UPDATE_ITEMS_ATTRIBUTE_VALUE}",
                                attribute_value: attribute_value_id,
                                lang: lang),
-                body, &block)
+                body, &)
           end
 
           def destroy(attribute_value_id, _value_id)

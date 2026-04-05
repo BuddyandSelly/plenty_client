@@ -11,19 +11,19 @@ module PlentyClient
       FIND_METHOD_NAMES_FOR_PAYMENT_METHOD_BY_LANG  = '/payments/methodNames/{paymentMethodId}/{land}'
 
       class << self
-        def list(headers = {}, &block)
-          get(build_endpoint(LIST_METHOD_NAMES), headers, &block)
+        def list(headers = {}, &)
+          get(build_endpoint(LIST_METHOD_NAMES), headers, &)
         end
 
-        def list_for_payment_method(payment_method_id, headers = {}, &block)
-          get(build_endpoint(LIST_METHOD_NAMES, payment_method: payment_method_id), headers, &block)
+        def list_for_payment_method(payment_method_id, headers = {}, &)
+          get(build_endpoint(LIST_METHOD_NAMES, payment_method: payment_method_id), headers, &)
         end
 
-        def list_for_payment_method_by_lang(payment_method_id, lang, headers = {}, &block)
+        def list_for_payment_method_by_lang(payment_method_id, lang, headers = {}, &)
           get(build_endpoint(LIST_METHOD_NAMES_FOR_PAYMENT_METHOD,
                              payment_method: payment_method_id,
                              lang: lang),
-              headers, &block)
+              headers, &)
         end
       end
     end

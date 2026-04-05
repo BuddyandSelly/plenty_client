@@ -8,8 +8,8 @@ module PlentyClient
     FIND_BASKET = '/basket'
 
     class << self
-      def find(headers = {}, &block)
-        get(build_endpoint(FIND_BASKET), headers, &block)
+      def find(headers = {}, &)
+        get(build_endpoint(FIND_BASKET), headers, &)
       end
     end
   end

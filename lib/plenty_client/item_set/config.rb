@@ -10,8 +10,8 @@ module PlentyClient
       UPDATE_ITEM_SET_CONFIGS = '/item_sets/{itemSetId}/config'
 
       class << self
-        def find(item_set_id, headers = {}, &block)
-          get(build_endpoint(FIND_ITEM_SET_CONFIGS, item_set: item_set_id), headers, &block)
+        def find(item_set_id, headers = {}, &)
+          get(build_endpoint(FIND_ITEM_SET_CONFIGS, item_set: item_set_id), headers, &)
         end
 
         def update(item_set_id, body = {})

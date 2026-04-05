@@ -11,9 +11,9 @@ module PlentyClient
       DELETE_CATEGORY_TEMPLATE  = '/categories/{catId}/templates'
 
       class << self
-        def list(cat_id, headers = {}, &block)
+        def list(cat_id, headers = {}, &)
           get(build_endpoint(LIST_BASKET_ITEMS,
-                             cat: cat_id), headers, &block)
+                             cat: cat_id), headers, &)
         end
 
         def update(cat_id, body = {})

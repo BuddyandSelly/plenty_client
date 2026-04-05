@@ -8,8 +8,8 @@ module PlentyClient
     LIST_WEBSTORES = '/webstores'
 
     class << self
-      def list(headers = {}, &block)
-        get(build_endpoint(LIST_WEBSTORES), headers, &block)
+      def list(headers = {}, &)
+        get(build_endpoint(LIST_WEBSTORES), headers, &)
       end
     end
   end

@@ -9,12 +9,12 @@ module PlentyClient
     AUTH_USER_WITH_UI_CONFIG = '/user/authorized_user_with_ui_config'
 
     class << self
-      def list(headers = {}, &block)
-        get(build_endpoint(AUTH_TOKEN), headers, &block)
+      def list(headers = {}, &)
+        get(build_endpoint(AUTH_TOKEN), headers, &)
       end
 
-      def list_with_ui_config(headers = {}, &block)
-        get(build_endpoint(AUTH_USER_WITH_UI_CONFIG), headers, &block)
+      def list_with_ui_config(headers = {}, &)
+        get(build_endpoint(AUTH_USER_WITH_UI_CONFIG), headers, &)
       end
     end
   end

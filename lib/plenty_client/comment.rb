@@ -11,14 +11,14 @@ module PlentyClient
     DELETE_COMMENT  = '/comments/{commentId}'
 
     class << self
-      def list(reference_type, reference_value, headers = {}, &block)
+      def list(reference_type, reference_value, headers = {}, &)
         get(build_endpoint(LIST_COMMENTS,
                            reference_type: reference_type,
-                           reference_value: reference_value), headers, &block)
+                           reference_value: reference_value), headers, &)
       end
 
-      def find(comment_id, headers = {}, &block)
-        get(build_endpoint(FIND_COMMENT, comment: comment_id), headers, &block)
+      def find(comment_id, headers = {}, &)
+        get(build_endpoint(FIND_COMMENT, comment: comment_id), headers, &)
       end
 
       def create(body = {})

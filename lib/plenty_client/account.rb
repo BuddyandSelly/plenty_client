@@ -17,12 +17,12 @@ module PlentyClient
     ACCOUNT_LOGOUT  = '/account/logout'
 
     class << self
-      def list(headers = {}, &block)
-        get(build_endpoint(LIST_ACCOUNTS), headers, &block)
+      def list(headers = {}, &)
+        get(build_endpoint(LIST_ACCOUNTS), headers, &)
       end
 
-      def find(account_id, headers = {}, &block)
-        get(build_endpoint(FIND_ACCOUNT, account: account_id), headers, &block)
+      def find(account_id, headers = {}, &)
+        get(build_endpoint(FIND_ACCOUNT, account: account_id), headers, &)
       end
 
       def create(body = {})
@@ -37,8 +37,8 @@ module PlentyClient
         delete(build_endpoint(DELETE_ACCOUNT, account: account_id), body)
       end
 
-      def list_contacts(account_id, headers = {}, &block)
-        get(build_endpoint(LIST_ACCOUNTS_CONTACTS, account: account_id), headers, &block)
+      def list_contacts(account_id, headers = {}, &)
+        get(build_endpoint(LIST_ACCOUNTS_CONTACTS, account: account_id), headers, &)
       end
 
       def login(body = {})

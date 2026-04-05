@@ -11,8 +11,8 @@ module PlentyClient
       DELETE_ITEMS_SHIPPING_PROFILE = '/items/{itemId}/item_shipping_profiles/{shippingProfileId}'
 
       class << self
-        def list(item_id, headers = {}, &block)
-          get(build_endpoint(GET_ITEMS_SHIPPING_PROFILE, item: item_id), headers, &block)
+        def list(item_id, headers = {}, &)
+          get(build_endpoint(GET_ITEMS_SHIPPING_PROFILE, item: item_id), headers, &)
         end
 
         def create(item_id, headers = {})

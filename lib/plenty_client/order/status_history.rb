@@ -10,12 +10,12 @@ module PlentyClient
       LIST_ORDER_STATUS_HISTORIES = '/orders/status-history'
 
       class << self
-        def find(order_id, headers = {}, &block)
-          get(build_endpoint(FIND_ORDER_STATUS_HISTORY, order: order_id), headers, &block)
+        def find(order_id, headers = {}, &)
+          get(build_endpoint(FIND_ORDER_STATUS_HISTORY, order: order_id), headers, &)
         end
 
-        def list(headers = {}, &block)
-          get(build_endpoint(LIST_ORDER_STATUS_HISTORIES), headers, &block)
+        def list(headers = {}, &)
+          get(build_endpoint(LIST_ORDER_STATUS_HISTORIES), headers, &)
         end
       end
     end

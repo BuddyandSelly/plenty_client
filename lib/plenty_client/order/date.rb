@@ -12,20 +12,20 @@ module PlentyClient
       FIND_ORDER_DATE             = '/orders/{orderId}/dates/{typeId}'
 
       class << self
-        def list_date_type_names(type_id, headers = {}, &block)
-          get(build_endpoint(LIST_ORDER_DATE_TYPE_NAMES, type: type_id), headers, &block)
+        def list_date_type_names(type_id, headers = {}, &)
+          get(build_endpoint(LIST_ORDER_DATE_TYPE_NAMES, type: type_id), headers, &)
         end
 
-        def find_date_type_name(type_id, lang, headers = {}, &block)
-          get(build_endpoint(FIND_ORDER_DATE_TYPE_NAME, type: type_id, lang: lang), headers, &block)
+        def find_date_type_name(type_id, lang, headers = {}, &)
+          get(build_endpoint(FIND_ORDER_DATE_TYPE_NAME, type: type_id, lang: lang), headers, &)
         end
 
-        def list(order_id, headers = {}, &block)
-          get(build_endpoint(LIST_ORDER_DATES, order: order_id), headers, &block)
+        def list(order_id, headers = {}, &)
+          get(build_endpoint(LIST_ORDER_DATES, order: order_id), headers, &)
         end
 
-        def find(order_id, type_id, headers = {}, &block)
-          get(build_endpoint(FIND_ORDER_DATE, order: order_id, type: type_id), headers, &block)
+        def find(order_id, type_id, headers = {}, &)
+          get(build_endpoint(FIND_ORDER_DATE, order: order_id, type: type_id), headers, &)
         end
       end
     end

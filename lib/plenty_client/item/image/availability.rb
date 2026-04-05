@@ -20,11 +20,11 @@ module PlentyClient
                                 image: image_id), headers)
           end
 
-          def list(item_id, image_id, headers = {}, &block)
+          def list(item_id, image_id, headers = {}, &)
             get(build_endpoint("#{ITEM_IMAGE_AVAILABILITY_PATH}#{LIST_ITEM_IMAGE_AVAILABILITY}",
                                item: item_id,
                                image: image_id),
-                headers, &block)
+                headers, &)
           end
 
           def destroy(item_id, image_id)

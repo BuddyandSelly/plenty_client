@@ -10,12 +10,12 @@ module PlentyClient
       LIST_LISTINGS_SHIPPING_PROFILES  = '/listings/shipping_profiles'
 
       class << self
-        def find(shipping_profile_id, headers = {}, &block)
-          get(build_endpoint(FIND_LISTINGS_SHIPPING_PROFILE, shipping_profile: shipping_profile_id), headers, &block)
+        def find(shipping_profile_id, headers = {}, &)
+          get(build_endpoint(FIND_LISTINGS_SHIPPING_PROFILE, shipping_profile: shipping_profile_id), headers, &)
         end
 
-        def list(headers = {}, &block)
-          get(build_endpoint(LIST_LISTINGS_SHIPPING_PROFILES), headers, &block)
+        def list(headers = {}, &)
+          get(build_endpoint(LIST_LISTINGS_SHIPPING_PROFILES), headers, &)
         end
       end
     end

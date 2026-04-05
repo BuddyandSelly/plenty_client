@@ -16,10 +16,10 @@ module PlentyClient
         DELETE_ITEM_VARIATIONS_DESCRIPTION    = '/descriptions/{lang}'
 
         class << self
-          def list(item_id, variation_id, headers = {}, &block)
+          def list(item_id, variation_id, headers = {}, &)
             get(build_endpoint("#{ITEM_VARIATION_DESCRIPTION_BASE_PATH}#{LIST_ITEM_VARIATION_DESCRIPTIONS}",
                                item: item_id,
-                               variation: variation_id), headers, &block)
+                               variation: variation_id), headers, &)
           end
 
           def find(item_id, variation_id, lang, headers = {})

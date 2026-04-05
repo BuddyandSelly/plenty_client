@@ -10,12 +10,12 @@ module PlentyClient
     REDISTRIBUTE_STOCK = '/stockmanagement/stock/redistribute'
 
     class << self
-      def list(headers = {}, &block)
-        get(build_endpoint(LIST_STOCK), headers, &block)
+      def list(headers = {}, &)
+        get(build_endpoint(LIST_STOCK), headers, &)
       end
 
-      def list_by_type(type_string, headers = {}, &block)
-        get(build_endpoint(LIST_STOCK_BY_TYPE, type_string: type_string), headers, &block)
+      def list_by_type(type_string, headers = {}, &)
+        get(build_endpoint(LIST_STOCK_BY_TYPE, type_string: type_string), headers, &)
       end
 
       def redistribute(body = {})

@@ -13,12 +13,12 @@ module PlentyClient
       DELETE_MARKET_CREDENTIALS = '/markets/credentials/{credentialsId}'
 
       class << self
-        def list(headers = {}, &block)
-          get(build_endpoint(LIST_MARKET_CREDENTIALS), headers, &block)
+        def list(headers = {}, &)
+          get(build_endpoint(LIST_MARKET_CREDENTIALS), headers, &)
         end
 
-        def find(credentials_id, headers = {}, &block)
-          get(build_endpoint(FIND_MARKET_CREDENTIALS, credentials: credentials_id), headers, &block)
+        def find(credentials_id, headers = {}, &)
+          get(build_endpoint(FIND_MARKET_CREDENTIALS, credentials: credentials_id), headers, &)
         end
 
         def create(body = {})

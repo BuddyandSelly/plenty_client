@@ -16,21 +16,21 @@ module PlentyClient
       LIST_ITEM_VARIATION_IMAGE = '/variations/{variationId}/images'
 
       class << self
-        def list(item_id, headers = {}, &block)
+        def list(item_id, headers = {}, &)
           get(build_endpoint("#{ITEM_IMAGE_BASE_PATH}#{LIST_ALL_ITEM_IMAGES}",
-                             item: item_id), headers, &block)
+                             item: item_id), headers, &)
         end
 
-        def list_variation_images(item_id, variation_id, headers = {}, &block)
+        def list_variation_images(item_id, variation_id, headers = {}, &)
           get(build_endpoint("#{ITEM_IMAGE_BASE_PATH}#{LIST_ITEM_VARIATION_IMAGE}",
                              item: item_id,
-                             variation: variation_id), headers, &block)
+                             variation: variation_id), headers, &)
         end
 
-        def find(item_id, image_id, headers = {}, &block)
+        def find(item_id, image_id, headers = {}, &)
           get(build_endpoint("#{ITEM_IMAGE_BASE_PATH}#{GET_ITEM_IMAGES}",
                              item: item_id,
-                             image: image_id), headers, &block)
+                             image: image_id), headers, &)
         end
 
         def create(item_id, headers = {})

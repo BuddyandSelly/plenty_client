@@ -15,13 +15,13 @@ module PlentyClient
         UPDATE_LISTING_MARKET_HISTORIES = '/listings/markets/histories/update'
 
         class << self
-          def find(market_listing_history_id, headers = {}, &block)
+          def find(market_listing_history_id, headers = {}, &)
             get(build_endpoint(FIND_LISTING_MARKET_HISTORY, market_listing_history: market_listing_history_id),
-                headers, &block)
+                headers, &)
           end
 
-          def list(headers = {}, &block)
-            get(build_endpoint(LIST_LISTING_MARKET_HISTORIES), headers, &block)
+          def list(headers = {}, &)
+            get(build_endpoint(LIST_LISTING_MARKET_HISTORIES), headers, &)
           end
 
           def end(market_listing_history_id, body = {})

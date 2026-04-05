@@ -9,9 +9,9 @@ module PlentyClient
       UPDATE_COUPON_CODE = '/orders/{orderId}/coupons/{coupon}'
 
       class << self
-        def update(order_id, coupon_string, headers = {}, &block)
+        def update(order_id, coupon_string, headers = {}, &)
           post(build_endpoint(UPDATE_COUPON_CODE, order: order_id, coupon_string: coupon_string),
-               headers, &block)
+               headers, &)
         end
       end
     end

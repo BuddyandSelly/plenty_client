@@ -13,12 +13,12 @@ module PlentyClient
       DELETE_MANUFACTURER     = '/items/manufacturers/{manufacturerId}'
 
       class << self
-        def list(headers = {}, &block)
-          get(build_endpoint(LIST_ALL_MANUFACTURERS), headers, &block)
+        def list(headers = {}, &)
+          get(build_endpoint(LIST_ALL_MANUFACTURERS), headers, &)
         end
 
-        def find(manufacturer_id, headers = {}, &block)
-          get(build_endpoint(GET_MANUFACTURER, manufacturer: manufacturer_id), headers, &block)
+        def find(manufacturer_id, headers = {}, &)
+          get(build_endpoint(GET_MANUFACTURER, manufacturer: manufacturer_id), headers, &)
         end
 
         def create(headers = {})

@@ -11,14 +11,14 @@ module PlentyClient
         LIST_ORDER_ITEM_SERIAL_NUMBERS  = '/orders/{orderId}/items/{orderItemId}/serialNumbers'
 
         class << self
-          def list(order_id, headers = {}, &block)
-            get(build_endpoint(LIST_SERIAL_NUMBERS, order: order_id), headers, &block)
+          def list(order_id, headers = {}, &)
+            get(build_endpoint(LIST_SERIAL_NUMBERS, order: order_id), headers, &)
           end
 
-          def find(order_id, order_item_id, headers = {}, &block)
+          def find(order_id, order_item_id, headers = {}, &)
             get(build_endpoint(LIST_ORDER_ITEM_SERIAL_NUMBERS,
                                order: order_id,
-                               order_item: order_item_id), headers, &block)
+                               order_item: order_item_id), headers, &)
           end
         end
       end

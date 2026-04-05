@@ -15,8 +15,8 @@ module PlentyClient
           post(build_endpoint(CREATE_ITEMS_CROSS_SELLING, item: item_id), headers)
         end
 
-        def list(item_id, headers = {}, &block)
-          get(build_endpoint(GET_ITEMS_CROSS_SELLING, item: item_id), headers, &block)
+        def list(item_id, headers = {}, &)
+          get(build_endpoint(GET_ITEMS_CROSS_SELLING, item: item_id), headers, &)
         end
 
         def destroy(item_id, cross_item_id)

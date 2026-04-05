@@ -11,8 +11,8 @@ module PlentyClient
         REFRESH_MARKET_EBAY_AUTH_TOKEN  = '/markets/ebay/auth/refresh-token'
 
         class << self
-          def find_login_url(headers = {}, &block)
-            get(build_endpoint(FIND_MARKET_EBAY_AUTH_URL), headers, &block)
+          def find_login_url(headers = {}, &)
+            get(build_endpoint(FIND_MARKET_EBAY_AUTH_URL), headers, &)
           end
 
           def refrest_token(body = {})

@@ -17,15 +17,15 @@ module PlentyClient
           DELETE_VARIATION_PROPERTY_TEXT      = '/variation_properties/{propertyId}/texts/{lang}'
 
           class << self
-            def find(item_id, variation_id, property_id, headers = {}, &block)
+            def find(item_id, variation_id, property_id, headers = {}, &)
               get(build_endpoint("#{VARIATION_PROPERTY_TEXT_BASE_PATH}#{GET_VARIATION_PROPERTY_TEXT}",
-                                 item: item_id, variation: variation_id, property: property_id), headers, &block)
+                                 item: item_id, variation: variation_id, property: property_id), headers, &)
             end
 
-            def find_by_language(item_id, variation_id, property_id, lang, headers = {}, &block)
+            def find_by_language(item_id, variation_id, property_id, lang, headers = {}, &)
               get(build_endpoint("#{VARIATION_PROPERTY_TEXT_BASE_PATH}#{GET_VARIATION_PROPERTY_TEXT_BY_LANG}",
                                  item: item_id, variation: variation_id, property: property_id, lang: lang),
-                  headers, &block)
+                  headers, &)
             end
 
             def create(item_id, variation_id, property_id, headers = {})

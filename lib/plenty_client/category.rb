@@ -15,12 +15,12 @@ module PlentyClient
     DELETE_CATEGORY_CLIENTS = '/categories/{catId}/clients'
 
     class << self
-      def list(headers = {}, &block)
-        get(build_endpoint(LIST_CATEGORIES), headers, &block)
+      def list(headers = {}, &)
+        get(build_endpoint(LIST_CATEGORIES), headers, &)
       end
 
-      def find(cat_id = nil, headers = {}, &block)
-        get(build_endpoint(FIND_CATEGORY, cat: cat_id), headers, &block)
+      def find(cat_id = nil, headers = {}, &)
+        get(build_endpoint(FIND_CATEGORY, cat: cat_id), headers, &)
       end
 
       def create(body = {})

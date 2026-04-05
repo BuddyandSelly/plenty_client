@@ -8,19 +8,19 @@ module PlentyClient
         include PlentyClient::Request
 
         BASE_PATH     = '/items/{itemId}/variations/{variationId}'
-        PLURAL_PATH   = BASE_PATH + '/variation_sales_prices'
-        SINGULAR_PATH = PLURAL_PATH + '/{priceId}'
+        PLURAL_PATH   = "#{BASE_PATH}/variation_sales_prices".freeze
+        SINGULAR_PATH = "#{PLURAL_PATH}/{priceId}".freeze
         BULK_PATH     = '/items/variations/variation_sales_prices'
 
         class << self
-          def list(item_id, variation_id, headers = {}, &block)
+          def list(item_id, variation_id, headers = {}, &)
             get(build_endpoint(PLURAL_PATH, item: item_id, variation: variation_id),
-                headers, &block)
+                headers, &)
           end
 
-          def find(item_id, variation_id, price_id, headers = {}, &block)
+          def find(item_id, variation_id, price_id, headers = {}, &)
             get(build_endpoint(SINGULAR_PATH, item: item_id, variation: variation_id, price: price_id),
-                headers, &block)
+                headers, &)
           end
 
           def create(item_id, variation_id, body = {})

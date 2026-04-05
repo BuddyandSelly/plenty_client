@@ -10,13 +10,13 @@ module PlentyClient
       LIST_CATEGORY_BRANCH = '/category_branches'
 
       class << self
-        def list(headers = {}, &block)
-          get(build_endpoint(LIST_CATEGORY_BRANCH), headers, &block)
+        def list(headers = {}, &)
+          get(build_endpoint(LIST_CATEGORY_BRANCH), headers, &)
         end
 
-        def find(cat_id, headers = {}, &block)
+        def find(cat_id, headers = {}, &)
           get(build_endpoint(FIND_CATEGORY_BRANCH,
-                             cat: cat_id), headers, &block)
+                             cat: cat_id), headers, &)
         end
       end
     end

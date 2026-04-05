@@ -15,17 +15,17 @@ module PlentyClient
         DELETE_ITEM_VARIATIONS_DEFAULT_CATEGORY = '/variation_default_categories/{plentyId}'
 
         class << self
-          def list(item_id, variation_id, headers = {}, &block)
+          def list(item_id, variation_id, headers = {}, &)
             get(build_endpoint("#{ITEM_VARIATION_DEFAULT_CATEGORY_PATH}#{LIST_ITEM_VARIATIONS_DEFAULT_CATEGORY}",
                                item: item_id,
-                               variation: variation_id), headers, &block)
+                               variation: variation_id), headers, &)
           end
 
-          def find(item_id, variation_id, plenty_id, headers = {}, &block)
+          def find(item_id, variation_id, plenty_id, headers = {}, &)
             get(build_endpoint("#{ITEM_VARIATION_DEFAULT_CATEGORY_PATH}#{GET_ITEM_VARIATIONS_DEFAULT_CATEGORY}",
                                item: item_id,
                                variation: variation_id,
-                               plenty: plenty_id), headers, &block)
+                               plenty: plenty_id), headers, &)
           end
 
           def create(item_id, variation_id, body = {})

@@ -16,10 +16,10 @@ module PlentyClient
         DELETE_ITEM_VARIATIONS_MARKET_IDENT = '/market_ident_numbers/{marketIdentNumberId}'
 
         class << self
-          def list(item_id, variation_id, headers = {}, &block)
+          def list(item_id, variation_id, headers = {}, &)
             get(build_endpoint("#{ITEM_VARIATION_MARKET_IDENT_PATH}#{LIST_ITEM_VARIATION_MARKET_IDENT}",
                                item: item_id,
-                               variation: variation_id), headers, &block)
+                               variation: variation_id), headers, &)
           end
 
           def find(item_id, variation_id, market_ident_number_id, headers = {})

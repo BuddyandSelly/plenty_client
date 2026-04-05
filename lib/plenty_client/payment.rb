@@ -13,24 +13,24 @@ module PlentyClient
     PAYMENT_IMPORTDATE  = '/payments/importdate'
 
     class << self
-      def list(headers = {}, &block)
-        get(build_endpoint(LIST_PAYMENT), headers, &block)
+      def list(headers = {}, &)
+        get(build_endpoint(LIST_PAYMENT), headers, &)
       end
 
-      def find(payment_id, headers = {}, &block)
-        get(build_endpoint(FIND_PAYMENT, payment: payment_id), headers, &block)
+      def find(payment_id, headers = {}, &)
+        get(build_endpoint(FIND_PAYMENT, payment: payment_id), headers, &)
       end
 
       def update(payment_id, body = {})
         put(build_endpoint(FIND_PAYMENT, payment: payment_id), body)
       end
 
-      def list_by_entry_date(headers = {}, &block)
-        get(build_endpoint(PAYMENT_ENTRYDATE), headers, &block)
+      def list_by_entry_date(headers = {}, &)
+        get(build_endpoint(PAYMENT_ENTRYDATE), headers, &)
       end
 
-      def list_by_import_date(headers = {}, &block)
-        get(build_endpoint(PAYMENT_IMPORTDATE), headers, &block)
+      def list_by_import_date(headers = {}, &)
+        get(build_endpoint(PAYMENT_IMPORTDATE), headers, &)
       end
     end
   end

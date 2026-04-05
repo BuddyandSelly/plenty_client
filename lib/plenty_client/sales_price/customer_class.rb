@@ -12,9 +12,9 @@ module PlentyClient
       DEACTIVATE_SALES_PRICE_CUSTOMER_CLASSES = '/customer_classes/{customerClassId}'
 
       class << self
-        def list(sales_price_id, headers = {}, &block)
+        def list(sales_price_id, headers = {}, &)
           get(build_endpoint("#{SALES_PRICE_PATH}#{LIST_SALES_PRICE_CUSTOMER_CLASSES}",
-                             sales_price: sales_price_id), headers, &block)
+                             sales_price: sales_price_id), headers, &)
         end
 
         def activate(sales_price_id, headers = {})

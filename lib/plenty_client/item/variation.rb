@@ -14,16 +14,16 @@ module PlentyClient
       UPDATE_ITEMS_VARIATION  = '/items/{itemId}/variations/{variationId}'
 
       class << self
-        def all(headers = {}, &block)
-          get(ALL_VARIATIONS, headers, &block)
+        def all(headers = {}, &)
+          get(ALL_VARIATIONS, headers, &)
         end
 
-        def find(item_id, variation_id, headers = {}, &block)
-          get(build_endpoint(GET_ITEMS_VARIATION, item: item_id, variation: variation_id), headers, &block)
+        def find(item_id, variation_id, headers = {}, &)
+          get(build_endpoint(GET_ITEMS_VARIATION, item: item_id, variation: variation_id), headers, &)
         end
 
-        def list(item_id, headers = {}, &block)
-          get(build_endpoint(GET_ITEMS_VARIATIONS, item: item_id), headers, &block)
+        def list(item_id, headers = {}, &)
+          get(build_endpoint(GET_ITEMS_VARIATIONS, item: item_id), headers, &)
         end
 
         def create(item_id, body = {})

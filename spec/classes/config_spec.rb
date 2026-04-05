@@ -1,11 +1,11 @@
 require 'spec_helper'
 
 RSpec.describe PlentyClient::Config do
-  let(:config) { PlentyClient::Config }
+  let(:config) { described_class }
 
   describe 'error handling' do
     describe '.validate_credentials' do
-      before(:each) do
+      before do
         config.site_url = 'https://www.example.com'
         config.api_user = 'foobar'
         config.api_password = 'foobar'
@@ -37,9 +37,9 @@ RSpec.describe PlentyClient::Config do
 
     describe '.tokens_valid?' do
       before do
-        PlentyClient::Config.access_token = 'foobar_token'
-        PlentyClient::Config.refresh_token = 'refresh_token'
-        PlentyClient::Config.expiry_date = Time.now + 86400
+        described_class.access_token = 'foobar_token'
+        described_class.refresh_token = 'refresh_token'
+        described_class.expiry_date = Time.now + 86400
       end
 
       context 'when all attributes are present' do

@@ -9,8 +9,8 @@ module PlentyClient
       FIND_PAYMENT_STATUS = '/payments/status/{statusId}'
 
       class << self
-        def find(status_id, headers = {}, &block)
-          get(build_endpoint(FIND_PAYMENT_STATUS, status: status_id), headers, &block)
+        def find(status_id, headers = {}, &)
+          get(build_endpoint(FIND_PAYMENT_STATUS, status: status_id), headers, &)
         end
       end
     end

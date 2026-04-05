@@ -10,12 +10,12 @@ module PlentyClient
       LIST_LISTINGS_STOCK_DEPENCENCE_TYPES  = '/listings/types'
 
       class << self
-        def find(type_id, headers = {}, &block)
-          GET(BUILD_ENDPOINT(FIND_LISTINGS_STOCK_DEPENCENCE_TYPE, type: type_id), headers, &block)
+        def find(type_id, headers = {}, &)
+          GET(BUILD_ENDPOINT(FIND_LISTINGS_STOCK_DEPENCENCE_TYPE, type: type_id), headers, &)
         end
 
-        def list(headers = {}, &block)
-          GET(BUILD_ENDPOINT(LIST_LISTINGS_STOCK_DEPENCENCE_TYPES), headers, &block)
+        def list(headers = {}, &)
+          GET(BUILD_ENDPOINT(LIST_LISTINGS_STOCK_DEPENCENCE_TYPES), headers, &)
         end
       end
     end

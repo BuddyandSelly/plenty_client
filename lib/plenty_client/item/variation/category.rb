@@ -18,17 +18,17 @@ module PlentyClient
         MASS_CATEGORY_ASSIGNMENT        = '/items/variations/variation_categories'
 
         class << self
-          def list(item_id, variation_id, headers = {}, &block)
+          def list(item_id, variation_id, headers = {}, &)
             get(build_endpoint("#{ITEM_VARIATION_CATEGORY_PATH}#{LIST_ITEM_VARIATIONS_CATEGORY}",
                                item: item_id,
-                               variation: variation_id), headers, &block)
+                               variation: variation_id), headers, &)
           end
 
-          def find(item_id, variation_id, category_id, headers = {}, &block)
+          def find(item_id, variation_id, category_id, headers = {}, &)
             get(build_endpoint("#{ITEM_VARIATION_CATEGORY_PATH}#{GET_ITEM_VARIATIONS_CATEGORY}",
                                item: item_id,
                                variation: variation_id,
-                               cat: category_id), headers, &block)
+                               cat: category_id), headers, &)
           end
 
           def create(item_id, variation_id, body = {})

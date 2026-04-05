@@ -1,7 +1,5 @@
 # frozen_string_literal: true
 
-# frozen_string_literal: true
-
 module PlentyClient
   module Item
     class UnitName
@@ -15,20 +13,20 @@ module PlentyClient
       DELETE_ITEMS_UNIT_NAME  = '/item/units/{unitID}/names/{lang}'
 
       class << self
-        def list(unit_id, headers = {}, &block)
-          get(build_endpoint(LIST_ITEM_UNIT_NAMES, unit: unit_id), headers, &block)
+        def list(unit_id, headers = {}, &)
+          get(build_endpoint(LIST_ITEM_UNIT_NAMES, unit: unit_id), headers, &)
         end
 
-        def find(unit_id, lang, headers = {}, &block)
-          get(build_endpoint(FIND_ITEM_UNIT_NAME, unit: unit_id, lang: lang), headers, &block)
+        def find(unit_id, lang, headers = {}, &)
+          get(build_endpoint(FIND_ITEM_UNIT_NAME, unit: unit_id, lang: lang), headers, &)
         end
 
         def create(unit_id, headers = {})
           post(build_endpoint(CREATE_ITEMS_UNIT_NAME, unit: unit_id), headers)
         end
 
-        def update(unit_id, lang, headers = {}, &block)
-          put(build_endpoint(UPDATE_ITEMS_UNIT_NAME, unit: unit_id, lang: lang), headers, &block)
+        def update(unit_id, lang, headers = {}, &)
+          put(build_endpoint(UPDATE_ITEMS_UNIT_NAME, unit: unit_id, lang: lang), headers, &)
         end
 
         def destroy(unit_id, lang)

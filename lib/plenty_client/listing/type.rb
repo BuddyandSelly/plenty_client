@@ -10,12 +10,12 @@ module PlentyClient
       LIST_LISTINGS_TYPES  = '/listings/types'
 
       class << self
-        def find(type_id, headers = {}, &block)
-          get(build_endpoint(FIND_LISTINGS_TYPE, type: type_id), headers, &block)
+        def find(type_id, headers = {}, &)
+          get(build_endpoint(FIND_LISTINGS_TYPE, type: type_id), headers, &)
         end
 
-        def list(headers = {}, &block)
-          get(build_endpoint(LIST_LISTINGS_TYPES), headers, &block)
+        def list(headers = {}, &)
+          get(build_endpoint(LIST_LISTINGS_TYPES), headers, &)
         end
       end
     end

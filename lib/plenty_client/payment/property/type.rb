@@ -14,12 +14,12 @@ module PlentyClient
         UPDATE_PAYMENT_PROPERTY_TYPE          = '/payments/properties/types'
 
         class << self
-          def list(headers = {}, &block)
-            get(build_endpoint(LIST_PAYMENT_PROPERTY_TYPES), headers, &block)
+          def list(headers = {}, &)
+            get(build_endpoint(LIST_PAYMENT_PROPERTY_TYPES), headers, &)
           end
 
-          def find(type_id, headers = {}, &block)
-            get(build_endpoint(FIND_PAYMENT_PROPERTY_TYPE, type: type_id), headers, &block)
+          def find(type_id, headers = {}, &)
+            get(build_endpoint(FIND_PAYMENT_PROPERTY_TYPE, type: type_id), headers, &)
           end
 
           def create(body = {})

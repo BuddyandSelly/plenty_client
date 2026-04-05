@@ -10,8 +10,8 @@ module PlentyClient
         LIST_SHIPPING_COUNTRIES = '/orders/shipping/countries'
 
         class << self
-          def list(headers = {}, &block)
-            get(build_endpoint(LIST_SHIPPING_COUNTRIES), headers, &block)
+          def list(headers = {}, &)
+            get(build_endpoint(LIST_SHIPPING_COUNTRIES), headers, &)
           end
         end
       end

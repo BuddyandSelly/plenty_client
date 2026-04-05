@@ -11,8 +11,8 @@ module PlentyClient
       DELETE_ORDERS_PAYMENT         = '/payment/{paymentId}/order'
 
       class << self
-        def list(order_id, headers = {}, &block)
-          get(build_endpoint(LIST_ORDERS_PAYMENTS, order: order_id), headers, &block)
+        def list(order_id, headers = {}, &)
+          get(build_endpoint(LIST_ORDERS_PAYMENTS, order: order_id), headers, &)
         end
 
         def create(payment_id, order_id, body = {})

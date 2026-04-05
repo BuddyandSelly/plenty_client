@@ -11,8 +11,8 @@ module PlentyClient
       DEACTIVATE_SALES_PRICE_ONLINE_STORE = '/items/sales_prices/{salesPriceId}/online_stores/{webstoreId}'
 
       class << self
-        def list(sales_price_id, headers = {}, &block)
-          get(build_endpoint(LIST_SALES_PRICE_ONLINE_STORES, sales_price: sales_price_id), headers, &block)
+        def list(sales_price_id, headers = {}, &)
+          get(build_endpoint(LIST_SALES_PRICE_ONLINE_STORES, sales_price: sales_price_id), headers, &)
         end
 
         def activate(sales_price_id, headers = {})

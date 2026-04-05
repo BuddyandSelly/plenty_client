@@ -10,8 +10,8 @@ module PlentyClient
         LIST_MARKET_EBAY_SHOP_CATEGORIES = '/markets/ebay/shop_categories'
 
         class << self
-          def list(headers = {}, &block)
-            get(build_endpoint(LIST_MARKET_EBAY_SHOP_CATEGORIES), headers, &block)
+          def list(headers = {}, &)
+            get(build_endpoint(LIST_MARKET_EBAY_SHOP_CATEGORIES), headers, &)
           end
         end
       end

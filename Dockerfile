@@ -1,10 +1,9 @@
-FROM ruby:3.1
+FROM ruby:4.0
 
 WORKDIR /gem
 
-RUN gem install 'faraday:1.10.3' 'typhoeus:1.4.0' \
-    && gem install json rspec webmock byebug
-
 COPY . .
+
+RUN bundle install
 
 CMD ["irb", "-I", "lib", "-r", "plenty_client"]

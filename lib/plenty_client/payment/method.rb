@@ -16,16 +16,16 @@ module PlentyClient
       CREATE_PAYMENT_EBICS_ACCOUNT  = '/payments/methods/ebics'
 
       class << self
-        def list(headers = {}, &block)
-          get(build_endpoint(LIST_PAYMENT_METHODS), headers, &block)
+        def list(headers = {}, &)
+          get(build_endpoint(LIST_PAYMENT_METHODS), headers, &)
         end
 
-        def find(method_id, headers = {}, &block)
-          get(build_endpoint(FIND_PAYMENT_METHOD, payment_method: method_id), headers, &block)
+        def find(method_id, headers = {}, &)
+          get(build_endpoint(FIND_PAYMENT_METHOD, payment_method: method_id), headers, &)
         end
 
-        def find_by_plugin_key(plugin_key, headers = {}, &block)
-          get(build_endpoint(FIND_PLUGIN_PAYMENT_METHOD, plugin_key: plugin_key), headers, &block)
+        def find_by_plugin_key(plugin_key, headers = {}, &)
+          get(build_endpoint(FIND_PLUGIN_PAYMENT_METHOD, plugin_key: plugin_key), headers, &)
         end
 
         def create(body = {})
@@ -40,8 +40,8 @@ module PlentyClient
         #   put(build_endpoint(UPDATE_PAYMENT_METHOD_WITH_ID, plugin_key: plugin_key), body)
         # end
 
-        def list_ebics_accounts(headers = {}, &block)
-          get(build_endpoint(LIST_PAYMENT_EBICS_ACCOUNTS), headers, &block)
+        def list_ebics_accounts(headers = {}, &)
+          get(build_endpoint(LIST_PAYMENT_EBICS_ACCOUNTS), headers, &)
         end
 
         def create_ebics_account(body = {})

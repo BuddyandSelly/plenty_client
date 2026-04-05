@@ -15,16 +15,16 @@ module PlentyClient
         SEARCH_MARKET_EBAY_PARTS_FITMENTS = '/markets/ebay/parts-fitments/search'
 
         class << self
-          def list(headers = {}, &block)
-            get(build_endpoint(LIST_MARKET_EBAY_PARTS_FITMENTS), headers, &block)
+          def list(headers = {}, &)
+            get(build_endpoint(LIST_MARKET_EBAY_PARTS_FITMENTS), headers, &)
           end
 
-          def search(headers = {}, &block)
-            get(build_endpoint(SEARCH_MARKET_EBAY_PARTS_FITMENTS), headers, &block)
+          def search(headers = {}, &)
+            get(build_endpoint(SEARCH_MARKET_EBAY_PARTS_FITMENTS), headers, &)
           end
 
-          def find(fitment_id, headers = {}, &block)
-            get(build_endpoint(FIND_MARKET_EBAY_PARTS_FITMENT, fitment: fitment_id), headers, &block)
+          def find(fitment_id, headers = {}, &)
+            get(build_endpoint(FIND_MARKET_EBAY_PARTS_FITMENT, fitment: fitment_id), headers, &)
           end
 
           def create(body = {})

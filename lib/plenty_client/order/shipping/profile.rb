@@ -11,12 +11,12 @@ module PlentyClient
         FIND_SHIPPING_PRESETS = '/orders/shipping/presets/{presetId}'
 
         class << self
-          def list(headers = {}, &block)
-            get(build_endpoint(LIST_SHIPPING_PRESET), headers, &block)
+          def list(headers = {}, &)
+            get(build_endpoint(LIST_SHIPPING_PRESET), headers, &)
           end
 
-          def find(preset_id, headers = {}, &block)
-            get(build_endpoint(FIND_SHIPPING_PRESETS, preset: preset_id), headers, &block)
+          def find(preset_id, headers = {}, &)
+            get(build_endpoint(FIND_SHIPPING_PRESETS, preset: preset_id), headers, &)
           end
         end
       end

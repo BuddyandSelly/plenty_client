@@ -14,23 +14,23 @@ module PlentyClient
       UPDATE_PAYMENT_PROPERTY             = '/payments/properties'
       LIST_P_PROPERTIES_BY_TYPE_AND_VALUE = '/payments/property/{propertyTypeId}/{propertyValue}'
       class << self
-        def list(headers = {}, &block)
-          get(build_endpoint(LIST_PAYMENT_PROPERTIES), headers, &block)
+        def list(headers = {}, &)
+          get(build_endpoint(LIST_PAYMENT_PROPERTIES), headers, &)
         end
 
-        def list_by_payment_id(payment_id, headers = {}, &block)
-          get(build_endpoint(LIST_PAYMENT_PROPERTIES_BY_PAYMENT, payment: payment_id), headers, &block)
+        def list_by_payment_id(payment_id, headers = {}, &)
+          get(build_endpoint(LIST_PAYMENT_PROPERTIES_BY_PAYMENT, payment: payment_id), headers, &)
         end
 
-        def list_by_type_and_value(property_type_id, property_value, headers = {}, &block)
+        def list_by_type_and_value(property_type_id, property_value, headers = {}, &)
           get(build_endpoint(LIST_P_PROPERTIES_BY_TYPE_AND_VALUE,
                              property_type: property_type_id,
                              property_value: property_value),
-              headers, &block)
+              headers, &)
         end
 
-        def find(payment_id, headers = {}, &block)
-          get(build_endpoint(FIND_PLUGIN_PAYMENT_PROPERTY, payment: payment_id), headers, &block)
+        def find(payment_id, headers = {}, &)
+          get(build_endpoint(FIND_PLUGIN_PAYMENT_PROPERTY, payment: payment_id), headers, &)
         end
 
         def create(body = {})

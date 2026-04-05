@@ -13,12 +13,12 @@ module PlentyClient
       DELETE_SALES_PRICE    = '/items/sales_prices/{salesPriceId}'
 
       class << self
-        def list(headers = {}, &block)
-          get(build_endpoint(LIST_ALL_SALES_PRICES), headers, &block)
+        def list(headers = {}, &)
+          get(build_endpoint(LIST_ALL_SALES_PRICES), headers, &)
         end
 
-        def find(sales_price_id, headers = {}, &block)
-          get(build_endpoint(GET_SALES_PRICE, sales_price: sales_price_id), headers, &block)
+        def find(sales_price_id, headers = {}, &)
+          get(build_endpoint(GET_SALES_PRICE, sales_price: sales_price_id), headers, &)
         end
 
         def create(headers = {})

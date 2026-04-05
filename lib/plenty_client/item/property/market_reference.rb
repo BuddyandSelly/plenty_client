@@ -22,17 +22,17 @@ module PlentyClient
                  headers)
           end
 
-          def list(property_id, headers = {}, &block)
+          def list(property_id, headers = {}, &)
             get(build_endpoint("#{ITEM_PROPERTY_MARKET_REFERENCE_PATH}#{LIST_ITEM_PROPERTY_MARKET_REFERENCE}",
                                property: property_id),
-                headers, &block)
+                headers, &)
           end
 
-          def find(property_id, market_id, headers = {}, &block)
+          def find(property_id, market_id, headers = {}, &)
             get(build_endpoint("#{ITEM_PROPERTY_MARKET_REFERENCE_PATH}#{GET_ITEMS_PROPERTY_MARKET_REFERENCE}",
                                property: property_id,
                                market: market_id),
-                headers, &block)
+                headers, &)
           end
 
           def update(property_id, market_id, body = {})

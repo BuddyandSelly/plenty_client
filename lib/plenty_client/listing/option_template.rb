@@ -13,12 +13,12 @@ module PlentyClient
       DELTE_LISTINGS_OPTION_TEMPLATE    = '/listings/option_templates/{optionTemplateId}'
 
       class << self
-        def preview(headers = {}, &block)
-          get(build_endpoint(PREVIEW_LISTINGS_OPTION_TEMPLATE), headers, &block)
+        def preview(headers = {}, &)
+          get(build_endpoint(PREVIEW_LISTINGS_OPTION_TEMPLATE), headers, &)
         end
 
-        def find(option_template_id, headers = {}, &block)
-          get(build_endpoint(FIND_LISTINGS_OPTION_TEMPLATE, option_template: option_template_id), headers, &block)
+        def find(option_template_id, headers = {}, &)
+          get(build_endpoint(FIND_LISTINGS_OPTION_TEMPLATE, option_template: option_template_id), headers, &)
         end
 
         def create(body = {})

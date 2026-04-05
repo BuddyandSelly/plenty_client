@@ -10,8 +10,8 @@ module PlentyClient
       LIST_URL = '/warehouses/%<warehouse_id>d/locations'
 
       class << self
-        def list(warehouse_id, body = {}, &block)
-          get(format(LIST_URL, warehouse_id: warehouse_id), body, &block)
+        def list(warehouse_id, body = {}, &)
+          get(format(LIST_URL, warehouse_id: warehouse_id), body, &)
         end
 
         private

@@ -14,12 +14,12 @@ module PlentyClient
         DELETE_A_CONTACT_PAYMENT  = '/accounts/contacts/banks/{contactBankId}'
 
         class << self
-          def list(contact_id, headers = {}, &block)
-            get(build_endpoint(LIST_A_CONTACT_PAYMENTS, contact: contact_id), headers, &block)
+          def list(contact_id, headers = {}, &)
+            get(build_endpoint(LIST_A_CONTACT_PAYMENTS, contact: contact_id), headers, &)
           end
 
-          def find(contact_bank_id, headers = {}, &block)
-            get(build_endpoint(FIND_A_CONTACT_PAYMENT, contact_bank: contact_bank_id), headers, &block)
+          def find(contact_bank_id, headers = {}, &)
+            get(build_endpoint(FIND_A_CONTACT_PAYMENT, contact_bank: contact_bank_id), headers, &)
           end
 
           def create(body = {})

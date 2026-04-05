@@ -11,8 +11,8 @@ module PlentyClient
     GET_TICKET    = '/tickets/{ticketId}'
 
     class << self
-      def list(headers = {}, &block)
-        get(build_endpoint(LIST_TICKETS), headers, &block)
+      def list(headers = {}, &)
+        get(build_endpoint(LIST_TICKETS), headers, &)
       end
 
       def create(body = {})

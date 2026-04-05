@@ -14,12 +14,12 @@ module PlentyClient
         DELETE_A_CONTACT_TYPE  = '/accounts/contacts/types/{typeId}'
 
         class << self
-          def list(headers = {}, &block)
-            get(build_endpoint(LIST_A_CONTACT_TYPES), headers, &block)
+          def list(headers = {}, &)
+            get(build_endpoint(LIST_A_CONTACT_TYPES), headers, &)
           end
 
-          def find(type, headers = {}, &block)
-            get(build_endpoint(FIND_A_CONTACT_TYPE, type: type), headers, &block)
+          def find(type, headers = {}, &)
+            get(build_endpoint(FIND_A_CONTACT_TYPE, type: type), headers, &)
           end
 
           def create(body = {})

@@ -13,12 +13,12 @@ module PlentyClient
       DELETE_A_CONTACT  = '/accounts/contacts/{contactId}'
 
       class << self
-        def list(headers = {}, &block)
-          get(build_endpoint(LIST_A_CONTACTS), headers, &block)
+        def list(headers = {}, &)
+          get(build_endpoint(LIST_A_CONTACTS), headers, &)
         end
 
-        def find(contact_id, headers = {}, &block)
-          get(build_endpoint(FIND_A_CONTACT, contact: contact_id), headers, &block)
+        def find(contact_id, headers = {}, &)
+          get(build_endpoint(FIND_A_CONTACT, contact: contact_id), headers, &)
         end
 
         def create(body = {})

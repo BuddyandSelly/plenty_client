@@ -13,29 +13,29 @@ module PlentyClient
       WM_FIND_RACKS                 = '/racks/{rackId}'
 
       class << self
-        def list_locations(warehouse_id, headers = {}, &block)
+        def list_locations(warehouse_id, headers = {}, &)
           get(build_endpoint("#{WM_STORAGE_LOCATION_BASE_PATH}#{WM_LIST_STORAGE_LOCATIONS}",
                              warehouse: warehouse_id),
-              headers, &block)
+              headers, &)
         end
 
-        def find_location(warehouse_id, storage_location_id, headers = {}, &block)
+        def find_location(warehouse_id, storage_location_id, headers = {}, &)
           get(build_endpoint("#{WM_STORAGE_LOCATION_BASE_PATH}#{WM_FIND_STORAGE_LOCATIONS}",
                              warehouse: warehouse_id,
                              storage_location: storage_location_id),
-              headers, &block)
+              headers, &)
         end
 
-        def list_racks(warehouse_id, headers = {}, &block)
+        def list_racks(warehouse_id, headers = {}, &)
           get(build_endpoint("#{WM_STORAGE_LOCATION_BASE_PATH}#{WM_LIST_RACKS}",
                              warehouse: warehouse_id),
-              headers, &block)
+              headers, &)
         end
 
-        def find_racks(warehouse_id, headers = {}, &block)
+        def find_racks(warehouse_id, headers = {}, &)
           get(build_endpoint("#{WM_STORAGE_LOCATION_BASE_PATH}#{WM_FIND_RACKS}",
                              warehouse: warehouse_id),
-              headers, &block)
+              headers, &)
         end
       end
     end

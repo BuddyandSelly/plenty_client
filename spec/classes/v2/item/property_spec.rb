@@ -1,7 +1,7 @@
 require 'spec_helper'
 
 RSpec.describe PlentyClient::V2::Item::Property do
-  before(:each) do
+  before do
     PlentyClient::Config.site_url = 'https://www.example.com'
     PlentyClient::Config.api_user = 'example'
     PlentyClient::Config.api_password = 'secret'
@@ -30,9 +30,9 @@ RSpec.describe PlentyClient::V2::Item::Property do
 
     context 'with a block' do
       before do
-        stub_request(:get, /example\.com\/rest\/v2\/properties/)
+        stub_request(:get, %r{example\.com/rest/v2/properties})
           .to_return do |r|
-          query = CGI.parse(r.uri.query)
+          query = parse_query(r.uri.query)
           page = query['page'][0].to_i
           {
             body: {
@@ -40,8 +40,8 @@ RSpec.describe PlentyClient::V2::Item::Property do
               totalsCount: 2,
               isLastPage: (page == 2),
               entries: [
-                { 'id' => page * 10 + 1, 'cast' => 'string' },
-                { 'id' => page * 10 + 2, 'cast' => 'int' }
+                { 'id' => (page * 10) + 1, 'cast' => 'string' },
+                { 'id' => (page * 10) + 2, 'cast' => 'int' }
               ]
             }.to_json,
             headers: response_headers
@@ -51,7 +51,7 @@ RSpec.describe PlentyClient::V2::Item::Property do
 
       it 'paginates through all pages' do
         described_class.list({}) { |_entry| }
-        expect(WebMock).to have_requested(:get, /v2\/properties/).times(2)
+        expect(WebMock).to have_requested(:get, %r{v2/properties}).times(2)
       end
 
       it 'yields entries from each page' do
@@ -61,7 +61,7 @@ RSpec.describe PlentyClient::V2::Item::Property do
 
     context 'with query parameters' do
       it 'forwards params to the API' do
-        stub_request(:get, /example\.com\/rest\/v2\/properties/)
+        stub_request(:get, %r{example\.com/rest/v2/properties})
           .to_return(
             body: { page: 1, isLastPage: true, entries: [] }.to_json,
             headers: response_headers
@@ -69,7 +69,7 @@ RSpec.describe PlentyClient::V2::Item::Property do
 
         described_class.list('with' => 'names,options', 'orderBy' => 'position', 'itemsPerPage' => 25)
 
-        expect(WebMock).to have_requested(:get, /v2\/properties/)
+        expect(WebMock).to have_requested(:get, %r{v2/properties})
           .with(query: hash_including('with' => 'names,options', 'orderBy' => 'position', 'itemsPerPage' => '25'))
       end
     end

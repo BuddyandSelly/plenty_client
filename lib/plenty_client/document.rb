@@ -8,8 +8,8 @@ module PlentyClient
     DOWNLOAD_DOCUMENT = '/documents/{documentId}'
 
     class << self
-      def download(document_id, headers = {}, &block)
-        get(build_endpoint(DOWNLOAD_DOCUMENT, document: document_id), headers, &block)
+      def download(document_id, headers = {}, &)
+        get(build_endpoint(DOWNLOAD_DOCUMENT, document: document_id), headers, &)
       end
     end
   end

@@ -16,16 +16,16 @@ module PlentyClient
         DELETE_ITEM_VARIATIONS_SUPPLIER = '/variation_suppliers/{variationSupplierId}'
 
         class << self
-          def list(item_id, variation_id, headers = {}, &block)
+          def list(item_id, variation_id, headers = {}, &)
             get(build_endpoint("#{ITEM_VARIATION_SUPPLIER_PATH}#{LIST_ITEM_VARIATIONS_SUPPLIER}",
                                item: item_id, variation: variation_id),
-                headers, &block)
+                headers, &)
           end
 
-          def find(item_id, variation_id, supplier_id, headers = {}, &block)
+          def find(item_id, variation_id, supplier_id, headers = {}, &)
             get(build_endpoint("#{ITEM_VARIATION_SUPPLIER_PATH}#{GET_ITEM_VARIATIONS_SUPPLIER}",
                                item: item_id, variation: variation_id, supplier: supplier_id),
-                headers, &block)
+                headers, &)
           end
 
           def create(item_id, variation_id, body = {})

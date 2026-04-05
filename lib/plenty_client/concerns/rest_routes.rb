@@ -50,24 +50,24 @@ module PlentyClient
         end
       end
 
-      def create(headers = {}, &block)
-        post(base_path, headers, &block)
+      def create(headers = {}, &)
+        post(base_path, headers, &)
       end
 
-      def list(headers = {}, &block)
-        get(base_path, headers, &block)
+      def list(headers = {}, &)
+        get(base_path, headers, &)
       end
 
-      def find(id, headers = {}, &block)
-        get(single_path(id), headers, &block)
+      def find(id, headers = {}, &)
+        get(single_path(id), headers, &)
       end
 
-      def update(id, headers = {}, &block)
-        put(single_path(id), headers, &block)
+      def update(id, headers = {}, &)
+        put(single_path(id), headers, &)
       end
 
-      def destroy(id, headers = {}, &block)
-        delete(single_path(id), headers, &block)
+      def destroy(id, headers = {}, &)
+        delete(single_path(id), headers, &)
       end
 
       private

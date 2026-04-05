@@ -14,12 +14,12 @@ module PlentyClient
     DELETE_ITEM_SETS  = '/item_sets'
 
     class << self
-      def list(headers = {}, &block)
-        get(build_endpoint(LIST_ITEM_SETS), headers, &block)
+      def list(headers = {}, &)
+        get(build_endpoint(LIST_ITEM_SETS), headers, &)
       end
 
-      def find(item_set_id, headers = {}, &block)
-        get(build_endpoint(GET_ITEM_SET, item_set: item_set_id), headers, &block)
+      def find(item_set_id, headers = {}, &)
+        get(build_endpoint(GET_ITEM_SET, item_set: item_set_id), headers, &)
       end
 
       def create(body = {})

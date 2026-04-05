@@ -18,20 +18,20 @@ module PlentyClient
         post(build_endpoint(CREATE_ORDER), body)
       end
 
-      def list(headers = {}, &block)
-        get(build_endpoint(LIST_ORDERS), headers, &block)
+      def list(headers = {}, &)
+        get(build_endpoint(LIST_ORDERS), headers, &)
       end
 
-      def list_contacts_orders(contact_id, headers = {}, &block)
-        get(build_endpoint(LIST_CONTACTS_ORDERS, contact: contact_id), headers, &block)
+      def list_contacts_orders(contact_id, headers = {}, &)
+        get(build_endpoint(LIST_CONTACTS_ORDERS, contact: contact_id), headers, &)
       end
 
-      def list_package_numbers(order_id, headers = {}, &block)
-        get(build_endpoint(LIST_ORDERS_PACKAGE_NUMBERS, order: order_id), headers, &block)
+      def list_package_numbers(order_id, headers = {}, &)
+        get(build_endpoint(LIST_ORDERS_PACKAGE_NUMBERS, order: order_id), headers, &)
       end
 
-      def find(order_id = nil, headers = {}, &block)
-        get(build_endpoint(FIND_ORDER, order: order_id), headers, &block)
+      def find(order_id = nil, headers = {}, &)
+        get(build_endpoint(FIND_ORDER, order: order_id), headers, &)
       end
 
       def update(order_id, body = {})

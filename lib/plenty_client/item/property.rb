@@ -13,12 +13,12 @@ module PlentyClient
       DELETE_PROPERTY     = '/items/properties/{propertyId}'
 
       class << self
-        def list(headers = {}, &block)
-          get(build_endpoint(LIST_ALL_PROPERTIES), headers, &block)
+        def list(headers = {}, &)
+          get(build_endpoint(LIST_ALL_PROPERTIES), headers, &)
         end
 
-        def find(property_id, headers = {}, &block)
-          get(build_endpoint(GET_PROPERTY, property: property_id), headers, &block)
+        def find(property_id, headers = {}, &)
+          get(build_endpoint(GET_PROPERTY, property: property_id), headers, &)
         end
 
         def create(headers = {})

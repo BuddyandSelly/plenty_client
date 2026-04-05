@@ -13,8 +13,8 @@ module PlentyClient
         DELETE_LISTING_MARKET = '/listings/markets/directories/{directoryId}'
 
         class << self
-          def find(directory_id, headers = {}, &block)
-            get(build_endpoint(FIND_LISTING_MARKET, directory: directory_id), headers, &block)
+          def find(directory_id, headers = {}, &)
+            get(build_endpoint(FIND_LISTING_MARKET, directory: directory_id), headers, &)
           end
 
           def create(body = {})

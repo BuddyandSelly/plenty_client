@@ -10,8 +10,8 @@ module PlentyClient
       LIST_BASKET_ITEMS   = '/basket/items'
 
       class << self
-        def list(headers = {}, &block)
-          get(LIST_BASKET_ITEMS, headers, &block)
+        def list(headers = {}, &)
+          get(LIST_BASKET_ITEMS, headers, &)
         end
 
         def create(body = {})

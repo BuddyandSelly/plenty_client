@@ -12,8 +12,8 @@ module PlentyClient
         LIST_LISTINGS_MARKET_INFO = '/listings/markets/infos'
 
         class << self
-          def list(headers = {}, &block)
-            get(build_endpoint(LIST_LISTINGS_MARKET_INFO), headers, &block)
+          def list(headers = {}, &)
+            get(build_endpoint(LIST_LISTINGS_MARKET_INFO), headers, &)
           end
         end
       end

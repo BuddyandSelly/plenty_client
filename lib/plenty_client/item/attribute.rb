@@ -13,12 +13,12 @@ module PlentyClient
       DELETE_ATTRIBUTE  = '/items/attributes/{attributeId}'
 
       class << self
-        def list(headers = {}, &block)
-          get(build_endpoint(LIST_ATTRIBUTES), headers, &block)
+        def list(headers = {}, &)
+          get(build_endpoint(LIST_ATTRIBUTES), headers, &)
         end
 
-        def find(attribute_id, headers = {}, &block)
-          get(build_endpoint(GET_ATTRIBUTE, attribute: attribute_id), headers, &block)
+        def find(attribute_id, headers = {}, &)
+          get(build_endpoint(GET_ATTRIBUTE, attribute: attribute_id), headers, &)
         end
 
         def create(headers = {})

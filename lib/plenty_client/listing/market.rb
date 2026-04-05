@@ -15,12 +15,12 @@ module PlentyClient
       VERIFY_LISTING_MARKET = '/listings/markets/verify/{marketListingId}'
 
       class << self
-        def find(market_listing_id, headers = {}, &block)
-          get(build_endpoint(FIND_LISTING_MARKET, market_listing: market_listing_id), headers, &block)
+        def find(market_listing_id, headers = {}, &)
+          get(build_endpoint(FIND_LISTING_MARKET, market_listing: market_listing_id), headers, &)
         end
 
-        def list(headers = {}, &block)
-          get(build_endpoint(LIST_LISTING_MARKETS), headers, &block)
+        def list(headers = {}, &)
+          get(build_endpoint(LIST_LISTING_MARKETS), headers, &)
         end
 
         def create(body = {})

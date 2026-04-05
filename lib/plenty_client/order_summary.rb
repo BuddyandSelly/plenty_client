@@ -18,20 +18,20 @@ module PlentyClient
         post(build_endpoint(CREATE_ORDER_SUMMARY), body)
       end
 
-      def list(headers = {}, &block)
-        get(build_endpoint(LIST_ORDER_SUMMARYS), headers, &block)
+      def list(headers = {}, &)
+        get(build_endpoint(LIST_ORDER_SUMMARYS), headers, &)
       end
 
-      def find(order_summary_id, headers = {}, &block)
-        get(build_endpoint(FIND_ORDER_SUMMARY, order_summary: order_summary_id), headers, &block)
+      def find(order_summary_id, headers = {}, &)
+        get(build_endpoint(FIND_ORDER_SUMMARY, order_summary: order_summary_id), headers, &)
       end
 
-      def find_by_contact(contact_id, headers = {}, &block)
-        get(build_endpoint(FIND_ORDER_SUMMARY_BY_CONTACT, contact: contact_id), headers, &block)
+      def find_by_contact(contact_id, headers = {}, &)
+        get(build_endpoint(FIND_ORDER_SUMMARY_BY_CONTACT, contact: contact_id), headers, &)
       end
 
-      def find_by_address(address_id, headers = {}, &block)
-        get(build_endpoint(LIST_ORDER_SUMMARYS_PACKAGE_NUMBERS, address: address_id), headers, &block)
+      def find_by_address(address_id, headers = {}, &)
+        get(build_endpoint(LIST_ORDER_SUMMARYS_PACKAGE_NUMBERS, address: address_id), headers, &)
       end
 
       def update(order_summary_id, body = {})

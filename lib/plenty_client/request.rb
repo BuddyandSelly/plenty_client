@@ -1,11 +1,12 @@
 require 'typhoeus'
-require 'typhoeus/adapters/faraday'
+require 'faraday/typhoeus'
+require 'faraday/retry'
 
 module PlentyClient
   module Request
     module ClassMethods
       def request(http_method, path, params = {})
-        raise ArgumentError, "http_method or path is missing" if http_method.nil? || path.nil?
+        raise ArgumentError, 'http_method or path is missing' if http_method.nil? || path.nil?
         unless %w[post put patch delete get].include?(http_method.to_s)
           raise ArgumentError, "unsupported http_method: #{http_method}"
         end
@@ -43,12 +44,14 @@ module PlentyClient
             response = request(:get, path, params.merge('page' => page))
             yield response['entries']
             break if response['isLastPage'] == true
+
             page += 1
           end
         else
           rval_array = request(:get, path, { 'page' => page }.merge(params))
         end
         return rval_array.flatten if rval_array.is_a?(Array)
+
         rval_array
       end
 
@@ -80,9 +83,9 @@ module PlentyClient
               logger.filter(/password=([^&]+)/, 'password=[FILTERED]')
             end
           end
-        faraday.request :retry, max: PlentyClient::Config.attempt_count
+          faraday.request :retry, max: PlentyClient::Config.attempt_count
+          faraday.adapter :typhoeus
         end
-        conn.adapter :typhoeus
         verb = http_method.to_s.downcase
         params = params.to_json unless %w[get delete].include?(verb)
         response = conn.send(verb, base_url(path), params)
@@ -125,12 +128,13 @@ module PlentyClient
         return if Time.now > delay_time
 
         wait_until = (delay_time - Time.now)
-        STDOUT.write "Plenty client => delaying request:  #{wait_until} seconds"
+        $stdout.write "Plenty client => delaying request:  #{wait_until} seconds"
         sleep(wait_until.round)
       end
 
       def parse_body(response)
-        return nil if response.body.strip == ""
+        return nil if response.body.strip == ''
+
         content_type = response.env.response_headers['Content-Type']
         case content_type
         when %r{(?:application|text)/json}
@@ -138,6 +142,7 @@ module PlentyClient
           errors = error_check(json)
           raise PlentyClient::NotFound, errors if errors.is_a?(String) && errors =~ /no query results/i
           raise PlentyClient::ResponseError, errors if errors && !errors&.empty?
+
           json
         when %r{application/pdf}
           response.body
@@ -150,8 +155,10 @@ module PlentyClient
 
       def error_check(response)
         return if response.nil? || response&.empty?
+
         response = response.first if response.is_a?(Array)
         return unless response&.key?('error')
+
         check_for_invalid_credentials(response)
         extract_message(response)
       end

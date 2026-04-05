@@ -1,7 +1,7 @@
 require 'spec_helper'
 
 RSpec.describe PlentyClient::V2::Item::Property::Name do
-  before(:each) do
+  before do
     PlentyClient::Config.site_url = 'https://www.example.com'
     PlentyClient::Config.api_user = 'example'
     PlentyClient::Config.api_password = 'secret'

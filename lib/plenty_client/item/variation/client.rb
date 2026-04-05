@@ -14,10 +14,10 @@ module PlentyClient
         DELETE_ITEM_VARIATIONS_CLIENTS = '/variation_clients/{plentyId}'
 
         class << self
-          def list(item_id, variation_id, headers = {}, &block)
+          def list(item_id, variation_id, headers = {}, &)
             get(build_endpoint("#{ITEM_VARIATION_CLIENTS_PATH}#{GET_ITEM_VARIATIONS_CLIENTS}",
                                item: item_id,
-                               variation: variation_id), headers, &block)
+                               variation: variation_id), headers, &)
           end
 
           def create(item_id, variation_id, body = {})

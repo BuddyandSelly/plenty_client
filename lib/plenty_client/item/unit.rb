@@ -17,16 +17,16 @@ module PlentyClient
           post(build_endpoint(CREATE_ITEMS_UNITS), headers)
         end
 
-        def list(headers = {}, &block)
-          get(build_endpoint(LIST_ITEM_UNITS), headers, &block)
+        def list(headers = {}, &)
+          get(build_endpoint(LIST_ITEM_UNITS), headers, &)
         end
 
-        def find(unit_id, headers = {}, &block)
-          get(build_endpoint(GET_ITEMS_UNIT, unit: unit_id), headers, &block)
+        def find(unit_id, headers = {}, &)
+          get(build_endpoint(GET_ITEMS_UNIT, unit: unit_id), headers, &)
         end
 
-        def update(unit_id, headers = {}, &block)
-          put(build_endpoint(UPDATE_ITEM_UNIT, unit: unit_id), headers, &block)
+        def update(unit_id, headers = {}, &)
+          put(build_endpoint(UPDATE_ITEM_UNIT, unit: unit_id), headers, &)
         end
 
         def destroy(unit_id)

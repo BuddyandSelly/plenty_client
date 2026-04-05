@@ -14,12 +14,12 @@ module PlentyClient
         DELETE_LISTING_MARKET_TEXT = '/listings/markets/texts/{marketTextId}'
 
         class << self
-          def find(market_text_id, headers = {}, &block)
-            get(build_endpoint(FIND_LISTING_MARKET_TEXT, market_text: market_text_id), headers, &block)
+          def find(market_text_id, headers = {}, &)
+            get(build_endpoint(FIND_LISTING_MARKET_TEXT, market_text: market_text_id), headers, &)
           end
 
-          def list(headers = {}, &block)
-            get(build_endpoint(LIST_LISTING_MARKET_TEXTS), headers, &block)
+          def list(headers = {}, &)
+            get(build_endpoint(LIST_LISTING_MARKET_TEXTS), headers, &)
           end
 
           def create(body = {})

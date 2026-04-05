@@ -1,13 +1,36 @@
-# This is the configuration used to check the rubocop source code.
+plugins:
+  - rubocop-rspec
+
 AllCops:
-  TargetRubyVersion: 2.4
+  TargetRubyVersion: 3.1
+  NewCops: enable
+  SuggestExtensions: false
   Exclude:
     - 'db/schema.rb'
-Lint/HandleExceptions:
+
+Lint/SuppressedException:
   Exclude:
     - 'bin/console'
     - 'bin/eun'
     - 'bin/setup'
+    - 'spec/**/*.rb'
+
+Lint/EmptyBlock:
+  Exclude:
+    - 'spec/**/*.rb'
+
+Lint/EmptyClass:
+  Enabled: false
+
+Metrics/CollectionLiteralLength:
+  Enabled: false
+
+Metrics/BlockLength:
+  Exclude:
+    - '**/*.rake'
+    - 'spec/**/*.rb'
+    - 'config/**/*.rb'
+    - '*.gemspec'
 
 Style/FrozenStringLiteralComment:
   Enabled: false
@@ -25,7 +48,7 @@ Style/GuardClause:
   Enabled: true
   MinBodyLength: 1
 
-Metrics/LineLength:
+Layout/LineLength:
   Max: 120
 Metrics/AbcSize:
   Max: 999
@@ -42,8 +65,30 @@ Metrics/ParameterLists:
 Metrics/PerceivedComplexity:
   Max: 99
 
-Metrics/BlockLength:
-  Exclude:
-    - '**/*.rake'
-    - 'spec/**/*.rb'
-    - 'config/**/*.rb'
+# RSpec cops - relax opinionated rules for existing test suite
+RSpec/NestedGroups:
+  Max: 6
+
+RSpec/ContextWording:
+  Enabled: false
+
+RSpec/MessageSpies:
+  Enabled: false
+
+RSpec/SpecFilePathFormat:
+  Enabled: false
+
+RSpec/ExampleLength:
+  Max: 15
+
+RSpec/AnyInstance:
+  Enabled: false
+
+RSpec/MultipleExpectations:
+  Max: 5
+
+RSpec/MultipleMemoizedHelpers:
+  Enabled: false
+
+RSpec/InstanceVariable:
+  Enabled: false

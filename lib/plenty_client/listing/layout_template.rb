@@ -11,8 +11,8 @@ module PlentyClient
       DELTE_LISTINGS_LAYOUT_TEMPLATE  = '/listings/layout_templates/{layoutTemplateId}'
 
       class << self
-        def find(layout_template_id, headers = {}, &block)
-          get(build_endpoint(FIND_LISTINGS_LAYOUT_TEMPLATE, layout_template: layout_template_id), headers, &block)
+        def find(layout_template_id, headers = {}, &)
+          get(build_endpoint(FIND_LISTINGS_LAYOUT_TEMPLATE, layout_template: layout_template_id), headers, &)
         end
 
         def create(body = {})

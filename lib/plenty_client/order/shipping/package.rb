@@ -17,15 +17,15 @@ module PlentyClient
         DELETE_ORDER_SHIPPING_PACKAGES  = '/packages'
 
         class << self
-          def list(order_id, headers = {}, &block)
+          def list(order_id, headers = {}, &)
             get(build_endpoint("#{BASE_ORDERS_SHIPPING_PATH}#{LIST_ORDERS_SHIPPING_PACKAGE}",
-                               order: order_id), headers, &block)
+                               order: order_id), headers, &)
           end
 
-          def find(order_id, package_id, headers = {}, &block)
+          def find(order_id, package_id, headers = {}, &)
             get(build_endpoint("#{BASE_ORDERS_SHIPPING_PATH}#{FIND_ORDERS_SHIPPING_PACKAGE}",
                                order: order_id,
-                               shipping_package: package_id), headers, &block)
+                               shipping_package: package_id), headers, &)
           end
 
           def create(order_id, body = {})

@@ -21,15 +21,15 @@ module PlentyClient
                  headers)
           end
 
-          def list(item_id, image_id, headers = {}, &block)
+          def list(item_id, image_id, headers = {}, &)
             get(build_endpoint("#{ITEM_IMAGE_NAME_PATH}#{LIST_ITEM_IMAGE_NAME}", item: item_id, image: image_id),
-                headers, &block)
+                headers, &)
           end
 
-          def find(item_id, image_id, lang, headers = {}, &block)
+          def find(item_id, image_id, lang, headers = {}, &)
             get(build_endpoint("#{ITEM_IMAGE_NAME_PATH}#{GET_ITEMS_IMAGE_NAME}",
                                item: item_id, image: image_id, lang: lang),
-                headers, &block)
+                headers, &)
           end
 
           def update(item_id, image_id, lang, body = {})

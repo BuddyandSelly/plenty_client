@@ -16,21 +16,21 @@ module PlentyClient
         DELETE_ITEM_IMAGES          = '/variations/{variationId}/variation_images/{imageId}'
 
         class << self
-          def list_images_image_links(item_id, image_id, headers = {}, &block)
+          def list_images_image_links(item_id, image_id, headers = {}, &)
             get(build_endpoint("#{ITEM_IMAGE_BASE_PATH}#{LIST_IMAGES_IMAGE_LINKS}",
                                item: item_id,
-                               image: image_id), headers, &block)
+                               image: image_id), headers, &)
           end
 
-          def list_variations_image_links(item_id, variation_id, headers = {}, &block)
+          def list_variations_image_links(item_id, variation_id, headers = {}, &)
             get(build_endpoint("#{ITEM_IMAGE_BASE_PATH}#{LIST_VARIATION_IMAGE_LINKS}",
                                item: item_id,
-                               variation: variation_id), headers, &block)
+                               variation: variation_id), headers, &)
           end
 
-          def list_items_image_links(item_id, headers = {}, &block)
+          def list_items_image_links(item_id, headers = {}, &)
             get(build_endpoint("#{ITEM_IMAGE_BASE_PATH}#{GET_ITEM_IMAGES}",
-                               item: item_id), headers, &block)
+                               item: item_id), headers, &)
           end
 
           def create(item_id, variation_id, body = {})
