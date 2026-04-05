@@ -7,6 +7,8 @@ module PlentyClient
         include PlentyClient::Endpoint
         include PlentyClient::Request
 
+        autoload :Name, 'plenty_client/v2/item/property/name'
+
         LIST_PROPERTIES   = '/v2/properties'
         GET_PROPERTY      = '/v2/properties/{propertyId}'
         CREATE_PROPERTY   = '/v2/properties'
