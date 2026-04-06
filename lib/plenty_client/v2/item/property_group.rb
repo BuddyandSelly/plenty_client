@@ -7,6 +7,8 @@ module PlentyClient
         include PlentyClient::Endpoint
         include PlentyClient::Request
 
+        autoload :Name, 'plenty_client/v2/item/property_group/name'
+
         LIST_PROPERTY_GROUPS   = '/v2/properties/groups'
         GET_PROPERTY_GROUP     = '/v2/properties/groups/{groupId}'
         CREATE_PROPERTY_GROUP  = '/v2/properties/groups'
