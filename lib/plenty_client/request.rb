@@ -84,8 +84,18 @@ module PlentyClient
         end
         conn.adapter :typhoeus
         verb = http_method.to_s.downcase
-        params = params.to_json unless %w[get delete].include?(verb)
-        response = conn.send(verb, base_url(path), params)
+        # DELETE with an Array body (used by /pim/variations/* bulk-delete endpoints)
+        # needs the JSON body set explicitly via the block form, because Faraday's
+        # `conn.delete(url, params)` treats the 2nd arg as query params, not a body.
+        # Legacy DELETE callers pass a Hash and rely on the query-param behavior, so
+        # those go through the standard send path unchanged.
+        if verb == 'delete' && params.is_a?(Array)
+          body = params.to_json
+          response = conn.delete(base_url(path)) { |req| req.body = body }
+        else
+          params = params.to_json unless %w[get delete].include?(verb)
+          response = conn.send(verb, base_url(path), params)
+        end
         throttle_check_short_period(response)
         assert_success_status_code(response)
         parse_body(response)

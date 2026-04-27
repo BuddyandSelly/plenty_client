@@ -169,6 +169,28 @@ RSpec.describe PlentyClient::Request::ClassMethods do
         end
       end
     end
+
+    describe 'DELETE body serialization' do
+      before(:each) { stub_api_tokens }
+
+      it 'JSON-encodes array bodies (used by /pim/variations/* bulk-delete)' do
+        stub_request(:delete, %r{/rest/index\.php}).to_return(
+          status: 200, body: '{}', headers: response_headers
+        )
+        request_client.request(:delete, '/index.php', [{ 'variationId' => 1942909 }])
+        expect(WebMock).to have_requested(:delete, %r{/rest/index\.php})
+                            .with(body: '[{"variationId":1942909}]')
+      end
+
+      it 'leaves Hash bodies untouched (preserves legacy query-param behavior)' do
+        stub_request(:delete, %r{/rest/index\.php}).to_return(
+          status: 200, body: '{}', headers: response_headers
+        )
+        request_client.request(:delete, '/index.php', { 'force' => 'true' })
+        expect(WebMock).not_to have_requested(:delete, %r{/rest/index\.php})
+                                .with(body: '{"force":"true"}')
+      end
+    end
   end
 
   describe 'wrong conent type' do
