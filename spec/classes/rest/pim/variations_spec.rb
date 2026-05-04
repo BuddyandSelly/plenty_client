@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-RSpec.describe PlentyClient::Pim::Variation do
+RSpec.describe PlentyClient::Rest::Pim::Variations do
   before(:each) do
     PlentyClient::Config.site_url = 'https://www.example.com'
     PlentyClient::Config.api_user = 'example'
