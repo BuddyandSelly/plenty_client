@@ -222,10 +222,6 @@ module PlentyClient
     end
   end
 
-  module Pim
-    autoload :Variation, 'plenty_client/pim/variation'
-  end
-
   module Rest
     module Pim
       autoload :Variations, 'plenty_client/rest/pim/variations'
