@@ -9,10 +9,15 @@ module PlentyClient
     LOGIN_RENEW_BUFFER = 60
     ATTEMPT_COUNT = 3
 
+    # Per-request HTTP timeouts in seconds. Without these, a hung Plenty connection
+    # blocks the caller indefinitely (the socket never errors, so retries never fire).
+    OPEN_TIMEOUT = 5
+    TIMEOUT = 30
+
     class << self
       attr_accessor :site_url, :api_user, :api_password, :access_token, :refresh_token, :log, :expiry_date, :plenty_id
       attr_accessor :request_wait_until
-      attr_writer :attempt_count
+      attr_writer :attempt_count, :open_timeout, :timeout
 
       def validate_credentials
         raise NoCredentials if site_url.nil? || api_user.nil? || api_password.nil?
@@ -24,6 +29,14 @@ module PlentyClient
 
       def attempt_count
         @attempt_count || ATTEMPT_COUNT
+      end
+
+      def open_timeout
+        @open_timeout || OPEN_TIMEOUT
+      end
+
+      def timeout
+        @timeout || TIMEOUT
       end
 
       def tokens_valid?
