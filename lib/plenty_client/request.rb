@@ -83,6 +83,8 @@ module PlentyClient
         faraday.request :retry, max: PlentyClient::Config.attempt_count
         end
         conn.adapter :typhoeus
+        conn.options.open_timeout = PlentyClient::Config.open_timeout
+        conn.options.timeout      = PlentyClient::Config.timeout
         verb = http_method.to_s.downcase
         # DELETE with an Array body (used by /pim/variations/* bulk-delete endpoints)
         # needs the JSON body set explicitly via the block form, because Faraday's

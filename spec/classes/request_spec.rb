@@ -220,6 +220,31 @@ RSpec.describe PlentyClient::Request::ClassMethods do
     end
   end
 
+  describe 'request timeouts' do
+    before { stub_api_tokens }
+
+    after do
+      PlentyClient::Config.open_timeout = nil
+      PlentyClient::Config.timeout = nil
+    end
+
+    it 'applies the configured timeouts to the Faraday connection' do
+      PlentyClient::Config.open_timeout = 7
+      PlentyClient::Config.timeout = 42
+      stub_request(:get, /example/).to_return(status: 200, body: '{}', headers: response_headers)
+
+      captured = nil
+      allow(Faraday).to receive(:new).and_wrap_original do |original, *args, &block|
+        captured = original.call(*args, &block)
+      end
+
+      request_client.request(:get, '/index.php')
+
+      expect(captured.options.open_timeout).to eq(7)
+      expect(captured.options.timeout).to eq(42)
+    end
+  end
+
   describe 'throttle check' do
     context 'short period' do
       before do

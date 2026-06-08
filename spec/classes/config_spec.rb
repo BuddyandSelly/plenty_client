@@ -77,4 +77,35 @@ RSpec.describe PlentyClient::Config do
       end
     end
   end
+
+  describe 'request timeouts' do
+    after do
+      config.open_timeout = nil
+      config.timeout = nil
+    end
+
+    describe '.open_timeout' do
+      it 'defaults to OPEN_TIMEOUT (5 seconds)' do
+        config.open_timeout = nil
+        expect(config.open_timeout).to eq(5)
+      end
+
+      it 'returns an overridden value' do
+        config.open_timeout = 12
+        expect(config.open_timeout).to eq(12)
+      end
+    end
+
+    describe '.timeout' do
+      it 'defaults to TIMEOUT (30 seconds)' do
+        config.timeout = nil
+        expect(config.timeout).to eq(30)
+      end
+
+      it 'returns an overridden value' do
+        config.timeout = 99
+        expect(config.timeout).to eq(99)
+      end
+    end
+  end
 end
