@@ -80,7 +80,19 @@ module PlentyClient
               logger.filter(/password=([^&]+)/, 'password=[FILTERED]')
             end
           end
-        faraday.request :retry, max: PlentyClient::Config.attempt_count
+          # Retry 429 (rate-limited) and 503 with capped, jittered exponential backoff so a
+          # transient throttle doesn't abort the whole run. Plenty's short window resets in
+          # ~1s, so 0.5s -> 1s -> 2s clears it within a retry or two, and the jitter de-syncs
+          # racing client instances. POST/PUT/DELETE are safe to retry on 429: a rate-limited
+          # request was rejected, not processed.
+          faraday.request :retry,
+                          max: PlentyClient::Config.attempt_count,
+                          interval: 0.5,
+                          interval_randomness: 0.5,
+                          backoff_factor: 2,
+                          max_interval: 30,
+                          retry_statuses: [429, 503],
+                          methods: %i[get post put patch delete]
         end
         conn.adapter :typhoeus
         conn.options.open_timeout = PlentyClient::Config.open_timeout
