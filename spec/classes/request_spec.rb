@@ -87,6 +87,29 @@ RSpec.describe PlentyClient::Request::ClassMethods do
           expect { request_client.request(:post, '/index.php') }.to raise_exception(PlentyClient::ServerError)
         end
       end
+
+      context 'on a 429 rate-limit response' do
+        after { PlentyClient::Config.attempt_count = nil }
+
+        it 'retries and succeeds once Plenty allows it' do
+          stub_request(:get, 'https://www.example.com/rest/index.php')
+            .to_return(status: 429, headers: response_headers)
+            .to_return(status: 200, body: '{}', headers: response_headers)
+
+          expect(request_client.request(:get, '/index.php')).to eq({})
+          expect(WebMock).to have_requested(:get, /index\.php/).times(2)
+        end
+
+        it 'raises ClientError after exhausting retries' do
+          PlentyClient::Config.attempt_count = 1 # initial request + 1 retry, keeps the test fast
+          stub_request(:get, 'https://www.example.com/rest/index.php')
+            .to_return(status: 429, headers: response_headers)
+
+          expect { request_client.request(:get, '/index.php') }
+            .to raise_error(PlentyClient::ClientError)
+          expect(WebMock).to have_requested(:get, /index\.php/).times(2)
+        end
+      end
     end
 
     describe 'wrappers for #request' do
