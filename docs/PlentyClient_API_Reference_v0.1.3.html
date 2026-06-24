@@ -1,0 +1,1940 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>PlentyClient (Ruby) — PlentyMarkets REST API Integration Reference</title>
+<style>
+  :root{
+    --ink:#1a2230; --muted:#5b6776; --line:#e1e6ec; --line2:#eef1f5;
+    --accent:#0f766e; --accent-d:#0b5750; --accent-bg:#e8f3f1;
+    --get-t:#0f7b3f; --get-b:#e6f4ec; --get-br:#bfe3cd;
+    --post-t:#1b5fb3; --post-b:#e7effb; --post-br:#c7dbf7;
+    --put-t:#92610a; --put-b:#fbf1dd; --put-br:#f0d9a8;
+    --del-t:#b42318; --del-b:#fbe9e7; --del-br:#f3c6c0;
+    --patch-t:#6d28d9; --patch-b:#f1eafd; --patch-br:#ddccf7;
+  }
+  @page{ size:A4; margin:17mm 15mm; }
+  *{ box-sizing:border-box; }
+  html{ -webkit-print-color-adjust:exact; print-color-adjust:exact; }
+  body{ font-family:-apple-system,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
+        color:var(--ink); font-size:10.3pt; line-height:1.5; margin:0; }
+  code,kbd{ font-family:"SFMono-Regular",Menlo,Consolas,"Liberation Mono",monospace; font-size:0.88em; }
+  h1,h2,h3,h4{ color:var(--ink); line-height:1.25; }
+  a{ color:var(--accent-d); text-decoration:none; }
+  p{ margin:0 0 .6em; }
+
+  /* ---- cover ---- */
+  .cover{ height:262mm; display:flex; flex-direction:column; page-break-after:always; }
+  .cover .bar{ height:10mm; background:var(--accent); margin:-2mm -2mm 0; }
+  .cover .top{ margin-top:34mm; }
+  .eyebrow{ letter-spacing:.16em; text-transform:uppercase; color:var(--accent-d);
+            font-weight:700; font-size:10pt; margin-bottom:10mm; }
+  .cover h1{ font-size:30pt; margin:0 0 6mm; letter-spacing:-.01em; line-height:1.12; }
+  .cover .sub{ font-size:13pt; color:var(--muted); max-width:150mm; }
+  .cover .spacer{ flex:1; }
+  .meta{ border-top:2px solid var(--accent); padding-top:6mm; display:grid;
+         grid-template-columns:repeat(2,1fr); gap:4mm 14mm; max-width:150mm; }
+  .meta .k{ font-size:8.5pt; letter-spacing:.08em; text-transform:uppercase; color:var(--muted); }
+  .meta .v{ font-size:11pt; font-weight:600; }
+  .confidential{ margin-top:8mm; font-size:9pt; color:var(--muted); }
+
+  /* ---- structure ---- */
+  h2{ font-size:16pt; margin:0 0 3mm; padding-bottom:2mm; border-bottom:2px solid var(--accent);
+      break-after:avoid; }
+  h3{ font-size:12.5pt; margin:7mm 0 2mm; break-after:avoid; }
+  h4{ font-size:10.3pt; margin:4mm 0 1.5mm; font-weight:600; break-after:avoid; }
+  h4 code{ font-size:10pt; color:var(--accent-d); }
+  .sn{ color:var(--accent); font-weight:700; margin-right:.4em; }
+  section{ margin-bottom:7mm; }
+  .lead{ color:var(--muted); font-size:11pt; }
+
+  /* ---- table of contents ---- */
+  .toc{ break-after:always; }
+  .toc ol{ list-style:none; padding:0; margin:0; column-gap:12mm; }
+  .toc li{ padding:1.6mm 0; border-bottom:1px dotted var(--line); break-inside:avoid; }
+  .toc .n{ color:var(--accent); font-weight:700; display:inline-block; min-width:8mm; }
+  .toc .sub{ padding-left:8mm; font-size:9.6pt; color:var(--muted); border-bottom:1px dotted var(--line2); }
+
+  /* ---- generic tables ---- */
+  table{ width:100%; border-collapse:collapse; margin:2mm 0 3mm; }
+  th,td{ text-align:left; padding:1.6mm 2.4mm; border-bottom:1px solid var(--line); vertical-align:top; }
+  thead th{ background:var(--accent-bg); color:var(--accent-d); font-size:8.4pt;
+            letter-spacing:.05em; text-transform:uppercase; border-bottom:1.5px solid var(--accent-br,#cfe4e0); }
+  tr{ break-inside:avoid; }
+  td.num,th.num{ text-align:right; font-variant-numeric:tabular-nums; }
+  .summary td.total{ font-weight:700; }
+  .summary tfoot td{ font-weight:700; border-top:2px solid var(--accent); background:var(--accent-bg); }
+  /* Keep the at-a-glance table whole on one page so its repeating tfoot total
+     never lands mid-table. */
+  #sa{ break-before:page; }
+  .summary{ break-inside:avoid; }
+
+  /* ---- endpoint tables ---- */
+  table.ep{ font-size:9.5pt; }
+  table.ep .c-m{ width:20mm; white-space:nowrap; }
+  table.ep .c-r{ width:30mm; white-space:nowrap; color:var(--muted); }
+  table.ep .c-p code{ color:var(--ink); word-break:break-all; }
+  table.ep tbody tr:nth-child(even){ background:#fafbfc; }
+  .klass{ break-inside:avoid; }
+  .ph{ color:var(--accent-d); font-weight:600; }
+  .rdesc{ color:var(--muted); margin:1mm 0 3mm; }
+  .rcount{ float:right; font-size:8.5pt; font-weight:600; color:var(--accent-d);
+           background:var(--accent-bg); padding:.6mm 2.4mm; border-radius:3px; }
+
+  /* ---- verb badges ---- */
+  .verb{ display:inline-block; font-family:"SFMono-Regular",Menlo,Consolas,monospace;
+         font-size:7.8pt; font-weight:700; letter-spacing:.03em; padding:.5mm 2mm;
+         border-radius:3px; border:1px solid; }
+  .v-get{ color:var(--get-t); background:var(--get-b); border-color:var(--get-br); }
+  .v-post{ color:var(--post-t); background:var(--post-b); border-color:var(--post-br); }
+  .v-put{ color:var(--put-t); background:var(--put-b); border-color:var(--put-br); }
+  .v-delete{ color:var(--del-t); background:var(--del-b); border-color:var(--del-br); }
+  .v-patch{ color:var(--patch-t); background:var(--patch-b); border-color:var(--patch-br); }
+
+  /* ---- callouts & misc ---- */
+  .note{ background:var(--accent-bg); border-left:3px solid var(--accent); padding:2.5mm 4mm;
+         margin:3mm 0; border-radius:0 4px 4px 0; font-size:9.8pt; }
+  .legend{ display:flex; gap:4mm; flex-wrap:wrap; margin:2mm 0 0; font-size:9pt; align-items:center; }
+  dl.cfg{ margin:0; } dl.cfg dt{ font-weight:600; margin-top:2mm; }
+  dl.cfg dt code{ color:var(--accent-d); } dl.cfg dd{ margin:.3mm 0 0; color:var(--muted); }
+  .kv code{ background:var(--accent-bg); padding:.3mm 1.4mm; border-radius:3px; }
+  .small{ font-size:9pt; color:var(--muted); }
+</style>
+</head>
+<body>
+
+<!-- ============ COVER ============ -->
+<div class="cover">
+  <div class="bar"></div>
+  <div class="top">
+    <div class="eyebrow">API Integration Reference</div>
+    <h1>PlentyClient&nbsp;for&nbsp;Ruby</h1>
+    <div class="sub">A complete reference to the PlentyMarkets REST API endpoints consumed by the
+      <code>plenty_client</code> Ruby gem — authentication, request conventions and the full endpoint catalogue.</div>
+  </div>
+  <div class="spacer"></div>
+  <div class="meta">
+    <div><div class="k">Library</div><div class="v">plenty_client (Ruby gem)</div></div>
+    <div><div class="k">Version documented</div><div class="v">0.1.3</div></div>
+    <div><div class="k">Target API</div><div class="v">PlentyMarkets REST API</div></div>
+    <div><div class="k">Endpoints catalogued</div><div class="v">503 across 297 paths</div></div>
+    <div><div class="k">Prepared by</div><div class="v">Buddy&nbsp;&amp;&nbsp;Selly</div></div>
+    <div><div class="k">Date</div><div class="v">24 June 2026</div></div>
+  </div>
+  <div class="confidential">Distributed to integration partners on request. Endpoint paths and conventions are
+    derived directly from the gem source (v0.1.3); the canonical authority for the API remains the
+    <a href="https://developers.plentymarkets.com/rest-doc">PlentyMarkets REST API documentation</a>.</div>
+</div>
+
+<!-- ============ TOC ============ -->
+<nav class="toc">
+  <h2>Contents</h2>
+  <ol>
+    <li><span class="n">1</span><a href="#s1">Introduction &amp; scope</a></li>
+    <li><span class="n">2</span><a href="#s2">Integration overview</a></li>
+    <li><span class="n">3</span><a href="#s3">Authentication &amp; token lifecycle</a></li>
+    <li><span class="n">4</span><a href="#s4">Request &amp; response conventions</a></li>
+    <li><span class="n">5</span><a href="#s5">Pagination</a></li>
+    <li><span class="n">6</span><a href="#s6">Rate limiting, retries &amp; timeouts</a></li>
+    <li><span class="n">7</span><a href="#s7">Error handling</a></li>
+    <li><span class="n">8</span><a href="#s8">API endpoint catalogue</a></li>
+    <li class="sub"><span class="n">8.1</span><a href="#res-Authentication">Authentication</a></li>
+    <li class="sub"><span class="n">8.2</span><a href="#res-Authorization">Authorization</a></li>
+    <li class="sub"><span class="n">8.3</span><a href="#res-Account">Account</a></li>
+    <li class="sub"><span class="n">8.4</span><a href="#res-Accounting">Accounting</a></li>
+    <li class="sub"><span class="n">8.5</span><a href="#res-Basket">Basket</a></li>
+    <li class="sub"><span class="n">8.6</span><a href="#res-Category">Category</a></li>
+    <li class="sub"><span class="n">8.7</span><a href="#res-Comment">Comment</a></li>
+    <li class="sub"><span class="n">8.8</span><a href="#res-Document">Document</a></li>
+    <li class="sub"><span class="n">8.9</span><a href="#res-Item">Item</a></li>
+    <li class="sub"><span class="n">8.10</span><a href="#res-ItemSet">ItemSet</a></li>
+    <li class="sub"><span class="n">8.11</span><a href="#res-Listing">Listing</a></li>
+    <li class="sub"><span class="n">8.12</span><a href="#res-Market">Market</a></li>
+    <li class="sub"><span class="n">8.13</span><a href="#res-Order">Order</a></li>
+    <li class="sub"><span class="n">8.14</span><a href="#res-OrderSummary">OrderSummary</a></li>
+    <li class="sub"><span class="n">8.15</span><a href="#res-Payment">Payment</a></li>
+    <li class="sub"><span class="n">8.16</span><a href="#res-SalesPrice">SalesPrice</a></li>
+    <li class="sub"><span class="n">8.17</span><a href="#res-Stock">Stock</a></li>
+    <li class="sub"><span class="n">8.18</span><a href="#res-Warehouse">Warehouse</a></li>
+    <li class="sub"><span class="n">8.19</span><a href="#res-Webstore">Webstore</a></li>
+    <li class="sub"><span class="n">8.20</span><a href="#res-V2">Properties &amp; Property Groups (API v2)</a></li>
+    <li class="sub"><span class="n">8.21</span><a href="#res-Rest">PIM Variations (bulk, /pim)</a></li>
+    <li><span class="n">9</span><a href="#s9">Client configuration reference</a></li>
+    <li><span class="n">A</span><a href="#sa">Appendix A — API surface at a glance</a></li>
+  </ol>
+</nav>
+
+<!-- ============ 1 ============ -->
+<section id="s1">
+  <h2><span class="sn">1</span>Introduction &amp; scope</h2>
+  <p class="lead">This document describes the PlentyMarkets REST API endpoints that the <code>plenty_client</code>
+     Ruby gem calls, together with the authentication scheme, headers, pagination, throttling and error
+     conventions it relies on.</p>
+  <p><code>plenty_client</code> is a thin Ruby wrapper around the PlentyMarkets REST API. It performs no business
+     validation of its own — it is a transport-layer gateway that maps Ruby method calls onto HTTP requests
+     against a PlentyMarkets instance. Every endpoint listed in section&nbsp;8 corresponds to a public method
+     on a <code>PlentyClient::*</code> class or module.</p>
+  <p>The catalogue covers <strong>503 endpoints</strong> over <strong>297 distinct paths</strong>
+     and <strong>125 client classes</strong>, spanning 21 top-level resource areas.
+     It is intended for integration partners — including PlentyMarkets — who need to understand precisely which
+     parts of the REST API this integration touches.</p>
+  <div class="note"><strong>Authoritative source.</strong> Paths, HTTP verbs and parameters in this document were
+     extracted directly from the gem source code for version 0.1.3. Where the meaning of a field or response
+     body is required, the <a href="https://developers.plentymarkets.com/rest-doc">official PlentyMarkets REST API
+     documentation</a> remains authoritative.</div>
+</section>
+
+<!-- ============ 2 ============ -->
+<section id="s2">
+  <h2><span class="sn">2</span>Integration overview</h2>
+  <table>
+    <tbody>
+      <tr><th style="width:42mm">Transport</th><td>HTTPS, JSON request and response bodies.</td></tr>
+      <tr><th>HTTP client</th><td>Faraday with the Typhoeus adapter.</td></tr>
+      <tr><th>Base URL</th><td>Derived from the configured <code>site_url</code>; the scheme and host are kept and
+        the request path is always mounted under <code>/rest</code> — i.e. <code>https://&lt;host&gt;/rest&lt;path&gt;</code>.</td></tr>
+      <tr><th>API version</th><td>Requests send <code>Accept: application/x.plentymarkets.v1+json</code> (REST API v1).
+        A subset of newer endpoints is served under the <code>/v2</code> and <code>/pim</code> path prefixes (see §8.20–8.21).</td></tr>
+      <tr><th>Authentication</th><td>Bearer access token obtained via <code>POST /rest/login</code> (see §3).</td></tr>
+      <tr><th>Content type</th><td>All requests send <code>Content-Type: application/json</code>; bodies for
+        <code>POST</code>/<code>PUT</code>/<code>PATCH</code> are JSON-encoded.</td></tr>
+    </tbody>
+  </table>
+  <div class="legend"><strong>Verb legend:</strong>
+    <span class="verb v-get">GET</span> read &nbsp; <span class="verb v-post">POST</span> create &nbsp; <span class="verb v-put">PUT</span> update/replace &nbsp;
+    <span class="verb v-patch">PATCH</span> partial update &nbsp; <span class="verb v-delete">DELETE</span> remove</div>
+</section>
+
+<!-- ============ 3 ============ -->
+<section id="s3">
+  <h2><span class="sn">3</span>Authentication &amp; token lifecycle</h2>
+  <p>The client authenticates with username/password credentials and then uses a Bearer access token for all
+     subsequent calls. Authentication is performed lazily: before any request, if no valid token is held, the
+     client issues a login.</p>
+  <h4>Authentication endpoints</h4>
+  <table class="ep"><thead><tr><th class="c-m">Method</th><th class="c-p">Endpoint path</th><th class="c-r">Client call</th></tr></thead><tbody>
+    <tr><td><span class="verb v-post">POST</span></td><td class="c-p"><code>/rest/login</code></td><td class="c-r"><code>Authentication.login</code></td></tr>
+    <tr><td><span class="verb v-post">POST</span></td><td class="c-p"><code>/rest/login/refresh</code></td><td class="c-r"><code>Authentication.login_refresh</code></td></tr>
+    <tr><td><span class="verb v-get">GET</span></td><td class="c-p"><code>/rest/oauth/access_token</code></td><td class="c-r"><code>Authentication.access_token</code></td></tr>
+    <tr><td><span class="verb v-post">POST</span></td><td class="c-p"><code>/rest/client-login</code></td><td class="c-r"><code>Authentication.client_access_token</code></td></tr>
+    <tr><td><span class="verb v-post">POST</span></td><td class="c-p"><code>/rest/logout</code></td><td class="c-r"><code>Authentication.logout</code></td></tr>
+  </tbody></table>
+  <h4>Token flow</h4>
+  <ol>
+    <li>The client sends <code>POST /rest/login</code> with <code>{ "username", "password" }</code>.</li>
+    <li>The response supplies <code>accessToken</code>, <code>refreshToken</code> and <code>expiresIn</code> (seconds).
+        The token expiry is stored as <em>now&nbsp;+&nbsp;expiresIn</em>.</li>
+    <li>Every request thereafter sends <code>Authorization: Bearer &lt;accessToken&gt;</code>.</li>
+    <li>A token is treated as valid only while it is more than <strong>60&nbsp;seconds</strong> from expiry; inside that
+        window the client re-authenticates before issuing the request.</li>
+  </ol>
+  <div class="note"><strong>Credentials required.</strong> <code>site_url</code>, <code>api_user</code> and
+     <code>api_password</code> must be configured; a request attempted without them raises before any network call.</div>
+</section>
+
+<!-- ============ 4 ============ -->
+<section id="s4">
+  <h2><span class="sn">4</span>Request &amp; response conventions</h2>
+  <h4>Request headers</h4>
+  <table><tbody>
+    <tr><th style="width:48mm"><code>Content-Type</code></th><td><code>application/json</code></td></tr>
+    <tr><th><code>Accept</code></th><td><code>application/x.plentymarkets.v1+json</code></td></tr>
+    <tr><th><code>Authorization</code></th><td><code>Bearer &lt;accessToken&gt;</code> (once authenticated)</td></tr>
+  </tbody></table>
+  <h4>Bodies &amp; query parameters</h4>
+  <p><code>GET</code> and <code>DELETE</code> requests pass parameters as the query string; <code>POST</code>,
+     <code>PUT</code> and <code>PATCH</code> send a JSON-encoded body. One group of bulk endpoints
+     (<code>/rest/pim/variations/*</code>, §8.21) accepts a JSON <em>array</em> body on <code>DELETE</code>.</p>
+  <h4>Responses</h4>
+  <p>Responses are parsed as JSON. <code>application/pdf</code> responses (document downloads) are returned as a raw
+     binary body. An empty response body is returned as <code>null</code>.</p>
+</section>
+
+<!-- ============ 5 ============ -->
+<section id="s5">
+  <h2><span class="sn">5</span>Pagination</h2>
+  <p>List endpoints are paginated. The client sends a <code>page</code> query parameter (1-based) and reads the
+     paged envelope returned by the API, which includes <code>entries</code> and the boolean <code>isLastPage</code>.
+     Common optional parameters include <code>itemsPerPage</code> and <code>with</code>.</p>
+  <p>The Ruby API exposes two modes: a single-page call returns the raw response, while passing a block iterates
+     every page automatically — repeatedly requesting incrementing <code>page</code> values and yielding each page's
+     <code>entries</code> until <code>isLastPage</code> is <code>true</code>.</p>
+</section>
+
+<!-- ============ 6 ============ -->
+<section id="s6">
+  <h2><span class="sn">6</span>Rate limiting, retries &amp; timeouts</h2>
+  <p>PlentyMarkets enforces request throttling and returns the remaining short-period allowance in response headers.
+     The client reads these and proactively paces itself:</p>
+  <table><tbody>
+    <tr><th style="width:62mm"><code>X-Plenty-Global-Short-Period-Calls-Left</code></th><td>Remaining calls in the current short window.</td></tr>
+    <tr><th><code>X-Plenty-Global-Short-Period-Decay</code></th><td>Seconds until the window resets.</td></tr>
+  </tbody></table>
+  <p>When the remaining short-period allowance drops to one or fewer, the client defers the next request until the
+     decay window has elapsed. In addition, transient throttling and availability responses are retried automatically:</p>
+  <table><tbody>
+    <tr><th style="width:48mm">Retried statuses</th><td><code>429</code> (rate limited) and <code>503</code> (unavailable).</td></tr>
+    <tr><th>Retried methods</th><td><code>GET, POST, PUT, PATCH, DELETE</code>.</td></tr>
+    <tr><th>Backoff</th><td>Exponential with jitter — base 0.5&nbsp;s, factor&nbsp;×2, capped at 30&nbsp;s.</td></tr>
+    <tr><th>Max attempts</th><td>3 (configurable).</td></tr>
+    <tr><th>Timeouts</th><td>Connection open 5&nbsp;s, total 30&nbsp;s (both configurable).</td></tr>
+  </tbody></table>
+</section>
+
+<!-- ============ 7 ============ -->
+<section id="s7">
+  <h2><span class="sn">7</span>Error handling</h2>
+  <p>HTTP status codes are mapped onto a small exception hierarchy, and JSON error payloads are inspected for
+     validation and credential failures.</p>
+  <table><tbody>
+    <tr><th style="width:48mm">3xx</th><td>Raises a redirection error.</td></tr>
+    <tr><th>4xx</th><td>Raises a client error. A body containing <em>“no query results”</em> is surfaced as a not-found error.</td></tr>
+    <tr><th>5xx</th><td>Raises a server error.</td></tr>
+    <tr><th>Credential failure</th><td>An <code>invalid_credentials</code> error payload raises a specific invalid-credentials error.</td></tr>
+    <tr><th>Validation failure</th><td><code>validation_errors</code> in the payload are collected and raised as a response error.</td></tr>
+  </tbody></table>
+</section>
+
+<!-- ============ 8 ============ -->
+<section id="s8">
+  <h2><span class="sn">8</span>API endpoint catalogue</h2>
+  <p class="lead">Every endpoint the gem calls, grouped by resource area. Paths are shown with the <code>/rest</code>
+     mount point included; <span class="ph">{placeholders}</span> mark required path parameters. The “Client call”
+     column gives the Ruby method on the listed class.</p>
+  <div class="legend"><strong>Legend:</strong>
+    <span class="verb v-get">GET</span> <span class="verb v-post">POST</span> <span class="verb v-put">PUT</span> <span class="verb v-patch">PATCH</span> <span class="verb v-delete">DELETE</span>
+    &nbsp;·&nbsp; <span class="ph">{param}</span> = required path parameter</div>
+  <section class="resource">
+<h3 id="res-Authentication"><span class="sn">8.1</span> Authentication <span class="rcount">5 endpoints</span></h3>
+<p class="rdesc">Session login, OAuth access-token retrieval, token refresh and logout. The client calls POST /login automatically before any request when no valid token is held.</p>
+<div class="klass">
+<h4><code>PlentyClient::Authentication</code></h4>
+<table class="ep">
+<thead><tr><th class="c-m">Method</th><th class="c-p">Endpoint path</th><th class="c-r">Client call</th></tr></thead>
+<tbody>
+<tr><td class="c-m"><span class="verb v-post">POST</span></td><td class="c-p"><code>/rest/client-login</code></td><td class="c-r"><code>.client_access_token</code></td></tr>
+<tr><td class="c-m"><span class="verb v-post">POST</span></td><td class="c-p"><code>/rest/login</code></td><td class="c-r"><code>.login</code></td></tr>
+<tr><td class="c-m"><span class="verb v-post">POST</span></td><td class="c-p"><code>/rest/login/refresh</code></td><td class="c-r"><code>.login_refresh</code></td></tr>
+<tr><td class="c-m"><span class="verb v-post">POST</span></td><td class="c-p"><code>/rest/logout</code></td><td class="c-r"><code>.logout</code></td></tr>
+<tr><td class="c-m"><span class="verb v-get">GET</span></td><td class="c-p"><code>/rest/oauth/access_token</code></td><td class="c-r"><code>.access_token</code></td></tr>
+</tbody>
+</table>
+</div>
+</section>
+<section class="resource">
+<h3 id="res-Authorization"><span class="sn">8.2</span> Authorization <span class="rcount">2 endpoints</span></h3>
+<p class="rdesc">Look up the currently authorised user and its UI configuration.</p>
+<div class="klass">
+<h4><code>PlentyClient::Authorization</code></h4>
+<table class="ep">
+<thead><tr><th class="c-m">Method</th><th class="c-p">Endpoint path</th><th class="c-r">Client call</th></tr></thead>
+<tbody>
+<tr><td class="c-m"><span class="verb v-get">GET</span></td><td class="c-p"><code>/rest/authorized_user</code></td><td class="c-r"><code>.list</code></td></tr>
+<tr><td class="c-m"><span class="verb v-get">GET</span></td><td class="c-p"><code>/rest/user/authorized_user_with_ui_config</code></td><td class="c-r"><code>.list_with_ui_config</code></td></tr>
+</tbody>
+</table>
+</div>
+</section>
+<section class="resource">
+<h3 id="res-Account"><span class="sn">8.3</span> Account <span class="rcount">33 endpoints</span></h3>
+<p class="rdesc">Contacts and their related records — addresses, bank details and contact types — plus account-level addresses.</p>
+<div class="klass">
+<h4><code>PlentyClient::Account</code></h4>
+<table class="ep">
+<thead><tr><th class="c-m">Method</th><th class="c-p">Endpoint path</th><th class="c-r">Client call</th></tr></thead>
+<tbody>
+<tr><td class="c-m"><span class="verb v-post">POST</span></td><td class="c-p"><code>/rest/account/login</code></td><td class="c-r"><code>.login</code></td></tr>
+<tr><td class="c-m"><span class="verb v-post">POST</span></td><td class="c-p"><code>/rest/account/login/refresh</code></td><td class="c-r"><code>.refresh_login</code></td></tr>
+<tr><td class="c-m"><span class="verb v-post">POST</span></td><td class="c-p"><code>/rest/account/logout</code></td><td class="c-r"><code>.logout</code></td></tr>
+<tr><td class="c-m"><span class="verb v-get">GET</span></td><td class="c-p"><code>/rest/accounts</code></td><td class="c-r"><code>.list</code></td></tr>
+<tr><td class="c-m"><span class="verb v-post">POST</span></td><td class="c-p"><code>/rest/accounts</code></td><td class="c-r"><code>.create</code></td></tr>
+<tr><td class="c-m"><span class="verb v-delete">DELETE</span></td><td class="c-p"><code>/rest/accounts/<span class="ph">{accountId}</span></code></td><td class="c-r"><code>.destroy</code></td></tr>
+<tr><td class="c-m"><span class="verb v-get">GET</span></td><td class="c-p"><code>/rest/accounts/<span class="ph">{accountId}</span></code></td><td class="c-r"><code>.find</code></td></tr>
+<tr><td class="c-m"><span class="verb v-put">PUT</span></td><td class="c-p"><code>/rest/accounts/<span class="ph">{accountId}</span></code></td><td class="c-r"><code>.update</code></td></tr>
+<tr><td class="c-m"><span class="verb v-get">GET</span></td><td class="c-p"><code>/rest/accounts/<span class="ph">{accountId}</span>/contacts</code></td><td class="c-r"><code>.list_contacts</code></td></tr>
+</tbody>
+</table>
+</div>
+<div class="klass">
+<h4><code>PlentyClient::Account::Address</code></h4>
+<table class="ep">
+<thead><tr><th class="c-m">Method</th><th class="c-p">Endpoint path</th><th class="c-r">Client call</th></tr></thead>
+<tbody>
+<tr><td class="c-m"><span class="verb v-post">POST</span></td><td class="c-p"><code>/rest/accounts/addresses</code></td><td class="c-r"><code>.create</code></td></tr>
+<tr><td class="c-m"><span class="verb v-delete">DELETE</span></td><td class="c-p"><code>/rest/accounts/addresses/<span class="ph">{addressId}</span></code></td><td class="c-r"><code>.destroy</code></td></tr>
+<tr><td class="c-m"><span class="verb v-get">GET</span></td><td class="c-p"><code>/rest/accounts/addresses/<span class="ph">{addressId}</span></code></td><td class="c-r"><code>.find</code></td></tr>
+<tr><td class="c-m"><span class="verb v-put">PUT</span></td><td class="c-p"><code>/rest/accounts/addresses/<span class="ph">{addressId}</span></code></td><td class="c-r"><code>.update</code></td></tr>
+</tbody>
+</table>
+</div>
+<div class="klass">
+<h4><code>PlentyClient::Account::Contact</code></h4>
+<table class="ep">
+<thead><tr><th class="c-m">Method</th><th class="c-p">Endpoint path</th><th class="c-r">Client call</th></tr></thead>
+<tbody>
+<tr><td class="c-m"><span class="verb v-get">GET</span></td><td class="c-p"><code>/rest/accounts/contacts</code></td><td class="c-r"><code>.list</code></td></tr>
+<tr><td class="c-m"><span class="verb v-post">POST</span></td><td class="c-p"><code>/rest/accounts/contacts</code></td><td class="c-r"><code>.create</code></td></tr>
+<tr><td class="c-m"><span class="verb v-delete">DELETE</span></td><td class="c-p"><code>/rest/accounts/contacts/<span class="ph">{contactId}</span></code></td><td class="c-r"><code>.destroy</code></td></tr>
+<tr><td class="c-m"><span class="verb v-get">GET</span></td><td class="c-p"><code>/rest/accounts/contacts/<span class="ph">{contactId}</span></code></td><td class="c-r"><code>.find</code></td></tr>
+<tr><td class="c-m"><span class="verb v-put">PUT</span></td><td class="c-p"><code>/rest/accounts/contacts/<span class="ph">{contactId}</span></code></td><td class="c-r"><code>.update</code></td></tr>
+</tbody>
+</table>
+</div>
+<div class="klass">
+<h4><code>PlentyClient::Account::Contact::Address</code></h4>
+<table class="ep">
+<thead><tr><th class="c-m">Method</th><th class="c-p">Endpoint path</th><th class="c-r">Client call</th></tr></thead>
+<tbody>
+<tr><td class="c-m"><span class="verb v-post">POST</span></td><td class="c-p"><code>/rest/accounts/contacts/<span class="ph">{contactId}</span>/addresses</code></td><td class="c-r"><code>.create</code></td></tr>
+<tr><td class="c-m"><span class="verb v-delete">DELETE</span></td><td class="c-p"><code>/rest/accounts/contacts/<span class="ph">{contactId}</span>/addresses/<span class="ph">{addressId}</span></code></td><td class="c-r"><code>.destroy</code></td></tr>
+<tr><td class="c-m"><span class="verb v-put">PUT</span></td><td class="c-p"><code>/rest/accounts/contacts/<span class="ph">{contactId}</span>/addresses/<span class="ph">{addressId}</span></code></td><td class="c-r"><code>.update</code></td></tr>
+<tr><td class="c-m"><span class="verb v-put">PUT</span></td><td class="c-p"><code>/rest/accounts/contacts/<span class="ph">{contactId}</span>/addresses/<span class="ph">{addressId}</span>/types/<span class="ph">{addressTypeId}</span>/primary</code></td><td class="c-r"><code>.update_primary</code></td></tr>
+<tr><td class="c-m"><span class="verb v-get">GET</span></td><td class="c-p"><code>/rest/accounts/contacts/<span class="ph">{contactId}</span>/addresses/<span class="ph">{addressTypeId}</span></code></td><td class="c-r"><code>.list</code></td></tr>
+</tbody>
+</table>
+</div>
+<div class="klass">
+<h4><code>PlentyClient::Account::Contact::Bank</code></h4>
+<table class="ep">
+<thead><tr><th class="c-m">Method</th><th class="c-p">Endpoint path</th><th class="c-r">Client call</th></tr></thead>
+<tbody>
+<tr><td class="c-m"><span class="verb v-post">POST</span></td><td class="c-p"><code>/rest/accounts/contacts/banks</code></td><td class="c-r"><code>.create</code></td></tr>
+<tr><td class="c-m"><span class="verb v-delete">DELETE</span></td><td class="c-p"><code>/rest/accounts/contacts/banks/<span class="ph">{contactBankId}</span></code></td><td class="c-r"><code>.destroy</code></td></tr>
+<tr><td class="c-m"><span class="verb v-get">GET</span></td><td class="c-p"><code>/rest/accounts/contacts/banks/<span class="ph">{contactBankId}</span></code></td><td class="c-r"><code>.find</code></td></tr>
+<tr><td class="c-m"><span class="verb v-put">PUT</span></td><td class="c-p"><code>/rest/accounts/contacts/banks/<span class="ph">{contactBankId}</span></code></td><td class="c-r"><code>.update</code></td></tr>
+<tr><td class="c-m"><span class="verb v-get">GET</span></td><td class="c-p"><code>/rest/accounts/contacts/<span class="ph">{contactId}</span>/banks</code></td><td class="c-r"><code>.list</code></td></tr>
+</tbody>
+</table>
+</div>
+<div class="klass">
+<h4><code>PlentyClient::Account::Contact::Type</code></h4>
+<table class="ep">
+<thead><tr><th class="c-m">Method</th><th class="c-p">Endpoint path</th><th class="c-r">Client call</th></tr></thead>
+<tbody>
+<tr><td class="c-m"><span class="verb v-get">GET</span></td><td class="c-p"><code>/rest/accounts/contacts/types</code></td><td class="c-r"><code>.list</code></td></tr>
+<tr><td class="c-m"><span class="verb v-post">POST</span></td><td class="c-p"><code>/rest/accounts/contacts/types</code></td><td class="c-r"><code>.create</code></td></tr>
+<tr><td class="c-m"><span class="verb v-delete">DELETE</span></td><td class="c-p"><code>/rest/accounts/contacts/types/<span class="ph">{typeId}</span></code></td><td class="c-r"><code>.destroy</code></td></tr>
+<tr><td class="c-m"><span class="verb v-get">GET</span></td><td class="c-p"><code>/rest/accounts/contacts/types/<span class="ph">{typeId}</span></code></td><td class="c-r"><code>.find</code></td></tr>
+<tr><td class="c-m"><span class="verb v-put">PUT</span></td><td class="c-p"><code>/rest/accounts/contacts/types/<span class="ph">{typeId}</span></code></td><td class="c-r"><code>.update</code></td></tr>
+</tbody>
+</table>
+</div>
+</section>
+<section class="resource">
+<h3 id="res-Accounting"><span class="sn">8.4</span> Accounting <span class="rcount">4 endpoints</span></h3>
+<p class="rdesc">VAT configuration, including standard VAT and VAT settings per location and country.</p>
+<div class="klass">
+<h4><code>PlentyClient::Accounting</code></h4>
+<table class="ep">
+<thead><tr><th class="c-m">Method</th><th class="c-p">Endpoint path</th><th class="c-r">Client call</th></tr></thead>
+<tbody>
+<tr><td class="c-m"><span class="verb v-get">GET</span></td><td class="c-p"><code>/rest/vat</code></td><td class="c-r"><code>.list</code></td></tr>
+<tr><td class="c-m"><span class="verb v-get">GET</span></td><td class="c-p"><code>/rest/vat/locations/<span class="ph">{locationId}</span></code></td><td class="c-r"><code>.list_for_location</code></td></tr>
+<tr><td class="c-m"><span class="verb v-get">GET</span></td><td class="c-p"><code>/rest/vat/locations/<span class="ph">{locationId}</span>/countries/<span class="ph">{countryId}</span></code></td><td class="c-r"><code>.list_for_country</code></td></tr>
+<tr><td class="c-m"><span class="verb v-get">GET</span></td><td class="c-p"><code>/rest/vat/standard</code></td><td class="c-r"><code>.standard</code></td></tr>
+</tbody>
+</table>
+</div>
+</section>
+<section class="resource">
+<h3 id="res-Basket"><span class="sn">8.5</span> Basket <span class="rcount">3 endpoints</span></h3>
+<p class="rdesc">Shopping baskets and the items contained within them.</p>
+<div class="klass">
+<h4><code>PlentyClient::Basket</code></h4>
+<table class="ep">
+<thead><tr><th class="c-m">Method</th><th class="c-p">Endpoint path</th><th class="c-r">Client call</th></tr></thead>
+<tbody>
+<tr><td class="c-m"><span class="verb v-get">GET</span></td><td class="c-p"><code>/rest/basket</code></td><td class="c-r"><code>.find</code></td></tr>
+</tbody>
+</table>
+</div>
+<div class="klass">
+<h4><code>PlentyClient::Basket::Item</code></h4>
+<table class="ep">
+<thead><tr><th class="c-m">Method</th><th class="c-p">Endpoint path</th><th class="c-r">Client call</th></tr></thead>
+<tbody>
+<tr><td class="c-m"><span class="verb v-get">GET</span></td><td class="c-p"><code>/rest/basket/items</code></td><td class="c-r"><code>.list</code></td></tr>
+<tr><td class="c-m"><span class="verb v-post">POST</span></td><td class="c-p"><code>/rest/basket/items</code></td><td class="c-r"><code>.create</code></td></tr>
+</tbody>
+</table>
+</div>
+</section>
+<section class="resource">
+<h3 id="res-Category"><span class="sn">8.6</span> Category <span class="rcount">13 endpoints</span></h3>
+<p class="rdesc">Categories, their branch data and their templates.</p>
+<div class="klass">
+<h4><code>PlentyClient::Category</code></h4>
+<table class="ep">
+<thead><tr><th class="c-m">Method</th><th class="c-p">Endpoint path</th><th class="c-r">Client call</th></tr></thead>
+<tbody>
+<tr><td class="c-m"><span class="verb v-get">GET</span></td><td class="c-p"><code>/rest/categories</code></td><td class="c-r"><code>.list</code></td></tr>
+<tr><td class="c-m"><span class="verb v-post">POST</span></td><td class="c-p"><code>/rest/categories</code></td><td class="c-r"><code>.create</code></td></tr>
+<tr><td class="c-m"><span class="verb v-put">PUT</span></td><td class="c-p"><code>/rest/categories</code></td><td class="c-r"><code>.update_all</code></td></tr>
+<tr><td class="c-m"><span class="verb v-delete">DELETE</span></td><td class="c-p"><code>/rest/categories/<span class="ph">{catId}</span></code></td><td class="c-r"><code>.destroy</code></td></tr>
+<tr><td class="c-m"><span class="verb v-get">GET</span></td><td class="c-p"><code>/rest/categories/<span class="ph">{catId}</span></code></td><td class="c-r"><code>.find</code></td></tr>
+<tr><td class="c-m"><span class="verb v-put">PUT</span></td><td class="c-p"><code>/rest/categories/<span class="ph">{catId}</span></code></td><td class="c-r"><code>.update</code></td></tr>
+<tr><td class="c-m"><span class="verb v-delete">DELETE</span></td><td class="c-p"><code>/rest/categories/<span class="ph">{catId}</span>/clients</code></td><td class="c-r"><code>.destroy_clients</code></td></tr>
+<tr><td class="c-m"><span class="verb v-delete">DELETE</span></td><td class="c-p"><code>/rest/categories/<span class="ph">{catId}</span>/details</code></td><td class="c-r"><code>.destroy_details</code></td></tr>
+</tbody>
+</table>
+</div>
+<div class="klass">
+<h4><code>PlentyClient::Category::Branch</code></h4>
+<table class="ep">
+<thead><tr><th class="c-m">Method</th><th class="c-p">Endpoint path</th><th class="c-r">Client call</th></tr></thead>
+<tbody>
+<tr><td class="c-m"><span class="verb v-get">GET</span></td><td class="c-p"><code>/rest/category_branches</code></td><td class="c-r"><code>.list</code></td></tr>
+<tr><td class="c-m"><span class="verb v-get">GET</span></td><td class="c-p"><code>/rest/category_branches/<span class="ph">{catId}</span></code></td><td class="c-r"><code>.find</code></td></tr>
+</tbody>
+</table>
+</div>
+<div class="klass">
+<h4><code>PlentyClient::Category::Template</code></h4>
+<table class="ep">
+<thead><tr><th class="c-m">Method</th><th class="c-p">Endpoint path</th><th class="c-r">Client call</th></tr></thead>
+<tbody>
+<tr><td class="c-m"><span class="verb v-delete">DELETE</span></td><td class="c-p"><code>/rest/categories/<span class="ph">{catId}</span>/templates</code></td><td class="c-r"><code>.destroy</code></td></tr>
+<tr><td class="c-m"><span class="verb v-get">GET</span></td><td class="c-p"><code>/rest/categories/<span class="ph">{catId}</span>/templates</code></td><td class="c-r"><code>.list</code></td></tr>
+<tr><td class="c-m"><span class="verb v-put">PUT</span></td><td class="c-p"><code>/rest/categories/<span class="ph">{catId}</span>/templates</code></td><td class="c-r"><code>.update</code></td></tr>
+</tbody>
+</table>
+</div>
+</section>
+<section class="resource">
+<h3 id="res-Comment"><span class="sn">8.7</span> Comment <span class="rcount">4 endpoints</span></h3>
+<p class="rdesc">Comments attached to other entities, addressed by reference type and value.</p>
+<div class="klass">
+<h4><code>PlentyClient::Comment</code></h4>
+<table class="ep">
+<thead><tr><th class="c-m">Method</th><th class="c-p">Endpoint path</th><th class="c-r">Client call</th></tr></thead>
+<tbody>
+<tr><td class="c-m"><span class="verb v-post">POST</span></td><td class="c-p"><code>/rest/comments</code></td><td class="c-r"><code>.create</code></td></tr>
+<tr><td class="c-m"><span class="verb v-delete">DELETE</span></td><td class="c-p"><code>/rest/comments/<span class="ph">{commentId}</span></code></td><td class="c-r"><code>.destroy</code></td></tr>
+<tr><td class="c-m"><span class="verb v-get">GET</span></td><td class="c-p"><code>/rest/comments/<span class="ph">{commentId}</span></code></td><td class="c-r"><code>.find</code></td></tr>
+<tr><td class="c-m"><span class="verb v-get">GET</span></td><td class="c-p"><code>/rest/comments/<span class="ph">{referenceType}</span>/<span class="ph">{referenceValue}</span></code></td><td class="c-r"><code>.list</code></td></tr>
+</tbody>
+</table>
+</div>
+</section>
+<section class="resource">
+<h3 id="res-Document"><span class="sn">8.8</span> Document <span class="rcount">10 endpoints</span></h3>
+<p class="rdesc">Generation, upload and download of documents associated with orders and categories.</p>
+<div class="klass">
+<h4><code>PlentyClient::Document</code></h4>
+<table class="ep">
+<thead><tr><th class="c-m">Method</th><th class="c-p">Endpoint path</th><th class="c-r">Client call</th></tr></thead>
+<tbody>
+<tr><td class="c-m"><span class="verb v-get">GET</span></td><td class="c-p"><code>/rest/documents/<span class="ph">{documentId}</span></code></td><td class="c-r"><code>.download</code></td></tr>
+</tbody>
+</table>
+</div>
+<div class="klass">
+<h4><code>PlentyClient::Document::Category</code></h4>
+<table class="ep">
+<thead><tr><th class="c-m">Method</th><th class="c-p">Endpoint path</th><th class="c-r">Client call</th></tr></thead>
+<tbody>
+<tr><td class="c-m"><span class="verb v-post">POST</span></td><td class="c-p"><code>/rest/categories/<span class="ph">{categoryId}</span>/documents</code></td><td class="c-r"><code>.upload</code></td></tr>
+<tr><td class="c-m"><span class="verb v-get">GET</span></td><td class="c-p"><code>/rest/categories/<span class="ph">{categoryId}</span>/documents/</code></td><td class="c-r"><code>.list</code></td></tr>
+<tr><td class="c-m"><span class="verb v-get">GET</span></td><td class="c-p"><code>/rest/categories/<span class="ph">{categoryId}</span>/documents/downloads</code></td><td class="c-r"><code>.download</code></td></tr>
+<tr><td class="c-m"><span class="verb v-delete">DELETE</span></td><td class="c-p"><code>/rest/categories/<span class="ph">{categoryId}</span>/documents/<span class="ph">{documentId}</span></code></td><td class="c-r"><code>.destroy</code></td></tr>
+</tbody>
+</table>
+</div>
+<div class="klass">
+<h4><code>PlentyClient::Document::Order</code></h4>
+<table class="ep">
+<thead><tr><th class="c-m">Method</th><th class="c-p">Endpoint path</th><th class="c-r">Client call</th></tr></thead>
+<tbody>
+<tr><td class="c-m"><span class="verb v-get">GET</span></td><td class="c-p"><code>/rest/orders/documents/downloads/<span class="ph">{type}</span></code></td><td class="c-r"><code>.download_by_type</code></td></tr>
+<tr><td class="c-m"><span class="verb v-get">GET</span></td><td class="c-p"><code>/rest/orders/documents/<span class="ph">{type}</span></code></td><td class="c-r"><code>.list_by_type</code></td></tr>
+<tr><td class="c-m"><span class="verb v-get">GET</span></td><td class="c-p"><code>/rest/orders/<span class="ph">{orderId}</span>/documents/downloads/<span class="ph">{type}</span></code></td><td class="c-r"><code>.download</code></td></tr>
+<tr><td class="c-m"><span class="verb v-get">GET</span></td><td class="c-p"><code>/rest/orders/<span class="ph">{orderId}</span>/documents/<span class="ph">{type}</span></code></td><td class="c-r"><code>.list</code></td></tr>
+<tr><td class="c-m"><span class="verb v-post">POST</span></td><td class="c-p"><code>/rest/orders/<span class="ph">{orderId}</span>/documents/<span class="ph">{type}</span></code></td><td class="c-r"><code>.upload</code></td></tr>
+</tbody>
+</table>
+</div>
+</section>
+<section class="resource">
+<h3 id="res-Item"><span class="sn">8.9</span> Item <span class="rcount">192 endpoints</span></h3>
+<p class="rdesc">Items (products) and their complete sub-resource tree: variations, attributes, barcodes, images, manufacturers, properties, sales prices, units, stock, SKUs, suppliers, cross-selling and more. This is the largest area of the API surface.</p>
+<div class="klass">
+<h4><code>PlentyClient::Item</code></h4>
+<table class="ep">
+<thead><tr><th class="c-m">Method</th><th class="c-p">Endpoint path</th><th class="c-r">Client call</th></tr></thead>
+<tbody>
+<tr><td class="c-m"><span class="verb v-get">GET</span></td><td class="c-p"><code>/rest/items</code></td><td class="c-r"><code>.list</code></td></tr>
+<tr><td class="c-m"><span class="verb v-post">POST</span></td><td class="c-p"><code>/rest/items</code></td><td class="c-r"><code>.create</code></td></tr>
+<tr><td class="c-m"><span class="verb v-delete">DELETE</span></td><td class="c-p"><code>/rest/items/<span class="ph">{itemId}</span></code></td><td class="c-r"><code>.destroy</code></td></tr>
+<tr><td class="c-m"><span class="verb v-get">GET</span></td><td class="c-p"><code>/rest/items/<span class="ph">{itemId}</span></code></td><td class="c-r"><code>.find</code></td></tr>
+<tr><td class="c-m"><span class="verb v-put">PUT</span></td><td class="c-p"><code>/rest/items/<span class="ph">{itemId}</span></code></td><td class="c-r"><code>.update</code></td></tr>
+</tbody>
+</table>
+</div>
+<div class="klass">
+<h4><code>PlentyClient::Item::Attribute</code></h4>
+<table class="ep">
+<thead><tr><th class="c-m">Method</th><th class="c-p">Endpoint path</th><th class="c-r">Client call</th></tr></thead>
+<tbody>
+<tr><td class="c-m"><span class="verb v-get">GET</span></td><td class="c-p"><code>/rest/items/attributes</code></td><td class="c-r"><code>.list</code></td></tr>
+<tr><td class="c-m"><span class="verb v-post">POST</span></td><td class="c-p"><code>/rest/items/attributes</code></td><td class="c-r"><code>.create</code></td></tr>
+<tr><td class="c-m"><span class="verb v-delete">DELETE</span></td><td class="c-p"><code>/rest/items/attributes/<span class="ph">{attributeId}</span></code></td><td class="c-r"><code>.destroy</code></td></tr>
+<tr><td class="c-m"><span class="verb v-get">GET</span></td><td class="c-p"><code>/rest/items/attributes/<span class="ph">{attributeId}</span></code></td><td class="c-r"><code>.find</code></td></tr>
+<tr><td class="c-m"><span class="verb v-post">POST</span></td><td class="c-p"><code>/rest/items/attributes/<span class="ph">{attributeId}</span></code></td><td class="c-r"><code>.update</code></td></tr>
+</tbody>
+</table>
+</div>
+<div class="klass">
+<h4><code>PlentyClient::Item::Attribute::Name</code></h4>
+<table class="ep">
+<thead><tr><th class="c-m">Method</th><th class="c-p">Endpoint path</th><th class="c-r">Client call</th></tr></thead>
+<tbody>
+<tr><td class="c-m"><span class="verb v-get">GET</span></td><td class="c-p"><code>/rest/items/attributes/<span class="ph">{attributeId}</span>/names</code></td><td class="c-r"><code>.list</code></td></tr>
+<tr><td class="c-m"><span class="verb v-post">POST</span></td><td class="c-p"><code>/rest/items/attributes/<span class="ph">{attributeId}</span>/names</code></td><td class="c-r"><code>.create</code></td></tr>
+<tr><td class="c-m"><span class="verb v-delete">DELETE</span></td><td class="c-p"><code>/rest/items/attributes/<span class="ph">{attributeId}</span>/names/<span class="ph">{lang}</span></code></td><td class="c-r"><code>.destroy</code></td></tr>
+<tr><td class="c-m"><span class="verb v-get">GET</span></td><td class="c-p"><code>/rest/items/attributes/<span class="ph">{attributeId}</span>/names/<span class="ph">{lang}</span></code></td><td class="c-r"><code>.find</code></td></tr>
+<tr><td class="c-m"><span class="verb v-put">PUT</span></td><td class="c-p"><code>/rest/items/attributes/<span class="ph">{attributeId}</span>/names/<span class="ph">{lang}</span></code></td><td class="c-r"><code>.update</code></td></tr>
+</tbody>
+</table>
+</div>
+<div class="klass">
+<h4><code>PlentyClient::Item::Attribute::Value</code></h4>
+<table class="ep">
+<thead><tr><th class="c-m">Method</th><th class="c-p">Endpoint path</th><th class="c-r">Client call</th></tr></thead>
+<tbody>
+<tr><td class="c-m"><span class="verb v-get">GET</span></td><td class="c-p"><code>/rest/items/attributes/<span class="ph">{attributeId}</span>/values</code></td><td class="c-r"><code>.list</code></td></tr>
+<tr><td class="c-m"><span class="verb v-post">POST</span></td><td class="c-p"><code>/rest/items/attributes/<span class="ph">{attributeId}</span>/values</code></td><td class="c-r"><code>.create</code></td></tr>
+<tr><td class="c-m"><span class="verb v-delete">DELETE</span></td><td class="c-p"><code>/rest/items/attributes/<span class="ph">{attributeId}</span>/values/<span class="ph">{valueId}</span></code></td><td class="c-r"><code>.destroy</code></td></tr>
+<tr><td class="c-m"><span class="verb v-get">GET</span></td><td class="c-p"><code>/rest/items/attributes/<span class="ph">{attributeId}</span>/values/<span class="ph">{valueId}</span></code></td><td class="c-r"><code>.find</code></td></tr>
+<tr><td class="c-m"><span class="verb v-put">PUT</span></td><td class="c-p"><code>/rest/items/attributes/<span class="ph">{attributeId}</span>/values/<span class="ph">{valueId}</span></code></td><td class="c-r"><code>.update</code></td></tr>
+</tbody>
+</table>
+</div>
+<div class="klass">
+<h4><code>PlentyClient::Item::Attribute::ValueName</code></h4>
+<table class="ep">
+<thead><tr><th class="c-m">Method</th><th class="c-p">Endpoint path</th><th class="c-r">Client call</th></tr></thead>
+<tbody>
+<tr><td class="c-m"><span class="verb v-get">GET</span></td><td class="c-p"><code>/rest/items/attribute_values/<span class="ph">{attributeValueId}</span>/names</code></td><td class="c-r"><code>.list</code></td></tr>
+<tr><td class="c-m"><span class="verb v-post">POST</span></td><td class="c-p"><code>/rest/items/attribute_values/<span class="ph">{attributeValueId}</span>/names</code></td><td class="c-r"><code>.create</code></td></tr>
+<tr><td class="c-m"><span class="verb v-delete">DELETE</span></td><td class="c-p"><code>/rest/items/attribute_values/<span class="ph">{attributeValueId}</span>/names/<span class="ph">{lang}</span></code></td><td class="c-r"><code>.destroy</code></td></tr>
+<tr><td class="c-m"><span class="verb v-get">GET</span></td><td class="c-p"><code>/rest/items/attribute_values/<span class="ph">{attributeValueId}</span>/names/<span class="ph">{lang}</span></code></td><td class="c-r"><code>.find</code></td></tr>
+<tr><td class="c-m"><span class="verb v-put">PUT</span></td><td class="c-p"><code>/rest/items/attribute_values/<span class="ph">{attributeValueId}</span>/names/<span class="ph">{lang}</span></code></td><td class="c-r"><code>.update</code></td></tr>
+</tbody>
+</table>
+</div>
+<div class="klass">
+<h4><code>PlentyClient::Item::Barcode</code></h4>
+<table class="ep">
+<thead><tr><th class="c-m">Method</th><th class="c-p">Endpoint path</th><th class="c-r">Client call</th></tr></thead>
+<tbody>
+<tr><td class="c-m"><span class="verb v-get">GET</span></td><td class="c-p"><code>/rest/items/barcodes</code></td><td class="c-r"><code>.list</code></td></tr>
+<tr><td class="c-m"><span class="verb v-post">POST</span></td><td class="c-p"><code>/rest/items/barcodes</code></td><td class="c-r"><code>.create</code></td></tr>
+<tr><td class="c-m"><span class="verb v-get">GET</span></td><td class="c-p"><code>/rest/items/barcodes/referrer/<span class="ph">{referrerId}</span></code></td><td class="c-r"><code>.list_by_referrer</code></td></tr>
+<tr><td class="c-m"><span class="verb v-get">GET</span></td><td class="c-p"><code>/rest/items/barcodes/type/<span class="ph">{type}</span></code></td><td class="c-r"><code>.list_by_type</code></td></tr>
+<tr><td class="c-m"><span class="verb v-delete">DELETE</span></td><td class="c-p"><code>/rest/items/barcodes/<span class="ph">{barcodeId}</span></code></td><td class="c-r"><code>.destroy</code></td></tr>
+<tr><td class="c-m"><span class="verb v-get">GET</span></td><td class="c-p"><code>/rest/items/barcodes/<span class="ph">{barcodeId}</span></code></td><td class="c-r"><code>.find</code></td></tr>
+<tr><td class="c-m"><span class="verb v-post">POST</span></td><td class="c-p"><code>/rest/items/barcodes/<span class="ph">{barcodeId}</span></code></td><td class="c-r"><code>.update</code></td></tr>
+<tr><td class="c-m"><span class="verb v-post">POST</span></td><td class="c-p"><code>/rest/items/barcodes/<span class="ph">{barcodeId}</span>/referrer</code></td><td class="c-r"><code>.activate_referrer</code></td></tr>
+<tr><td class="c-m"><span class="verb v-delete">DELETE</span></td><td class="c-p"><code>/rest/items/barcodes/<span class="ph">{barcodeId}</span>/referrer/<span class="ph">{referrerId}</span></code></td><td class="c-r"><code>.deactivate_referrer</code></td></tr>
+</tbody>
+</table>
+</div>
+<div class="klass">
+<h4><code>PlentyClient::Item::CrossSelling</code></h4>
+<table class="ep">
+<thead><tr><th class="c-m">Method</th><th class="c-p">Endpoint path</th><th class="c-r">Client call</th></tr></thead>
+<tbody>
+<tr><td class="c-m"><span class="verb v-get">GET</span></td><td class="c-p"><code>/rest/items/<span class="ph">{itemId}</span>/item_cross_selling</code></td><td class="c-r"><code>.list</code></td></tr>
+<tr><td class="c-m"><span class="verb v-post">POST</span></td><td class="c-p"><code>/rest/items/<span class="ph">{itemId}</span>/item_cross_selling</code></td><td class="c-r"><code>.create</code></td></tr>
+<tr><td class="c-m"><span class="verb v-delete">DELETE</span></td><td class="c-p"><code>/rest/items/<span class="ph">{itemId}</span>/item_cross_selling/<span class="ph">{crossItemId}</span></code></td><td class="c-r"><code>.destroy</code></td></tr>
+</tbody>
+</table>
+</div>
+<div class="klass">
+<h4><code>PlentyClient::Item::Image</code></h4>
+<table class="ep">
+<thead><tr><th class="c-m">Method</th><th class="c-p">Endpoint path</th><th class="c-r">Client call</th></tr></thead>
+<tbody>
+<tr><td class="c-m"><span class="verb v-get">GET</span></td><td class="c-p"><code>/rest/items/<span class="ph">{itemId}</span>/images</code></td><td class="c-r"><code>.list</code></td></tr>
+<tr><td class="c-m"><span class="verb v-post">POST</span></td><td class="c-p"><code>/rest/items/<span class="ph">{itemId}</span>/images/upload</code></td><td class="c-r"><code>.create</code></td></tr>
+<tr><td class="c-m"><span class="verb v-post">POST</span></td><td class="c-p"><code>/rest/items/<span class="ph">{itemId}</span>/images/upload</code></td><td class="c-r"><code>.upload</code></td></tr>
+<tr><td class="c-m"><span class="verb v-delete">DELETE</span></td><td class="c-p"><code>/rest/items/<span class="ph">{itemId}</span>/images/<span class="ph">{imageId}</span></code></td><td class="c-r"><code>.destroy</code></td></tr>
+<tr><td class="c-m"><span class="verb v-get">GET</span></td><td class="c-p"><code>/rest/items/<span class="ph">{itemId}</span>/images/<span class="ph">{imageId}</span></code></td><td class="c-r"><code>.find</code></td></tr>
+<tr><td class="c-m"><span class="verb v-put">PUT</span></td><td class="c-p"><code>/rest/items/<span class="ph">{itemId}</span>/images/<span class="ph">{imageId}</span></code></td><td class="c-r"><code>.update</code></td></tr>
+<tr><td class="c-m"><span class="verb v-get">GET</span></td><td class="c-p"><code>/rest/items/<span class="ph">{itemId}</span>/variations/<span class="ph">{variationId}</span>/images</code></td><td class="c-r"><code>.list_variation_images</code></td></tr>
+</tbody>
+</table>
+</div>
+<div class="klass">
+<h4><code>PlentyClient::Item::Image::Availability</code></h4>
+<table class="ep">
+<thead><tr><th class="c-m">Method</th><th class="c-p">Endpoint path</th><th class="c-r">Client call</th></tr></thead>
+<tbody>
+<tr><td class="c-m"><span class="verb v-delete">DELETE</span></td><td class="c-p"><code>/rest/items/<span class="ph">{itemId}</span>/images/<span class="ph">{imageId}</span>/availabilities</code></td><td class="c-r"><code>.destroy</code></td></tr>
+<tr><td class="c-m"><span class="verb v-get">GET</span></td><td class="c-p"><code>/rest/items/<span class="ph">{itemId}</span>/images/<span class="ph">{imageId}</span>/availabilities</code></td><td class="c-r"><code>.list</code></td></tr>
+<tr><td class="c-m"><span class="verb v-post">POST</span></td><td class="c-p"><code>/rest/items/<span class="ph">{itemId}</span>/images/<span class="ph">{imageId}</span>/availabilities</code></td><td class="c-r"><code>.create</code></td></tr>
+</tbody>
+</table>
+</div>
+<div class="klass">
+<h4><code>PlentyClient::Item::Image::Name</code></h4>
+<table class="ep">
+<thead><tr><th class="c-m">Method</th><th class="c-p">Endpoint path</th><th class="c-r">Client call</th></tr></thead>
+<tbody>
+<tr><td class="c-m"><span class="verb v-get">GET</span></td><td class="c-p"><code>/rest/items/<span class="ph">{itemId}</span>/images/<span class="ph">{imageId}</span>/names</code></td><td class="c-r"><code>.list</code></td></tr>
+<tr><td class="c-m"><span class="verb v-post">POST</span></td><td class="c-p"><code>/rest/items/<span class="ph">{itemId}</span>/images/<span class="ph">{imageId}</span>/names</code></td><td class="c-r"><code>.create</code></td></tr>
+<tr><td class="c-m"><span class="verb v-delete">DELETE</span></td><td class="c-p"><code>/rest/items/<span class="ph">{itemId}</span>/images/<span class="ph">{imageId}</span>/names/<span class="ph">{lang}</span></code></td><td class="c-r"><code>.destroy</code></td></tr>
+<tr><td class="c-m"><span class="verb v-get">GET</span></td><td class="c-p"><code>/rest/items/<span class="ph">{itemId}</span>/images/<span class="ph">{imageId}</span>/names/<span class="ph">{lang}</span></code></td><td class="c-r"><code>.find</code></td></tr>
+<tr><td class="c-m"><span class="verb v-put">PUT</span></td><td class="c-p"><code>/rest/items/<span class="ph">{itemId}</span>/images/<span class="ph">{imageId}</span>/names/<span class="ph">{lang}</span></code></td><td class="c-r"><code>.update</code></td></tr>
+</tbody>
+</table>
+</div>
+<div class="klass">
+<h4><code>PlentyClient::Item::Manufacturer</code></h4>
+<table class="ep">
+<thead><tr><th class="c-m">Method</th><th class="c-p">Endpoint path</th><th class="c-r">Client call</th></tr></thead>
+<tbody>
+<tr><td class="c-m"><span class="verb v-get">GET</span></td><td class="c-p"><code>/rest/items/manufacturers</code></td><td class="c-r"><code>.list</code></td></tr>
+<tr><td class="c-m"><span class="verb v-post">POST</span></td><td class="c-p"><code>/rest/items/manufacturers</code></td><td class="c-r"><code>.create</code></td></tr>
+<tr><td class="c-m"><span class="verb v-delete">DELETE</span></td><td class="c-p"><code>/rest/items/manufacturers/<span class="ph">{manufacturerId}</span></code></td><td class="c-r"><code>.destroy</code></td></tr>
+<tr><td class="c-m"><span class="verb v-get">GET</span></td><td class="c-p"><code>/rest/items/manufacturers/<span class="ph">{manufacturerId}</span></code></td><td class="c-r"><code>.find</code></td></tr>
+<tr><td class="c-m"><span class="verb v-put">PUT</span></td><td class="c-p"><code>/rest/items/manufacturers/<span class="ph">{manufacturerId}</span></code></td><td class="c-r"><code>.update</code></td></tr>
+</tbody>
+</table>
+</div>
+<div class="klass">
+<h4><code>PlentyClient::Item::Manufacturer::Commission</code></h4>
+<table class="ep">
+<thead><tr><th class="c-m">Method</th><th class="c-p">Endpoint path</th><th class="c-r">Client call</th></tr></thead>
+<tbody>
+<tr><td class="c-m"><span class="verb v-get">GET</span></td><td class="c-p"><code>/rest/items/manufacturers/<span class="ph">{manufacturerId}</span>/commissions</code></td><td class="c-r"><code>.list</code></td></tr>
+<tr><td class="c-m"><span class="verb v-post">POST</span></td><td class="c-p"><code>/rest/items/manufacturers/<span class="ph">{manufacturerId}</span>/commissions</code></td><td class="c-r"><code>.create</code></td></tr>
+<tr><td class="c-m"><span class="verb v-delete">DELETE</span></td><td class="c-p"><code>/rest/items/manufacturers/<span class="ph">{manufacturerId}</span>/commissions/<span class="ph">{commissionId}</span></code></td><td class="c-r"><code>.destroy</code></td></tr>
+<tr><td class="c-m"><span class="verb v-get">GET</span></td><td class="c-p"><code>/rest/items/manufacturers/<span class="ph">{manufacturerId}</span>/commissions/<span class="ph">{commissionId}</span></code></td><td class="c-r"><code>.find</code></td></tr>
+<tr><td class="c-m"><span class="verb v-put">PUT</span></td><td class="c-p"><code>/rest/items/manufacturers/<span class="ph">{manufacturerId}</span>/commissions/<span class="ph">{commissionId}</span></code></td><td class="c-r"><code>.update</code></td></tr>
+</tbody>
+</table>
+</div>
+<div class="klass">
+<h4><code>PlentyClient::Item::Property</code></h4>
+<table class="ep">
+<thead><tr><th class="c-m">Method</th><th class="c-p">Endpoint path</th><th class="c-r">Client call</th></tr></thead>
+<tbody>
+<tr><td class="c-m"><span class="verb v-get">GET</span></td><td class="c-p"><code>/rest/items/properties</code></td><td class="c-r"><code>.list</code></td></tr>
+<tr><td class="c-m"><span class="verb v-post">POST</span></td><td class="c-p"><code>/rest/items/properties</code></td><td class="c-r"><code>.create</code></td></tr>
+<tr><td class="c-m"><span class="verb v-delete">DELETE</span></td><td class="c-p"><code>/rest/items/properties/<span class="ph">{propertyId}</span></code></td><td class="c-r"><code>.destroy</code></td></tr>
+<tr><td class="c-m"><span class="verb v-get">GET</span></td><td class="c-p"><code>/rest/items/properties/<span class="ph">{propertyId}</span></code></td><td class="c-r"><code>.find</code></td></tr>
+<tr><td class="c-m"><span class="verb v-put">PUT</span></td><td class="c-p"><code>/rest/items/properties/<span class="ph">{propertyId}</span></code></td><td class="c-r"><code>.update</code></td></tr>
+</tbody>
+</table>
+</div>
+<div class="klass">
+<h4><code>PlentyClient::Item::Property::MarketReference</code></h4>
+<table class="ep">
+<thead><tr><th class="c-m">Method</th><th class="c-p">Endpoint path</th><th class="c-r">Client call</th></tr></thead>
+<tbody>
+<tr><td class="c-m"><span class="verb v-get">GET</span></td><td class="c-p"><code>/rest/items/properties/<span class="ph">{propertyId}</span>/market_references</code></td><td class="c-r"><code>.list</code></td></tr>
+<tr><td class="c-m"><span class="verb v-post">POST</span></td><td class="c-p"><code>/rest/items/properties/<span class="ph">{propertyId}</span>/market_references</code></td><td class="c-r"><code>.create</code></td></tr>
+<tr><td class="c-m"><span class="verb v-delete">DELETE</span></td><td class="c-p"><code>/rest/items/properties/<span class="ph">{propertyId}</span>/market_references/<span class="ph">{marketId}</span></code></td><td class="c-r"><code>.destroy</code></td></tr>
+<tr><td class="c-m"><span class="verb v-get">GET</span></td><td class="c-p"><code>/rest/items/properties/<span class="ph">{propertyId}</span>/market_references/<span class="ph">{marketId}</span></code></td><td class="c-r"><code>.find</code></td></tr>
+<tr><td class="c-m"><span class="verb v-put">PUT</span></td><td class="c-p"><code>/rest/items/properties/<span class="ph">{propertyId}</span>/market_references/<span class="ph">{marketId}</span></code></td><td class="c-r"><code>.update</code></td></tr>
+</tbody>
+</table>
+</div>
+<div class="klass">
+<h4><code>PlentyClient::Item::Property::Name</code></h4>
+<table class="ep">
+<thead><tr><th class="c-m">Method</th><th class="c-p">Endpoint path</th><th class="c-r">Client call</th></tr></thead>
+<tbody>
+<tr><td class="c-m"><span class="verb v-get">GET</span></td><td class="c-p"><code>/rest/items/properties/<span class="ph">{propertyId}</span>/names</code></td><td class="c-r"><code>.list</code></td></tr>
+<tr><td class="c-m"><span class="verb v-post">POST</span></td><td class="c-p"><code>/rest/items/properties/<span class="ph">{propertyId}</span>/names</code></td><td class="c-r"><code>.create</code></td></tr>
+<tr><td class="c-m"><span class="verb v-delete">DELETE</span></td><td class="c-p"><code>/rest/items/properties/<span class="ph">{propertyId}</span>/names/<span class="ph">{lang}</span></code></td><td class="c-r"><code>.destroy</code></td></tr>
+<tr><td class="c-m"><span class="verb v-get">GET</span></td><td class="c-p"><code>/rest/items/properties/<span class="ph">{propertyId}</span>/names/<span class="ph">{lang}</span></code></td><td class="c-r"><code>.find</code></td></tr>
+<tr><td class="c-m"><span class="verb v-put">PUT</span></td><td class="c-p"><code>/rest/items/properties/<span class="ph">{propertyId}</span>/names/<span class="ph">{lang}</span></code></td><td class="c-r"><code>.update</code></td></tr>
+</tbody>
+</table>
+</div>
+<div class="klass">
+<h4><code>PlentyClient::Item::PropertyGroup</code></h4>
+<table class="ep">
+<thead><tr><th class="c-m">Method</th><th class="c-p">Endpoint path</th><th class="c-r">Client call</th></tr></thead>
+<tbody>
+<tr><td class="c-m"><span class="verb v-get">GET</span></td><td class="c-p"><code>/rest/items/property_groups</code></td><td class="c-r"><code>.list</code></td></tr>
+<tr><td class="c-m"><span class="verb v-post">POST</span></td><td class="c-p"><code>/rest/items/property_groups</code></td><td class="c-r"><code>.create</code></td></tr>
+<tr><td class="c-m"><span class="verb v-delete">DELETE</span></td><td class="c-p"><code>/rest/items/property_groups/<span class="ph">{propertyGroupId}</span></code></td><td class="c-r"><code>.destroy</code></td></tr>
+<tr><td class="c-m"><span class="verb v-get">GET</span></td><td class="c-p"><code>/rest/items/property_groups/<span class="ph">{propertyGroupId}</span></code></td><td class="c-r"><code>.find</code></td></tr>
+<tr><td class="c-m"><span class="verb v-put">PUT</span></td><td class="c-p"><code>/rest/items/property_groups/<span class="ph">{propertyGroupId}</span></code></td><td class="c-r"><code>.update</code></td></tr>
+</tbody>
+</table>
+</div>
+<div class="klass">
+<h4><code>PlentyClient::Item::PropertyGroupName</code></h4>
+<table class="ep">
+<thead><tr><th class="c-m">Method</th><th class="c-p">Endpoint path</th><th class="c-r">Client call</th></tr></thead>
+<tbody>
+<tr><td class="c-m"><span class="verb v-get">GET</span></td><td class="c-p"><code>/rest/items/property_groups/<span class="ph">{propertyGroupId}</span>/names</code></td><td class="c-r"><code>.list</code></td></tr>
+<tr><td class="c-m"><span class="verb v-post">POST</span></td><td class="c-p"><code>/rest/items/property_groups/<span class="ph">{propertyGroupId}</span>/names</code></td><td class="c-r"><code>.create</code></td></tr>
+<tr><td class="c-m"><span class="verb v-delete">DELETE</span></td><td class="c-p"><code>/rest/items/property_groups/<span class="ph">{propertyGroupId}</span>/names/<span class="ph">{lang}</span></code></td><td class="c-r"><code>.destroy</code></td></tr>
+<tr><td class="c-m"><span class="verb v-get">GET</span></td><td class="c-p"><code>/rest/items/property_groups/<span class="ph">{propertyGroupId}</span>/names/<span class="ph">{lang}</span></code></td><td class="c-r"><code>.find</code></td></tr>
+<tr><td class="c-m"><span class="verb v-put">PUT</span></td><td class="c-p"><code>/rest/items/property_groups/<span class="ph">{propertyGroupId}</span>/names/<span class="ph">{lang}</span></code></td><td class="c-r"><code>.update</code></td></tr>
+</tbody>
+</table>
+</div>
+<div class="klass">
+<h4><code>PlentyClient::Item::SalesPrice</code></h4>
+<table class="ep">
+<thead><tr><th class="c-m">Method</th><th class="c-p">Endpoint path</th><th class="c-r">Client call</th></tr></thead>
+<tbody>
+<tr><td class="c-m"><span class="verb v-get">GET</span></td><td class="c-p"><code>/rest/items/sales_prices</code></td><td class="c-r"><code>.list</code></td></tr>
+<tr><td class="c-m"><span class="verb v-post">POST</span></td><td class="c-p"><code>/rest/items/sales_prices</code></td><td class="c-r"><code>.create</code></td></tr>
+<tr><td class="c-m"><span class="verb v-delete">DELETE</span></td><td class="c-p"><code>/rest/items/sales_prices/<span class="ph">{salesPriceId}</span></code></td><td class="c-r"><code>.destroy</code></td></tr>
+<tr><td class="c-m"><span class="verb v-get">GET</span></td><td class="c-p"><code>/rest/items/sales_prices/<span class="ph">{salesPriceId}</span></code></td><td class="c-r"><code>.find</code></td></tr>
+<tr><td class="c-m"><span class="verb v-put">PUT</span></td><td class="c-p"><code>/rest/items/sales_prices/<span class="ph">{salesPriceId}</span></code></td><td class="c-r"><code>.update</code></td></tr>
+</tbody>
+</table>
+</div>
+<div class="klass">
+<h4><code>PlentyClient::Item::ShippingProfile</code></h4>
+<table class="ep">
+<thead><tr><th class="c-m">Method</th><th class="c-p">Endpoint path</th><th class="c-r">Client call</th></tr></thead>
+<tbody>
+<tr><td class="c-m"><span class="verb v-get">GET</span></td><td class="c-p"><code>/rest/items/<span class="ph">{itemId}</span>/item_shipping_profiles</code></td><td class="c-r"><code>.list</code></td></tr>
+<tr><td class="c-m"><span class="verb v-post">POST</span></td><td class="c-p"><code>/rest/items/<span class="ph">{itemId}</span>/item_shipping_profiles</code></td><td class="c-r"><code>.create</code></td></tr>
+<tr><td class="c-m"><span class="verb v-delete">DELETE</span></td><td class="c-p"><code>/rest/items/<span class="ph">{itemId}</span>/item_shipping_profiles/<span class="ph">{shippingProfileId}</span></code></td><td class="c-r"><code>.destroy</code></td></tr>
+</tbody>
+</table>
+</div>
+<div class="klass">
+<h4><code>PlentyClient::Item::Unit</code></h4>
+<table class="ep">
+<thead><tr><th class="c-m">Method</th><th class="c-p">Endpoint path</th><th class="c-r">Client call</th></tr></thead>
+<tbody>
+<tr><td class="c-m"><span class="verb v-get">GET</span></td><td class="c-p"><code>/rest/items/units</code></td><td class="c-r"><code>.list</code></td></tr>
+<tr><td class="c-m"><span class="verb v-get">GET</span></td><td class="c-p"><code>/rest/items/units</code></td><td class="c-r"><code>.find</code></td></tr>
+<tr><td class="c-m"><span class="verb v-post">POST</span></td><td class="c-p"><code>/rest/items/units</code></td><td class="c-r"><code>.create</code></td></tr>
+<tr><td class="c-m"><span class="verb v-delete">DELETE</span></td><td class="c-p"><code>/rest/items/units/<span class="ph">{unitId}</span></code></td><td class="c-r"><code>.destroy</code></td></tr>
+<tr><td class="c-m"><span class="verb v-put">PUT</span></td><td class="c-p"><code>/rest/items/units/<span class="ph">{unitId}</span></code></td><td class="c-r"><code>.update</code></td></tr>
+</tbody>
+</table>
+</div>
+<div class="klass">
+<h4><code>PlentyClient::Item::UnitName</code></h4>
+<table class="ep">
+<thead><tr><th class="c-m">Method</th><th class="c-p">Endpoint path</th><th class="c-r">Client call</th></tr></thead>
+<tbody>
+<tr><td class="c-m"><span class="verb v-get">GET</span></td><td class="c-p"><code>/rest/item/units/<span class="ph">{unitID}</span>/names</code></td><td class="c-r"><code>.list</code></td></tr>
+<tr><td class="c-m"><span class="verb v-post">POST</span></td><td class="c-p"><code>/rest/item/units/<span class="ph">{unitID}</span>/names</code></td><td class="c-r"><code>.create</code></td></tr>
+<tr><td class="c-m"><span class="verb v-delete">DELETE</span></td><td class="c-p"><code>/rest/item/units/<span class="ph">{unitID}</span>/names/<span class="ph">{lang}</span></code></td><td class="c-r"><code>.destroy</code></td></tr>
+<tr><td class="c-m"><span class="verb v-get">GET</span></td><td class="c-p"><code>/rest/item/units/<span class="ph">{unitID}</span>/names/<span class="ph">{lang}</span></code></td><td class="c-r"><code>.find</code></td></tr>
+<tr><td class="c-m"><span class="verb v-put">PUT</span></td><td class="c-p"><code>/rest/item/units/<span class="ph">{unitID}</span>/names/<span class="ph">{lang}</span></code></td><td class="c-r"><code>.update</code></td></tr>
+</tbody>
+</table>
+</div>
+<div class="klass">
+<h4><code>PlentyClient::Item::Variation</code></h4>
+<table class="ep">
+<thead><tr><th class="c-m">Method</th><th class="c-p">Endpoint path</th><th class="c-r">Client call</th></tr></thead>
+<tbody>
+<tr><td class="c-m"><span class="verb v-get">GET</span></td><td class="c-p"><code>/rest/items/variations</code></td><td class="c-r"><code>.all</code></td></tr>
+<tr><td class="c-m"><span class="verb v-get">GET</span></td><td class="c-p"><code>/rest/items/<span class="ph">{itemId}</span>/variations</code></td><td class="c-r"><code>.list</code></td></tr>
+<tr><td class="c-m"><span class="verb v-post">POST</span></td><td class="c-p"><code>/rest/items/<span class="ph">{itemId}</span>/variations</code></td><td class="c-r"><code>.create</code></td></tr>
+<tr><td class="c-m"><span class="verb v-delete">DELETE</span></td><td class="c-p"><code>/rest/items/<span class="ph">{itemId}</span>/variations/<span class="ph">{variationId}</span></code></td><td class="c-r"><code>.destroy</code></td></tr>
+<tr><td class="c-m"><span class="verb v-get">GET</span></td><td class="c-p"><code>/rest/items/<span class="ph">{itemId}</span>/variations/<span class="ph">{variationId}</span></code></td><td class="c-r"><code>.find</code></td></tr>
+<tr><td class="c-m"><span class="verb v-put">PUT</span></td><td class="c-p"><code>/rest/items/<span class="ph">{itemId}</span>/variations/<span class="ph">{variationId}</span></code></td><td class="c-r"><code>.update</code></td></tr>
+</tbody>
+</table>
+</div>
+<div class="klass">
+<h4><code>PlentyClient::Item::Variation::Barcode</code></h4>
+<table class="ep">
+<thead><tr><th class="c-m">Method</th><th class="c-p">Endpoint path</th><th class="c-r">Client call</th></tr></thead>
+<tbody>
+<tr><td class="c-m"><span class="verb v-get">GET</span></td><td class="c-p"><code>/rest/items/<span class="ph">{itemId}</span>/variations/<span class="ph">{variationId}</span>/variation_barcodes</code></td><td class="c-r"><code>.list</code></td></tr>
+<tr><td class="c-m"><span class="verb v-post">POST</span></td><td class="c-p"><code>/rest/items/<span class="ph">{itemId}</span>/variations/<span class="ph">{variationId}</span>/variation_barcodes</code></td><td class="c-r"><code>.create</code></td></tr>
+<tr><td class="c-m"><span class="verb v-delete">DELETE</span></td><td class="c-p"><code>/rest/items/<span class="ph">{itemId}</span>/variations/<span class="ph">{variationId}</span>/variation_barcodes/<span class="ph">{barcodeId}</span></code></td><td class="c-r"><code>.destroy</code></td></tr>
+<tr><td class="c-m"><span class="verb v-get">GET</span></td><td class="c-p"><code>/rest/items/<span class="ph">{itemId}</span>/variations/<span class="ph">{variationId}</span>/variation_barcodes/<span class="ph">{barcodeId}</span></code></td><td class="c-r"><code>.find</code></td></tr>
+<tr><td class="c-m"><span class="verb v-put">PUT</span></td><td class="c-p"><code>/rest/items/<span class="ph">{itemId}</span>/variations/<span class="ph">{variationId}</span>/variation_barcodes/<span class="ph">{barcodeId}</span></code></td><td class="c-r"><code>.update</code></td></tr>
+</tbody>
+</table>
+</div>
+<div class="klass">
+<h4><code>PlentyClient::Item::Variation::Bundle</code></h4>
+<table class="ep">
+<thead><tr><th class="c-m">Method</th><th class="c-p">Endpoint path</th><th class="c-r">Client call</th></tr></thead>
+<tbody>
+<tr><td class="c-m"><span class="verb v-get">GET</span></td><td class="c-p"><code>/rest/items/<span class="ph">{itemId}</span>/variations/<span class="ph">{variationId}</span>/variation_bundles</code></td><td class="c-r"><code>.list</code></td></tr>
+<tr><td class="c-m"><span class="verb v-post">POST</span></td><td class="c-p"><code>/rest/items/<span class="ph">{itemId}</span>/variations/<span class="ph">{variationId}</span>/variation_bundles</code></td><td class="c-r"><code>.create</code></td></tr>
+<tr><td class="c-m"><span class="verb v-delete">DELETE</span></td><td class="c-p"><code>/rest/items/<span class="ph">{itemId}</span>/variations/<span class="ph">{variationId}</span>/variation_bundles/<span class="ph">{bundleId}</span></code></td><td class="c-r"><code>.destroy</code></td></tr>
+<tr><td class="c-m"><span class="verb v-get">GET</span></td><td class="c-p"><code>/rest/items/<span class="ph">{itemId}</span>/variations/<span class="ph">{variationId}</span>/variation_bundles/<span class="ph">{bundleId}</span></code></td><td class="c-r"><code>.find</code></td></tr>
+<tr><td class="c-m"><span class="verb v-put">PUT</span></td><td class="c-p"><code>/rest/items/<span class="ph">{itemId}</span>/variations/<span class="ph">{variationId}</span>/variation_bundles/<span class="ph">{bundleId}</span></code></td><td class="c-r"><code>.update</code></td></tr>
+</tbody>
+</table>
+</div>
+<div class="klass">
+<h4><code>PlentyClient::Item::Variation::Category</code></h4>
+<table class="ep">
+<thead><tr><th class="c-m">Method</th><th class="c-p">Endpoint path</th><th class="c-r">Client call</th></tr></thead>
+<tbody>
+<tr><td class="c-m"><span class="verb v-post">POST</span></td><td class="c-p"><code>/rest/items/variations/variation_categories</code></td><td class="c-r"><code>.bulk_assign</code></td></tr>
+<tr><td class="c-m"><span class="verb v-get">GET</span></td><td class="c-p"><code>/rest/items/<span class="ph">{itemId}</span>/variations/<span class="ph">{variationId}</span>/variation_categories</code></td><td class="c-r"><code>.list</code></td></tr>
+<tr><td class="c-m"><span class="verb v-post">POST</span></td><td class="c-p"><code>/rest/items/<span class="ph">{itemId}</span>/variations/<span class="ph">{variationId}</span>/variation_categories</code></td><td class="c-r"><code>.create</code></td></tr>
+<tr><td class="c-m"><span class="verb v-delete">DELETE</span></td><td class="c-p"><code>/rest/items/<span class="ph">{itemId}</span>/variations/<span class="ph">{variationId}</span>/variation_categories/<span class="ph">{catId}</span></code></td><td class="c-r"><code>.destroy</code></td></tr>
+<tr><td class="c-m"><span class="verb v-get">GET</span></td><td class="c-p"><code>/rest/items/<span class="ph">{itemId}</span>/variations/<span class="ph">{variationId}</span>/variation_categories/<span class="ph">{catId}</span></code></td><td class="c-r"><code>.find</code></td></tr>
+<tr><td class="c-m"><span class="verb v-put">PUT</span></td><td class="c-p"><code>/rest/items/<span class="ph">{itemId}</span>/variations/<span class="ph">{variationId}</span>/variation_categories/<span class="ph">{catId}</span></code></td><td class="c-r"><code>.update</code></td></tr>
+</tbody>
+</table>
+</div>
+<div class="klass">
+<h4><code>PlentyClient::Item::Variation::Client</code></h4>
+<table class="ep">
+<thead><tr><th class="c-m">Method</th><th class="c-p">Endpoint path</th><th class="c-r">Client call</th></tr></thead>
+<tbody>
+<tr><td class="c-m"><span class="verb v-get">GET</span></td><td class="c-p"><code>/rest/items/<span class="ph">{itemId}</span>/variations/<span class="ph">{variationId}</span>/variation_clients</code></td><td class="c-r"><code>.list</code></td></tr>
+<tr><td class="c-m"><span class="verb v-post">POST</span></td><td class="c-p"><code>/rest/items/<span class="ph">{itemId}</span>/variations/<span class="ph">{variationId}</span>/variation_clients</code></td><td class="c-r"><code>.create</code></td></tr>
+<tr><td class="c-m"><span class="verb v-delete">DELETE</span></td><td class="c-p"><code>/rest/items/<span class="ph">{itemId}</span>/variations/<span class="ph">{variationId}</span>/variation_clients/<span class="ph">{plentyId}</span></code></td><td class="c-r"><code>.destroy</code></td></tr>
+</tbody>
+</table>
+</div>
+<div class="klass">
+<h4><code>PlentyClient::Item::Variation::DefaultCategory</code></h4>
+<table class="ep">
+<thead><tr><th class="c-m">Method</th><th class="c-p">Endpoint path</th><th class="c-r">Client call</th></tr></thead>
+<tbody>
+<tr><td class="c-m"><span class="verb v-get">GET</span></td><td class="c-p"><code>/rest/items/<span class="ph">{itemId}</span>/variations/<span class="ph">{variationId}</span>/variation_default_categories</code></td><td class="c-r"><code>.list</code></td></tr>
+<tr><td class="c-m"><span class="verb v-post">POST</span></td><td class="c-p"><code>/rest/items/<span class="ph">{itemId}</span>/variations/<span class="ph">{variationId}</span>/variation_default_categories</code></td><td class="c-r"><code>.create</code></td></tr>
+<tr><td class="c-m"><span class="verb v-delete">DELETE</span></td><td class="c-p"><code>/rest/items/<span class="ph">{itemId}</span>/variations/<span class="ph">{variationId}</span>/variation_default_categories/<span class="ph">{plentyId}</span></code></td><td class="c-r"><code>.destroy</code></td></tr>
+<tr><td class="c-m"><span class="verb v-get">GET</span></td><td class="c-p"><code>/rest/items/<span class="ph">{itemId}</span>/variations/<span class="ph">{variationId}</span>/variation_default_categories/<span class="ph">{plentyId}</span></code></td><td class="c-r"><code>.find</code></td></tr>
+</tbody>
+</table>
+</div>
+<div class="klass">
+<h4><code>PlentyClient::Item::Variation::Description</code></h4>
+<table class="ep">
+<thead><tr><th class="c-m">Method</th><th class="c-p">Endpoint path</th><th class="c-r">Client call</th></tr></thead>
+<tbody>
+<tr><td class="c-m"><span class="verb v-get">GET</span></td><td class="c-p"><code>/rest/items/<span class="ph">{itemId}</span>/variations/<span class="ph">{variationId}</span>/descriptions</code></td><td class="c-r"><code>.list</code></td></tr>
+<tr><td class="c-m"><span class="verb v-post">POST</span></td><td class="c-p"><code>/rest/items/<span class="ph">{itemId}</span>/variations/<span class="ph">{variationId}</span>/descriptions</code></td><td class="c-r"><code>.create</code></td></tr>
+<tr><td class="c-m"><span class="verb v-delete">DELETE</span></td><td class="c-p"><code>/rest/items/<span class="ph">{itemId}</span>/variations/<span class="ph">{variationId}</span>/descriptions/<span class="ph">{lang}</span></code></td><td class="c-r"><code>.destroy</code></td></tr>
+<tr><td class="c-m"><span class="verb v-get">GET</span></td><td class="c-p"><code>/rest/items/<span class="ph">{itemId}</span>/variations/<span class="ph">{variationId}</span>/descriptions/<span class="ph">{lang}</span></code></td><td class="c-r"><code>.find</code></td></tr>
+<tr><td class="c-m"><span class="verb v-put">PUT</span></td><td class="c-p"><code>/rest/items/<span class="ph">{itemId}</span>/variations/<span class="ph">{variationId}</span>/descriptions/<span class="ph">{lang}</span></code></td><td class="c-r"><code>.update</code></td></tr>
+</tbody>
+</table>
+</div>
+<div class="klass">
+<h4><code>PlentyClient::Item::Variation::Image</code></h4>
+<table class="ep">
+<thead><tr><th class="c-m">Method</th><th class="c-p">Endpoint path</th><th class="c-r">Client call</th></tr></thead>
+<tbody>
+<tr><td class="c-m"><span class="verb v-get">GET</span></td><td class="c-p"><code>/rest/items/<span class="ph">{itemId}</span>/images/<span class="ph">{imageId}</span>/variation_images</code></td><td class="c-r"><code>.list_images_image_links</code></td></tr>
+<tr><td class="c-m"><span class="verb v-get">GET</span></td><td class="c-p"><code>/rest/items/<span class="ph">{itemId}</span>/variation_images</code></td><td class="c-r"><code>.list_items_image_links</code></td></tr>
+<tr><td class="c-m"><span class="verb v-get">GET</span></td><td class="c-p"><code>/rest/items/<span class="ph">{itemId}</span>/variations/<span class="ph">{variationId}</span>/variation_images</code></td><td class="c-r"><code>.list_variations_image_links</code></td></tr>
+<tr><td class="c-m"><span class="verb v-post">POST</span></td><td class="c-p"><code>/rest/items/<span class="ph">{itemId}</span>/variations/<span class="ph">{variationId}</span>/variation_images</code></td><td class="c-r"><code>.create</code></td></tr>
+<tr><td class="c-m"><span class="verb v-delete">DELETE</span></td><td class="c-p"><code>/rest/items/<span class="ph">{itemId}</span>/variations/<span class="ph">{variationId}</span>/variation_images/<span class="ph">{imageId}</span></code></td><td class="c-r"><code>.destroy</code></td></tr>
+</tbody>
+</table>
+</div>
+<div class="klass">
+<h4><code>PlentyClient::Item::Variation::Market</code></h4>
+<table class="ep">
+<thead><tr><th class="c-m">Method</th><th class="c-p">Endpoint path</th><th class="c-r">Client call</th></tr></thead>
+<tbody>
+<tr><td class="c-m"><span class="verb v-get">GET</span></td><td class="c-p"><code>/rest/items/<span class="ph">{itemId}</span>/variations/<span class="ph">{variationId}</span>/variation_markets</code></td><td class="c-r"><code>.list</code></td></tr>
+<tr><td class="c-m"><span class="verb v-post">POST</span></td><td class="c-p"><code>/rest/items/<span class="ph">{itemId}</span>/variations/<span class="ph">{variationId}</span>/variation_markets</code></td><td class="c-r"><code>.create</code></td></tr>
+<tr><td class="c-m"><span class="verb v-delete">DELETE</span></td><td class="c-p"><code>/rest/items/<span class="ph">{itemId}</span>/variations/<span class="ph">{variationId}</span>/variation_markets/<span class="ph">{marketplaceId}</span></code></td><td class="c-r"><code>.destroy</code></td></tr>
+</tbody>
+</table>
+</div>
+<div class="klass">
+<h4><code>PlentyClient::Item::Variation::MarketIdentNumber</code></h4>
+<table class="ep">
+<thead><tr><th class="c-m">Method</th><th class="c-p">Endpoint path</th><th class="c-r">Client call</th></tr></thead>
+<tbody>
+<tr><td class="c-m"><span class="verb v-get">GET</span></td><td class="c-p"><code>/rest/items/<span class="ph">{itemId}</span>/variations/<span class="ph">{variationId}</span>/market_ident_numbers</code></td><td class="c-r"><code>.list</code></td></tr>
+<tr><td class="c-m"><span class="verb v-post">POST</span></td><td class="c-p"><code>/rest/items/<span class="ph">{itemId}</span>/variations/<span class="ph">{variationId}</span>/market_ident_numbers</code></td><td class="c-r"><code>.create</code></td></tr>
+<tr><td class="c-m"><span class="verb v-delete">DELETE</span></td><td class="c-p"><code>/rest/items/<span class="ph">{itemId}</span>/variations/<span class="ph">{variationId}</span>/market_ident_numbers/<span class="ph">{marketIdentNumberId}</span></code></td><td class="c-r"><code>.destroy</code></td></tr>
+<tr><td class="c-m"><span class="verb v-get">GET</span></td><td class="c-p"><code>/rest/items/<span class="ph">{itemId}</span>/variations/<span class="ph">{variationId}</span>/market_ident_numbers/<span class="ph">{marketIdentNumberId}</span></code></td><td class="c-r"><code>.find</code></td></tr>
+<tr><td class="c-m"><span class="verb v-put">PUT</span></td><td class="c-p"><code>/rest/items/<span class="ph">{itemId}</span>/variations/<span class="ph">{variationId}</span>/market_ident_numbers/<span class="ph">{marketIdentNumberId}</span></code></td><td class="c-r"><code>.update</code></td></tr>
+</tbody>
+</table>
+</div>
+<div class="klass">
+<h4><code>PlentyClient::Item::Variation::Property</code></h4>
+<table class="ep">
+<thead><tr><th class="c-m">Method</th><th class="c-p">Endpoint path</th><th class="c-r">Client call</th></tr></thead>
+<tbody>
+<tr><td class="c-m"><span class="verb v-post">POST</span></td><td class="c-p"><code>/rest/items/variations/variation_properties</code></td><td class="c-r"><code>.bulk_create</code></td></tr>
+<tr><td class="c-m"><span class="verb v-put">PUT</span></td><td class="c-p"><code>/rest/items/variations/variation_properties</code></td><td class="c-r"><code>.bulk_update</code></td></tr>
+<tr><td class="c-m"><span class="verb v-delete">DELETE</span></td><td class="c-p"><code>/rest/items/<span class="ph">{itemId}</span>/variations/<span class="ph">{variationId}</span>/variation_properties</code></td><td class="c-r"><code>.destroy_all</code></td></tr>
+<tr><td class="c-m"><span class="verb v-get">GET</span></td><td class="c-p"><code>/rest/items/<span class="ph">{itemId}</span>/variations/<span class="ph">{variationId}</span>/variation_properties</code></td><td class="c-r"><code>.list</code></td></tr>
+<tr><td class="c-m"><span class="verb v-post">POST</span></td><td class="c-p"><code>/rest/items/<span class="ph">{itemId}</span>/variations/<span class="ph">{variationId}</span>/variation_properties</code></td><td class="c-r"><code>.create</code></td></tr>
+<tr><td class="c-m"><span class="verb v-delete">DELETE</span></td><td class="c-p"><code>/rest/items/<span class="ph">{itemId}</span>/variations/<span class="ph">{variationId}</span>/variation_properties/<span class="ph">{propertyId}</span></code></td><td class="c-r"><code>.destroy</code></td></tr>
+<tr><td class="c-m"><span class="verb v-get">GET</span></td><td class="c-p"><code>/rest/items/<span class="ph">{itemId}</span>/variations/<span class="ph">{variationId}</span>/variation_properties/<span class="ph">{propertyId}</span></code></td><td class="c-r"><code>.find</code></td></tr>
+<tr><td class="c-m"><span class="verb v-put">PUT</span></td><td class="c-p"><code>/rest/items/<span class="ph">{itemId}</span>/variations/<span class="ph">{variationId}</span>/variation_properties/<span class="ph">{propertyId}</span></code></td><td class="c-r"><code>.update</code></td></tr>
+</tbody>
+</table>
+</div>
+<div class="klass">
+<h4><code>PlentyClient::Item::Variation::Property::Text</code></h4>
+<table class="ep">
+<thead><tr><th class="c-m">Method</th><th class="c-p">Endpoint path</th><th class="c-r">Client call</th></tr></thead>
+<tbody>
+<tr><td class="c-m"><span class="verb v-get">GET</span></td><td class="c-p"><code>/rest/items/<span class="ph">{itemId}</span>/variations/<span class="ph">{variationId}</span>/variation_properties/<span class="ph">{propertyId}</span>/texts</code></td><td class="c-r"><code>.find</code></td></tr>
+<tr><td class="c-m"><span class="verb v-post">POST</span></td><td class="c-p"><code>/rest/items/<span class="ph">{itemId}</span>/variations/<span class="ph">{variationId}</span>/variation_properties/<span class="ph">{propertyId}</span>/texts</code></td><td class="c-r"><code>.create</code></td></tr>
+<tr><td class="c-m"><span class="verb v-delete">DELETE</span></td><td class="c-p"><code>/rest/items/<span class="ph">{itemId}</span>/variations/<span class="ph">{variationId}</span>/variation_properties/<span class="ph">{propertyId}</span>/texts/<span class="ph">{lang}</span></code></td><td class="c-r"><code>.destroy</code></td></tr>
+<tr><td class="c-m"><span class="verb v-get">GET</span></td><td class="c-p"><code>/rest/items/<span class="ph">{itemId}</span>/variations/<span class="ph">{variationId}</span>/variation_properties/<span class="ph">{propertyId}</span>/texts/<span class="ph">{lang}</span></code></td><td class="c-r"><code>.find_by_language</code></td></tr>
+<tr><td class="c-m"><span class="verb v-put">PUT</span></td><td class="c-p"><code>/rest/items/<span class="ph">{itemId}</span>/variations/<span class="ph">{variationId}</span>/variation_properties/<span class="ph">{propertyId}</span>/texts/<span class="ph">{lang}</span></code></td><td class="c-r"><code>.update</code></td></tr>
+</tbody>
+</table>
+</div>
+<div class="klass">
+<h4><code>PlentyClient::Item::Variation::SalesPrice</code></h4>
+<table class="ep">
+<thead><tr><th class="c-m">Method</th><th class="c-p">Endpoint path</th><th class="c-r">Client call</th></tr></thead>
+<tbody>
+<tr><td class="c-m"><span class="verb v-put">PUT</span></td><td class="c-p"><code>/rest/items/variations/variation_sales_prices</code></td><td class="c-r"><code>.bulk_update</code></td></tr>
+<tr><td class="c-m"><span class="verb v-get">GET</span></td><td class="c-p"><code>/rest/items/<span class="ph">{itemId}</span>/variations/<span class="ph">{variationId}</span>/variation_sales_prices</code></td><td class="c-r"><code>.list</code></td></tr>
+<tr><td class="c-m"><span class="verb v-post">POST</span></td><td class="c-p"><code>/rest/items/<span class="ph">{itemId}</span>/variations/<span class="ph">{variationId}</span>/variation_sales_prices</code></td><td class="c-r"><code>.create</code></td></tr>
+<tr><td class="c-m"><span class="verb v-delete">DELETE</span></td><td class="c-p"><code>/rest/items/<span class="ph">{itemId}</span>/variations/<span class="ph">{variationId}</span>/variation_sales_prices/<span class="ph">{priceId}</span></code></td><td class="c-r"><code>.destroy</code></td></tr>
+<tr><td class="c-m"><span class="verb v-get">GET</span></td><td class="c-p"><code>/rest/items/<span class="ph">{itemId}</span>/variations/<span class="ph">{variationId}</span>/variation_sales_prices/<span class="ph">{priceId}</span></code></td><td class="c-r"><code>.find</code></td></tr>
+<tr><td class="c-m"><span class="verb v-put">PUT</span></td><td class="c-p"><code>/rest/items/<span class="ph">{itemId}</span>/variations/<span class="ph">{variationId}</span>/variation_sales_prices/<span class="ph">{priceId}</span></code></td><td class="c-r"><code>.update</code></td></tr>
+</tbody>
+</table>
+</div>
+<div class="klass">
+<h4><code>PlentyClient::Item::Variation::Sku</code></h4>
+<table class="ep">
+<thead><tr><th class="c-m">Method</th><th class="c-p">Endpoint path</th><th class="c-r">Client call</th></tr></thead>
+<tbody>
+<tr><td class="c-m"><span class="verb v-get">GET</span></td><td class="c-p"><code>/rest/items/<span class="ph">{itemId}</span>/variations/<span class="ph">{variationId}</span>/variation_skus</code></td><td class="c-r"><code>.list</code></td></tr>
+<tr><td class="c-m"><span class="verb v-post">POST</span></td><td class="c-p"><code>/rest/items/<span class="ph">{itemId}</span>/variations/<span class="ph">{variationId}</span>/variation_skus</code></td><td class="c-r"><code>.create</code></td></tr>
+<tr><td class="c-m"><span class="verb v-put">PUT</span></td><td class="c-p"><code>/rest/items/<span class="ph">{itemId}</span>/variations/<span class="ph">{variationId}</span>/variation_skus</code></td><td class="c-r"><code>.update</code></td></tr>
+<tr><td class="c-m"><span class="verb v-delete">DELETE</span></td><td class="c-p"><code>/rest/items/<span class="ph">{itemId}</span>/variations/<span class="ph">{variationId}</span>/variation_skus/<span class="ph">{skuId}</span></code></td><td class="c-r"><code>.destroy</code></td></tr>
+<tr><td class="c-m"><span class="verb v-get">GET</span></td><td class="c-p"><code>/rest/items/<span class="ph">{itemId}</span>/variations/<span class="ph">{variationId}</span>/variation_skus/<span class="ph">{skuId}</span></code></td><td class="c-r"><code>.find</code></td></tr>
+</tbody>
+</table>
+</div>
+<div class="klass">
+<h4><code>PlentyClient::Item::Variation::Stock</code></h4>
+<table class="ep">
+<thead><tr><th class="c-m">Method</th><th class="c-p">Endpoint path</th><th class="c-r">Client call</th></tr></thead>
+<tbody>
+<tr><td class="c-m"><span class="verb v-get">GET</span></td><td class="c-p"><code>/rest/items/<span class="ph">{itemId}</span>/variations/<span class="ph">{variationId}</span>/stock</code></td><td class="c-r"><code>.list</code></td></tr>
+<tr><td class="c-m"><span class="verb v-put">PUT</span></td><td class="c-p"><code>/rest/items/<span class="ph">{itemId}</span>/variations/<span class="ph">{variationId}</span>/stock/bookIncomingItems</code></td><td class="c-r"><code>.update_incoming_items</code></td></tr>
+<tr><td class="c-m"><span class="verb v-put">PUT</span></td><td class="c-p"><code>/rest/items/<span class="ph">{itemId}</span>/variations/<span class="ph">{variationId}</span>/stock/correction</code></td><td class="c-r"><code>.update_corrections</code></td></tr>
+<tr><td class="c-m"><span class="verb v-get">GET</span></td><td class="c-p"><code>/rest/items/<span class="ph">{itemId}</span>/variations/<span class="ph">{variationId}</span>/stock/movements</code></td><td class="c-r"><code>.list_stock_movements</code></td></tr>
+<tr><td class="c-m"><span class="verb v-put">PUT</span></td><td class="c-p"><code>/rest/items/<span class="ph">{itemId}</span>/variations/<span class="ph">{variationId}</span>/stock/redistribute</code></td><td class="c-r"><code>.update_redistributions</code></td></tr>
+<tr><td class="c-m"><span class="verb v-get">GET</span></td><td class="c-p"><code>/rest/items/<span class="ph">{itemId}</span>/variations/<span class="ph">{variationId}</span>/stock/storageLocations</code></td><td class="c-r"><code>.list_storage_locations</code></td></tr>
+</tbody>
+</table>
+</div>
+<div class="klass">
+<h4><code>PlentyClient::Item::Variation::Supplier</code></h4>
+<table class="ep">
+<thead><tr><th class="c-m">Method</th><th class="c-p">Endpoint path</th><th class="c-r">Client call</th></tr></thead>
+<tbody>
+<tr><td class="c-m"><span class="verb v-get">GET</span></td><td class="c-p"><code>/rest/items/<span class="ph">{itemId}</span>/variations/<span class="ph">{variationId}</span>/variation_suppliers</code></td><td class="c-r"><code>.list</code></td></tr>
+<tr><td class="c-m"><span class="verb v-post">POST</span></td><td class="c-p"><code>/rest/items/<span class="ph">{itemId}</span>/variations/<span class="ph">{variationId}</span>/variation_suppliers</code></td><td class="c-r"><code>.create</code></td></tr>
+<tr><td class="c-m"><span class="verb v-put">PUT</span></td><td class="c-p"><code>/rest/items/<span class="ph">{itemId}</span>/variations/<span class="ph">{variationId}</span>/variation_suppliers</code></td><td class="c-r"><code>.update</code></td></tr>
+<tr><td class="c-m"><span class="verb v-delete">DELETE</span></td><td class="c-p"><code>/rest/items/<span class="ph">{itemId}</span>/variations/<span class="ph">{variationId}</span>/variation_suppliers/<span class="ph">{variationSupplierId}</span></code></td><td class="c-r"><code>.destroy</code></td></tr>
+<tr><td class="c-m"><span class="verb v-get">GET</span></td><td class="c-p"><code>/rest/items/<span class="ph">{itemId}</span>/variations/<span class="ph">{variationId}</span>/variation_suppliers/<span class="ph">{variationSupplierId}</span></code></td><td class="c-r"><code>.find</code></td></tr>
+</tbody>
+</table>
+</div>
+<div class="klass">
+<h4><code>PlentyClient::Item::Variation::Warehouse</code></h4>
+<table class="ep">
+<thead><tr><th class="c-m">Method</th><th class="c-p">Endpoint path</th><th class="c-r">Client call</th></tr></thead>
+<tbody>
+<tr><td class="c-m"><span class="verb v-get">GET</span></td><td class="c-p"><code>/rest/items/<span class="ph">{itemId}</span>/variations/<span class="ph">{variationId}</span>/variation_warehouses</code></td><td class="c-r"><code>.list</code></td></tr>
+<tr><td class="c-m"><span class="verb v-post">POST</span></td><td class="c-p"><code>/rest/items/<span class="ph">{itemId}</span>/variations/<span class="ph">{variationId}</span>/variation_warehouses</code></td><td class="c-r"><code>.create</code></td></tr>
+<tr><td class="c-m"><span class="verb v-put">PUT</span></td><td class="c-p"><code>/rest/items/<span class="ph">{itemId}</span>/variations/<span class="ph">{variationId}</span>/variation_warehouses</code></td><td class="c-r"><code>.update</code></td></tr>
+<tr><td class="c-m"><span class="verb v-delete">DELETE</span></td><td class="c-p"><code>/rest/items/<span class="ph">{itemId}</span>/variations/<span class="ph">{variationId}</span>/variation_warehouses/<span class="ph">{warehouseId}</span></code></td><td class="c-r"><code>.destroy</code></td></tr>
+<tr><td class="c-m"><span class="verb v-get">GET</span></td><td class="c-p"><code>/rest/items/<span class="ph">{itemId}</span>/variations/<span class="ph">{variationId}</span>/variation_warehouses/<span class="ph">{warehouseId}</span></code></td><td class="c-r"><code>.find</code></td></tr>
+</tbody>
+</table>
+</div>
+</section>
+<section class="resource">
+<h3 id="res-ItemSet"><span class="sn">8.10</span> ItemSet <span class="rcount">16 endpoints</span></h3>
+<p class="rdesc">Item sets (product bundles), their components and configuration.</p>
+<div class="klass">
+<h4><code>PlentyClient::ItemSet</code></h4>
+<table class="ep">
+<thead><tr><th class="c-m">Method</th><th class="c-p">Endpoint path</th><th class="c-r">Client call</th></tr></thead>
+<tbody>
+<tr><td class="c-m"><span class="verb v-get">GET</span></td><td class="c-p"><code>/rest/item_sets</code></td><td class="c-r"><code>.list</code></td></tr>
+<tr><td class="c-m"><span class="verb v-post">POST</span></td><td class="c-p"><code>/rest/item_sets</code></td><td class="c-r"><code>.create</code></td></tr>
+<tr><td class="c-m"><span class="verb v-put">PUT</span></td><td class="c-p"><code>/rest/item_sets</code></td><td class="c-r"><code>.update_sets</code></td></tr>
+<tr><td class="c-m"><span class="verb v-put">PUT</span></td><td class="c-p"><code>/rest/item_sets</code></td><td class="c-r"><code>.destroy_sets</code></td></tr>
+<tr><td class="c-m"><span class="verb v-get">GET</span></td><td class="c-p"><code>/rest/item_sets/<span class="ph">{itemSetId}</span></code></td><td class="c-r"><code>.find</code></td></tr>
+<tr><td class="c-m"><span class="verb v-put">PUT</span></td><td class="c-p"><code>/rest/item_sets/<span class="ph">{itemSetId}</span></code></td><td class="c-r"><code>.update</code></td></tr>
+<tr><td class="c-m"><span class="verb v-put">PUT</span></td><td class="c-p"><code>/rest/item_sets/<span class="ph">{itemSetId}</span></code></td><td class="c-r"><code>.destroy</code></td></tr>
+</tbody>
+</table>
+</div>
+<div class="klass">
+<h4><code>PlentyClient::ItemSet::Component</code></h4>
+<table class="ep">
+<thead><tr><th class="c-m">Method</th><th class="c-p">Endpoint path</th><th class="c-r">Client call</th></tr></thead>
+<tbody>
+<tr><td class="c-m"><span class="verb v-delete">DELETE</span></td><td class="c-p"><code>/rest/item_sets/<span class="ph">{itemSetId}</span>/components</code></td><td class="c-r"><code>.destroy_item_sets_components</code></td></tr>
+<tr><td class="c-m"><span class="verb v-get">GET</span></td><td class="c-p"><code>/rest/item_sets/<span class="ph">{itemSetId}</span>/components</code></td><td class="c-r"><code>.list_item_sets_components</code></td></tr>
+<tr><td class="c-m"><span class="verb v-post">POST</span></td><td class="c-p"><code>/rest/item_sets/<span class="ph">{itemSetId}</span>/components</code></td><td class="c-r"><code>.create</code></td></tr>
+<tr><td class="c-m"><span class="verb v-put">PUT</span></td><td class="c-p"><code>/rest/item_sets/<span class="ph">{itemSetId}</span>/components</code></td><td class="c-r"><code>.update_item_sets_components</code></td></tr>
+<tr><td class="c-m"><span class="verb v-delete">DELETE</span></td><td class="c-p"><code>/rest/item_sets/<span class="ph">{itemSetId}</span>/components/<span class="ph">{componentId}</span></code></td><td class="c-r"><code>.destroy_item_set_component</code></td></tr>
+<tr><td class="c-m"><span class="verb v-get">GET</span></td><td class="c-p"><code>/rest/item_sets/<span class="ph">{itemSetId}</span>/components/<span class="ph">{componentId}</span></code></td><td class="c-r"><code>.list_item_set_component</code></td></tr>
+<tr><td class="c-m"><span class="verb v-put">PUT</span></td><td class="c-p"><code>/rest/item_sets/<span class="ph">{itemSetId}</span>/components/<span class="ph">{componentId}</span></code></td><td class="c-r"><code>.update_item_set_component</code></td></tr>
+</tbody>
+</table>
+</div>
+<div class="klass">
+<h4><code>PlentyClient::ItemSet::Config</code></h4>
+<table class="ep">
+<thead><tr><th class="c-m">Method</th><th class="c-p">Endpoint path</th><th class="c-r">Client call</th></tr></thead>
+<tbody>
+<tr><td class="c-m"><span class="verb v-get">GET</span></td><td class="c-p"><code>/rest/item_sets/<span class="ph">{itemSetId}</span>/config</code></td><td class="c-r"><code>.find</code></td></tr>
+<tr><td class="c-m"><span class="verb v-put">PUT</span></td><td class="c-p"><code>/rest/item_sets/<span class="ph">{itemSetId}</span>/config</code></td><td class="c-r"><code>.update</code></td></tr>
+</tbody>
+</table>
+</div>
+</section>
+<section class="resource">
+<h3 id="res-Listing"><span class="sn">8.11</span> Listing <span class="rcount">42 endpoints</span></h3>
+<p class="rdesc">Marketplace listings together with markets, layout/option templates, listing types and shipping profiles.</p>
+<div class="klass">
+<h4><code>PlentyClient::Listing</code></h4>
+<table class="ep">
+<thead><tr><th class="c-m">Method</th><th class="c-p">Endpoint path</th><th class="c-r">Client call</th></tr></thead>
+<tbody>
+<tr><td class="c-m"><span class="verb v-get">GET</span></td><td class="c-p"><code>/rest/listings</code></td><td class="c-r"><code>.list</code></td></tr>
+<tr><td class="c-m"><span class="verb v-post">POST</span></td><td class="c-p"><code>/rest/listings</code></td><td class="c-r"><code>.create</code></td></tr>
+<tr><td class="c-m"><span class="verb v-delete">DELETE</span></td><td class="c-p"><code>/rest/listings/<span class="ph">{listingId}</span></code></td><td class="c-r"><code>.destroy</code></td></tr>
+<tr><td class="c-m"><span class="verb v-get">GET</span></td><td class="c-p"><code>/rest/listings/<span class="ph">{listingId}</span></code></td><td class="c-r"><code>.find</code></td></tr>
+<tr><td class="c-m"><span class="verb v-post">POST</span></td><td class="c-p"><code>/rest/listings/<span class="ph">{listingId}</span></code></td><td class="c-r"><code>.update</code></td></tr>
+</tbody>
+</table>
+</div>
+<div class="klass">
+<h4><code>PlentyClient::Listing::LayoutTemplate</code></h4>
+<table class="ep">
+<thead><tr><th class="c-m">Method</th><th class="c-p">Endpoint path</th><th class="c-r">Client call</th></tr></thead>
+<tbody>
+<tr><td class="c-m"><span class="verb v-post">POST</span></td><td class="c-p"><code>/rest/listings/layout_templates</code></td><td class="c-r"><code>.create</code></td></tr>
+<tr><td class="c-m"><span class="verb v-delete">DELETE</span></td><td class="c-p"><code>/rest/listings/layout_templates/<span class="ph">{layoutTemplateId}</span></code></td><td class="c-r"><code>.destroy</code></td></tr>
+<tr><td class="c-m"><span class="verb v-get">GET</span></td><td class="c-p"><code>/rest/listings/layout_templates/<span class="ph">{layoutTemplateId}</span></code></td><td class="c-r"><code>.find</code></td></tr>
+</tbody>
+</table>
+</div>
+<div class="klass">
+<h4><code>PlentyClient::Listing::Market</code></h4>
+<table class="ep">
+<thead><tr><th class="c-m">Method</th><th class="c-p">Endpoint path</th><th class="c-r">Client call</th></tr></thead>
+<tbody>
+<tr><td class="c-m"><span class="verb v-get">GET</span></td><td class="c-p"><code>/rest/listings/markets</code></td><td class="c-r"><code>.list</code></td></tr>
+<tr><td class="c-m"><span class="verb v-post">POST</span></td><td class="c-p"><code>/rest/listings/markets</code></td><td class="c-r"><code>.create</code></td></tr>
+<tr><td class="c-m"><span class="verb v-post">POST</span></td><td class="c-p"><code>/rest/listings/markets/start/<span class="ph">{marketListingId}</span></code></td><td class="c-r"><code>.start</code></td></tr>
+<tr><td class="c-m"><span class="verb v-post">POST</span></td><td class="c-p"><code>/rest/listings/markets/verify/<span class="ph">{marketListingId}</span></code></td><td class="c-r"><code>.verify</code></td></tr>
+<tr><td class="c-m"><span class="verb v-delete">DELETE</span></td><td class="c-p"><code>/rest/listings/markets/<span class="ph">{marketListingId}</span></code></td><td class="c-r"><code>.destroy</code></td></tr>
+<tr><td class="c-m"><span class="verb v-get">GET</span></td><td class="c-p"><code>/rest/listings/markets/<span class="ph">{marketListingId}</span></code></td><td class="c-r"><code>.find</code></td></tr>
+<tr><td class="c-m"><span class="verb v-put">PUT</span></td><td class="c-p"><code>/rest/listings/markets/<span class="ph">{marketListingId}</span></code></td><td class="c-r"><code>.update</code></td></tr>
+</tbody>
+</table>
+</div>
+<div class="klass">
+<h4><code>PlentyClient::Listing::Market::Directory</code></h4>
+<table class="ep">
+<thead><tr><th class="c-m">Method</th><th class="c-p">Endpoint path</th><th class="c-r">Client call</th></tr></thead>
+<tbody>
+<tr><td class="c-m"><span class="verb v-post">POST</span></td><td class="c-p"><code>/rest/listings/markets/directories</code></td><td class="c-r"><code>.create</code></td></tr>
+<tr><td class="c-m"><span class="verb v-delete">DELETE</span></td><td class="c-p"><code>/rest/listings/markets/directories/<span class="ph">{directoryId}</span></code></td><td class="c-r"><code>.destroy</code></td></tr>
+<tr><td class="c-m"><span class="verb v-get">GET</span></td><td class="c-p"><code>/rest/listings/markets/directories/<span class="ph">{directoryId}</span></code></td><td class="c-r"><code>.find</code></td></tr>
+<tr><td class="c-m"><span class="verb v-put">PUT</span></td><td class="c-p"><code>/rest/listings/markets/directories/<span class="ph">{directoryId}</span></code></td><td class="c-r"><code>.update</code></td></tr>
+</tbody>
+</table>
+</div>
+<div class="klass">
+<h4><code>PlentyClient::Listing::Market::History</code></h4>
+<table class="ep">
+<thead><tr><th class="c-m">Method</th><th class="c-p">Endpoint path</th><th class="c-r">Client call</th></tr></thead>
+<tbody>
+<tr><td class="c-m"><span class="verb v-get">GET</span></td><td class="c-p"><code>/rest/listings/markets/histories</code></td><td class="c-r"><code>.list</code></td></tr>
+<tr><td class="c-m"><span class="verb v-delete">DELETE</span></td><td class="c-p"><code>/rest/listings/markets/histories/end/<span class="ph">{marketListingHistoryId}</span></code></td><td class="c-r"><code>.end</code></td></tr>
+<tr><td class="c-m"><span class="verb v-post">POST</span></td><td class="c-p"><code>/rest/listings/markets/histories/relist/<span class="ph">{marketListingHistoryId}</span></code></td><td class="c-r"><code>.relist</code></td></tr>
+<tr><td class="c-m"><span class="verb v-put">PUT</span></td><td class="c-p"><code>/rest/listings/markets/histories/update</code></td><td class="c-r"><code>.update_many</code></td></tr>
+<tr><td class="c-m"><span class="verb v-put">PUT</span></td><td class="c-p"><code>/rest/listings/markets/histories/update/<span class="ph">{marketListingHistoryId}</span></code></td><td class="c-r"><code>.update</code></td></tr>
+<tr><td class="c-m"><span class="verb v-get">GET</span></td><td class="c-p"><code>/rest/listings/markets/histories/<span class="ph">{marketListingHistoryId}</span></code></td><td class="c-r"><code>.find</code></td></tr>
+</tbody>
+</table>
+</div>
+<div class="klass">
+<h4><code>PlentyClient::Listing::Market::Info</code></h4>
+<table class="ep">
+<thead><tr><th class="c-m">Method</th><th class="c-p">Endpoint path</th><th class="c-r">Client call</th></tr></thead>
+<tbody>
+<tr><td class="c-m"><span class="verb v-get">GET</span></td><td class="c-p"><code>/rest/listings/markets/infos</code></td><td class="c-r"><code>.list</code></td></tr>
+</tbody>
+</table>
+</div>
+<div class="klass">
+<h4><code>PlentyClient::Listing::Market::Text</code></h4>
+<table class="ep">
+<thead><tr><th class="c-m">Method</th><th class="c-p">Endpoint path</th><th class="c-r">Client call</th></tr></thead>
+<tbody>
+<tr><td class="c-m"><span class="verb v-get">GET</span></td><td class="c-p"><code>/rest/listings/markets/texts</code></td><td class="c-r"><code>.list</code></td></tr>
+<tr><td class="c-m"><span class="verb v-post">POST</span></td><td class="c-p"><code>/rest/listings/markets/texts</code></td><td class="c-r"><code>.create</code></td></tr>
+<tr><td class="c-m"><span class="verb v-delete">DELETE</span></td><td class="c-p"><code>/rest/listings/markets/texts/<span class="ph">{marketTextId}</span></code></td><td class="c-r"><code>.destroy</code></td></tr>
+<tr><td class="c-m"><span class="verb v-get">GET</span></td><td class="c-p"><code>/rest/listings/markets/texts/<span class="ph">{marketTextId}</span></code></td><td class="c-r"><code>.find</code></td></tr>
+<tr><td class="c-m"><span class="verb v-put">PUT</span></td><td class="c-p"><code>/rest/listings/markets/texts/<span class="ph">{marketTextId}</span></code></td><td class="c-r"><code>.update</code></td></tr>
+</tbody>
+</table>
+</div>
+<div class="klass">
+<h4><code>PlentyClient::Listing::OptionTemplate</code></h4>
+<table class="ep">
+<thead><tr><th class="c-m">Method</th><th class="c-p">Endpoint path</th><th class="c-r">Client call</th></tr></thead>
+<tbody>
+<tr><td class="c-m"><span class="verb v-post">POST</span></td><td class="c-p"><code>/rest/listings/option_templates</code></td><td class="c-r"><code>.create</code></td></tr>
+<tr><td class="c-m"><span class="verb v-get">GET</span></td><td class="c-p"><code>/rest/listings/option_templates/preview</code></td><td class="c-r"><code>.preview</code></td></tr>
+<tr><td class="c-m"><span class="verb v-delete">DELETE</span></td><td class="c-p"><code>/rest/listings/option_templates/<span class="ph">{optionTemplateId}</span></code></td><td class="c-r"><code>.destroy</code></td></tr>
+<tr><td class="c-m"><span class="verb v-get">GET</span></td><td class="c-p"><code>/rest/listings/option_templates/<span class="ph">{optionTemplateId}</span></code></td><td class="c-r"><code>.find</code></td></tr>
+<tr><td class="c-m"><span class="verb v-put">PUT</span></td><td class="c-p"><code>/rest/listings/option_templates/<span class="ph">{optionTemplateId}</span></code></td><td class="c-r"><code>.update</code></td></tr>
+</tbody>
+</table>
+</div>
+<div class="klass">
+<h4><code>PlentyClient::Listing::ShippingProfile</code></h4>
+<table class="ep">
+<thead><tr><th class="c-m">Method</th><th class="c-p">Endpoint path</th><th class="c-r">Client call</th></tr></thead>
+<tbody>
+<tr><td class="c-m"><span class="verb v-get">GET</span></td><td class="c-p"><code>/rest/listings/shipping_profiles</code></td><td class="c-r"><code>.list</code></td></tr>
+<tr><td class="c-m"><span class="verb v-get">GET</span></td><td class="c-p"><code>/rest/listings/shipping_profiles/<span class="ph">{shippingProfileId}</span></code></td><td class="c-r"><code>.find</code></td></tr>
+</tbody>
+</table>
+</div>
+<div class="klass">
+<h4><code>PlentyClient::Listing::StockDependenceType</code></h4>
+<table class="ep">
+<thead><tr><th class="c-m">Method</th><th class="c-p">Endpoint path</th><th class="c-r">Client call</th></tr></thead>
+<tbody>
+<tr><td class="c-m"><span class="verb v-get">GET</span></td><td class="c-p"><code>/rest/listings/types</code></td><td class="c-r"><code>.list</code></td></tr>
+<tr><td class="c-m"><span class="verb v-get">GET</span></td><td class="c-p"><code>/rest/listings/types/<span class="ph">{typeId}</span></code></td><td class="c-r"><code>.find</code></td></tr>
+</tbody>
+</table>
+</div>
+<div class="klass">
+<h4><code>PlentyClient::Listing::Type</code></h4>
+<table class="ep">
+<thead><tr><th class="c-m">Method</th><th class="c-p">Endpoint path</th><th class="c-r">Client call</th></tr></thead>
+<tbody>
+<tr><td class="c-m"><span class="verb v-get">GET</span></td><td class="c-p"><code>/rest/listings/types</code></td><td class="c-r"><code>.list</code></td></tr>
+<tr><td class="c-m"><span class="verb v-get">GET</span></td><td class="c-p"><code>/rest/listings/types/<span class="ph">{typeId}</span></code></td><td class="c-r"><code>.find</code></td></tr>
+</tbody>
+</table>
+</div>
+</section>
+<section class="resource">
+<h3 id="res-Market"><span class="sn">8.12</span> Market <span class="rcount">14 endpoints</span></h3>
+<p class="rdesc">Marketplace credentials and eBay-specific endpoints (authentication, parts fitment, shop categories).</p>
+<div class="klass">
+<h4><code>PlentyClient::Market::Credentials</code></h4>
+<table class="ep">
+<thead><tr><th class="c-m">Method</th><th class="c-p">Endpoint path</th><th class="c-r">Client call</th></tr></thead>
+<tbody>
+<tr><td class="c-m"><span class="verb v-get">GET</span></td><td class="c-p"><code>/rest/markets/credentials</code></td><td class="c-r"><code>.list</code></td></tr>
+<tr><td class="c-m"><span class="verb v-post">POST</span></td><td class="c-p"><code>/rest/markets/credentials</code></td><td class="c-r"><code>.create</code></td></tr>
+<tr><td class="c-m"><span class="verb v-delete">DELETE</span></td><td class="c-p"><code>/rest/markets/credentials/<span class="ph">{credentialsId}</span></code></td><td class="c-r"><code>.destroy</code></td></tr>
+<tr><td class="c-m"><span class="verb v-get">GET</span></td><td class="c-p"><code>/rest/markets/credentials/<span class="ph">{credentialsId}</span></code></td><td class="c-r"><code>.find</code></td></tr>
+<tr><td class="c-m"><span class="verb v-put">PUT</span></td><td class="c-p"><code>/rest/markets/credentials/<span class="ph">{credentialsId}</span></code></td><td class="c-r"><code>.update</code></td></tr>
+</tbody>
+</table>
+</div>
+<div class="klass">
+<h4><code>PlentyClient::Market::Ebay::Authentication</code></h4>
+<table class="ep">
+<thead><tr><th class="c-m">Method</th><th class="c-p">Endpoint path</th><th class="c-r">Client call</th></tr></thead>
+<tbody>
+<tr><td class="c-m"><span class="verb v-get">GET</span></td><td class="c-p"><code>/rest/markets/ebay/auth/login</code></td><td class="c-r"><code>.find_login_url</code></td></tr>
+<tr><td class="c-m"><span class="verb v-put">PUT</span></td><td class="c-p"><code>/rest/markets/ebay/auth/refresh-token</code></td><td class="c-r"><code>.refrest_token</code></td></tr>
+</tbody>
+</table>
+</div>
+<div class="klass">
+<h4><code>PlentyClient::Market::Ebay::PartsFitment</code></h4>
+<table class="ep">
+<thead><tr><th class="c-m">Method</th><th class="c-p">Endpoint path</th><th class="c-r">Client call</th></tr></thead>
+<tbody>
+<tr><td class="c-m"><span class="verb v-get">GET</span></td><td class="c-p"><code>/rest/markets/ebay/parts-fitments</code></td><td class="c-r"><code>.list</code></td></tr>
+<tr><td class="c-m"><span class="verb v-post">POST</span></td><td class="c-p"><code>/rest/markets/ebay/parts-fitments</code></td><td class="c-r"><code>.create</code></td></tr>
+<tr><td class="c-m"><span class="verb v-get">GET</span></td><td class="c-p"><code>/rest/markets/ebay/parts-fitments/search</code></td><td class="c-r"><code>.search</code></td></tr>
+<tr><td class="c-m"><span class="verb v-delete">DELETE</span></td><td class="c-p"><code>/rest/markets/ebay/parts-fitments/<span class="ph">{fitmentId}</span></code></td><td class="c-r"><code>.destroy</code></td></tr>
+<tr><td class="c-m"><span class="verb v-get">GET</span></td><td class="c-p"><code>/rest/markets/ebay/parts-fitments/<span class="ph">{fitmentId}</span></code></td><td class="c-r"><code>.find</code></td></tr>
+<tr><td class="c-m"><span class="verb v-put">PUT</span></td><td class="c-p"><code>/rest/markets/ebay/parts-fitments/<span class="ph">{fitmentId}</span></code></td><td class="c-r"><code>.update</code></td></tr>
+</tbody>
+</table>
+</div>
+<div class="klass">
+<h4><code>PlentyClient::Market::Ebay::ShopCategory</code></h4>
+<table class="ep">
+<thead><tr><th class="c-m">Method</th><th class="c-p">Endpoint path</th><th class="c-r">Client call</th></tr></thead>
+<tbody>
+<tr><td class="c-m"><span class="verb v-get">GET</span></td><td class="c-p"><code>/rest/markets/ebay/shop_categories</code></td><td class="c-r"><code>.list</code></td></tr>
+</tbody>
+</table>
+</div>
+</section>
+<section class="resource">
+<h3 id="res-Order"><span class="sn">8.13</span> Order <span class="rcount">42 endpoints</span></h3>
+<p class="rdesc">Orders and their related records — order items, shipping, coupons, currencies, dates, referrers, contact wishes and status history.</p>
+<div class="klass">
+<h4><code>PlentyClient::Order</code></h4>
+<table class="ep">
+<thead><tr><th class="c-m">Method</th><th class="c-p">Endpoint path</th><th class="c-r">Client call</th></tr></thead>
+<tbody>
+<tr><td class="c-m"><span class="verb v-get">GET</span></td><td class="c-p"><code>/rest/orders</code></td><td class="c-r"><code>.list</code></td></tr>
+<tr><td class="c-m"><span class="verb v-post">POST</span></td><td class="c-p"><code>/rest/orders</code></td><td class="c-r"><code>.create</code></td></tr>
+<tr><td class="c-m"><span class="verb v-get">GET</span></td><td class="c-p"><code>/rest/orders/contacts/<span class="ph">{contactId}</span></code></td><td class="c-r"><code>.list_contacts_orders</code></td></tr>
+<tr><td class="c-m"><span class="verb v-delete">DELETE</span></td><td class="c-p"><code>/rest/orders/<span class="ph">{orderId}</span></code></td><td class="c-r"><code>.destroy</code></td></tr>
+<tr><td class="c-m"><span class="verb v-get">GET</span></td><td class="c-p"><code>/rest/orders/<span class="ph">{orderId}</span></code></td><td class="c-r"><code>.find</code></td></tr>
+<tr><td class="c-m"><span class="verb v-put">PUT</span></td><td class="c-p"><code>/rest/orders/<span class="ph">{orderId}</span></code></td><td class="c-r"><code>.update</code></td></tr>
+<tr><td class="c-m"><span class="verb v-get">GET</span></td><td class="c-p"><code>/rest/orders/<span class="ph">{orderId}</span>/packagenumbers</code></td><td class="c-r"><code>.list_package_numbers</code></td></tr>
+</tbody>
+</table>
+</div>
+<div class="klass">
+<h4><code>PlentyClient::Order::ContactWish</code></h4>
+<table class="ep">
+<thead><tr><th class="c-m">Method</th><th class="c-p">Endpoint path</th><th class="c-r">Client call</th></tr></thead>
+<tbody>
+<tr><td class="c-m"><span class="verb v-get">GET</span></td><td class="c-p"><code>/rest/orders/<span class="ph">{orderId}</span>/contactWish</code></td><td class="c-r"><code>.find</code></td></tr>
+</tbody>
+</table>
+</div>
+<div class="klass">
+<h4><code>PlentyClient::Order::CouponCode</code></h4>
+<table class="ep">
+<thead><tr><th class="c-m">Method</th><th class="c-p">Endpoint path</th><th class="c-r">Client call</th></tr></thead>
+<tbody>
+<tr><td class="c-m"><span class="verb v-post">POST</span></td><td class="c-p"><code>/rest/orders/<span class="ph">{orderId}</span>/coupons/<span class="ph">{coupon}</span></code></td><td class="c-r"><code>.update</code></td></tr>
+</tbody>
+</table>
+</div>
+<div class="klass">
+<h4><code>PlentyClient::Order::CouponCode::Contact</code></h4>
+<table class="ep">
+<thead><tr><th class="c-m">Method</th><th class="c-p">Endpoint path</th><th class="c-r">Client call</th></tr></thead>
+<tbody>
+<tr><td class="c-m"><span class="verb v-post">POST</span></td><td class="c-p"><code>/rest/orders/coupons/codes/contacts/<span class="ph">{contactId}</span></code></td><td class="c-r"><code>.update</code></td></tr>
+</tbody>
+</table>
+</div>
+<div class="klass">
+<h4><code>PlentyClient::Order::CouponCode::Validation</code></h4>
+<table class="ep">
+<thead><tr><th class="c-m">Method</th><th class="c-p">Endpoint path</th><th class="c-r">Client call</th></tr></thead>
+<tbody>
+<tr><td class="c-m"><span class="verb v-post">POST</span></td><td class="c-p"><code>/rest/orders/coupons/codes/<span class="ph">{coupon}</span></code></td><td class="c-r"><code>.update</code></td></tr>
+</tbody>
+</table>
+</div>
+<div class="klass">
+<h4><code>PlentyClient::Order::Currency</code></h4>
+<table class="ep">
+<thead><tr><th class="c-m">Method</th><th class="c-p">Endpoint path</th><th class="c-r">Client call</th></tr></thead>
+<tbody>
+<tr><td class="c-m"><span class="verb v-get">GET</span></td><td class="c-p"><code>/rest/orders/currencies</code></td><td class="c-r"><code>.list</code></td></tr>
+<tr><td class="c-m"><span class="verb v-get">GET</span></td><td class="c-p"><code>/rest/orders/currencies/countries/<span class="ph">{countryId}</span></code></td><td class="c-r"><code>.find_currency</code></td></tr>
+<tr><td class="c-m"><span class="verb v-get">GET</span></td><td class="c-p"><code>/rest/orders/currencies/<span class="ph">{currencyIso}</span></code></td><td class="c-r"><code>.find</code></td></tr>
+<tr><td class="c-m"><span class="verb v-get">GET</span></td><td class="c-p"><code>/rest/orders/currencies/<span class="ph">{currencyIso}</span>/countries</code></td><td class="c-r"><code>.find_countries</code></td></tr>
+</tbody>
+</table>
+</div>
+<div class="klass">
+<h4><code>PlentyClient::Order::Date</code></h4>
+<table class="ep">
+<thead><tr><th class="c-m">Method</th><th class="c-p">Endpoint path</th><th class="c-r">Client call</th></tr></thead>
+<tbody>
+<tr><td class="c-m"><span class="verb v-get">GET</span></td><td class="c-p"><code>/rest/orders/dates/types/<span class="ph">{typeId}</span>/names</code></td><td class="c-r"><code>.list_date_type_names</code></td></tr>
+<tr><td class="c-m"><span class="verb v-get">GET</span></td><td class="c-p"><code>/rest/orders/dates/types/<span class="ph">{typeId}</span>/names/<span class="ph">{lang}</span></code></td><td class="c-r"><code>.find_date_type_name</code></td></tr>
+<tr><td class="c-m"><span class="verb v-get">GET</span></td><td class="c-p"><code>/rest/orders/<span class="ph">{orderId}</span>/dates</code></td><td class="c-r"><code>.list</code></td></tr>
+<tr><td class="c-m"><span class="verb v-get">GET</span></td><td class="c-p"><code>/rest/orders/<span class="ph">{orderId}</span>/dates/<span class="ph">{typeId}</span></code></td><td class="c-r"><code>.find</code></td></tr>
+</tbody>
+</table>
+</div>
+<div class="klass">
+<h4><code>PlentyClient::Order::Item</code></h4>
+<table class="ep">
+<thead><tr><th class="c-m">Method</th><th class="c-p">Endpoint path</th><th class="c-r">Client call</th></tr></thead>
+<tbody>
+<tr><td class="c-m"><span class="verb v-delete">DELETE</span></td><td class="c-p"><code>/rest/orders/<span class="ph">{orderId}</span>/items/<span class="ph">{orderItemId}</span></code></td><td class="c-r"><code>.destroy</code></td></tr>
+</tbody>
+</table>
+</div>
+<div class="klass">
+<h4><code>PlentyClient::Order::Item::SerialNumber</code></h4>
+<table class="ep">
+<thead><tr><th class="c-m">Method</th><th class="c-p">Endpoint path</th><th class="c-r">Client call</th></tr></thead>
+<tbody>
+<tr><td class="c-m"><span class="verb v-get">GET</span></td><td class="c-p"><code>/rest/orders/<span class="ph">{orderId}</span>/items/serialNumbers</code></td><td class="c-r"><code>.list</code></td></tr>
+<tr><td class="c-m"><span class="verb v-get">GET</span></td><td class="c-p"><code>/rest/orders/<span class="ph">{orderId}</span>/items/<span class="ph">{orderItemId}</span>/serialNumbers</code></td><td class="c-r"><code>.find</code></td></tr>
+</tbody>
+</table>
+</div>
+<div class="klass">
+<h4><code>PlentyClient::Order::Referrer</code></h4>
+<table class="ep">
+<thead><tr><th class="c-m">Method</th><th class="c-p">Endpoint path</th><th class="c-r">Client call</th></tr></thead>
+<tbody>
+<tr><td class="c-m"><span class="verb v-get">GET</span></td><td class="c-p"><code>/rest/orders/referrers</code></td><td class="c-r"><code>.list</code></td></tr>
+<tr><td class="c-m"><span class="verb v-post">POST</span></td><td class="c-p"><code>/rest/orders/referrers/<span class="ph">{parentReferrerId}</span></code></td><td class="c-r"><code>.create</code></td></tr>
+</tbody>
+</table>
+</div>
+<div class="klass">
+<h4><code>PlentyClient::Order::Shipping::Country</code></h4>
+<table class="ep">
+<thead><tr><th class="c-m">Method</th><th class="c-p">Endpoint path</th><th class="c-r">Client call</th></tr></thead>
+<tbody>
+<tr><td class="c-m"><span class="verb v-get">GET</span></td><td class="c-p"><code>/rest/orders/shipping/countries</code></td><td class="c-r"><code>.list</code></td></tr>
+</tbody>
+</table>
+</div>
+<div class="klass">
+<h4><code>PlentyClient::Order::Shipping::Information</code></h4>
+<table class="ep">
+<thead><tr><th class="c-m">Method</th><th class="c-p">Endpoint path</th><th class="c-r">Client call</th></tr></thead>
+<tbody>
+<tr><td class="c-m"><span class="verb v-post">POST</span></td><td class="c-p"><code>/rest/orders/shipping/shipping_information</code></td><td class="c-r"><code>.create</code></td></tr>
+<tr><td class="c-m"><span class="verb v-delete">DELETE</span></td><td class="c-p"><code>/rest/orders/<span class="ph">{orderId}</span>/shipping/shipping_information</code></td><td class="c-r"><code>.destroy</code></td></tr>
+<tr><td class="c-m"><span class="verb v-get">GET</span></td><td class="c-p"><code>/rest/orders/<span class="ph">{orderId}</span>/shipping/shipping_information</code></td><td class="c-r"><code>.list</code></td></tr>
+<tr><td class="c-m"><span class="verb v-put">PUT</span></td><td class="c-p"><code>/rest/orders/<span class="ph">{orderId}</span>/shipping/shipping_information/additional_data</code></td><td class="c-r"><code>.update_data</code></td></tr>
+<tr><td class="c-m"><span class="verb v-put">PUT</span></td><td class="c-p"><code>/rest/orders/<span class="ph">{orderId}</span>/shipping/shipping_information/status</code></td><td class="c-r"><code>.update_status</code></td></tr>
+</tbody>
+</table>
+</div>
+<div class="klass">
+<h4><code>PlentyClient::Order::Shipping::Package</code></h4>
+<table class="ep">
+<thead><tr><th class="c-m">Method</th><th class="c-p">Endpoint path</th><th class="c-r">Client call</th></tr></thead>
+<tbody>
+<tr><td class="c-m"><span class="verb v-delete">DELETE</span></td><td class="c-p"><code>/rest/orders/<span class="ph">{orderId}</span>/shipping/packages</code></td><td class="c-r"><code>.destroy_all</code></td></tr>
+<tr><td class="c-m"><span class="verb v-get">GET</span></td><td class="c-p"><code>/rest/orders/<span class="ph">{orderId}</span>/shipping/packages</code></td><td class="c-r"><code>.list</code></td></tr>
+<tr><td class="c-m"><span class="verb v-post">POST</span></td><td class="c-p"><code>/rest/orders/<span class="ph">{orderId}</span>/shipping/packages</code></td><td class="c-r"><code>.create</code></td></tr>
+<tr><td class="c-m"><span class="verb v-put">PUT</span></td><td class="c-p"><code>/rest/orders/<span class="ph">{orderId}</span>/shipping/packages</code></td><td class="c-r"><code>.update</code></td></tr>
+<tr><td class="c-m"><span class="verb v-delete">DELETE</span></td><td class="c-p"><code>/rest/orders/<span class="ph">{orderId}</span>/shipping/packages/<span class="ph">{orderShippingPackageId}</span></code></td><td class="c-r"><code>.destroy</code></td></tr>
+<tr><td class="c-m"><span class="verb v-get">GET</span></td><td class="c-p"><code>/rest/orders/<span class="ph">{orderId}</span>/shipping/packages/<span class="ph">{orderShippingPackageId}</span></code></td><td class="c-r"><code>.find</code></td></tr>
+</tbody>
+</table>
+</div>
+<div class="klass">
+<h4><code>PlentyClient::Order::Shipping::Profile</code></h4>
+<table class="ep">
+<thead><tr><th class="c-m">Method</th><th class="c-p">Endpoint path</th><th class="c-r">Client call</th></tr></thead>
+<tbody>
+<tr><td class="c-m"><span class="verb v-get">GET</span></td><td class="c-p"><code>/rest/orders/shipping/presets</code></td><td class="c-r"><code>.list</code></td></tr>
+<tr><td class="c-m"><span class="verb v-get">GET</span></td><td class="c-p"><code>/rest/orders/shipping/presets/<span class="ph">{presetId}</span></code></td><td class="c-r"><code>.find</code></td></tr>
+</tbody>
+</table>
+</div>
+<div class="klass">
+<h4><code>PlentyClient::Order::Shipping::ServiceProvider</code></h4>
+<table class="ep">
+<thead><tr><th class="c-m">Method</th><th class="c-p">Endpoint path</th><th class="c-r">Client call</th></tr></thead>
+<tbody>
+<tr><td class="c-m"><span class="verb v-get">GET</span></td><td class="c-p"><code>/rest/orders/shipping/shipping_service_providers</code></td><td class="c-r"><code>.list</code></td></tr>
+<tr><td class="c-m"><span class="verb v-get">GET</span></td><td class="c-p"><code>/rest/orders/shipping/shipping_service_providers/<span class="ph">{shippingServiceProviderID}</span></code></td><td class="c-r"><code>.find</code></td></tr>
+</tbody>
+</table>
+</div>
+<div class="klass">
+<h4><code>PlentyClient::Order::StatusHistory</code></h4>
+<table class="ep">
+<thead><tr><th class="c-m">Method</th><th class="c-p">Endpoint path</th><th class="c-r">Client call</th></tr></thead>
+<tbody>
+<tr><td class="c-m"><span class="verb v-get">GET</span></td><td class="c-p"><code>/rest/orders/status-history</code></td><td class="c-r"><code>.list</code></td></tr>
+<tr><td class="c-m"><span class="verb v-get">GET</span></td><td class="c-p"><code>/rest/orders/<span class="ph">{orderId}</span>/status-history</code></td><td class="c-r"><code>.find</code></td></tr>
+</tbody>
+</table>
+</div>
+</section>
+<section class="resource">
+<h3 id="res-OrderSummary"><span class="sn">8.14</span> OrderSummary <span class="rcount">7 endpoints</span></h3>
+<p class="rdesc">Aggregated order summaries, addressable by summary id, contact or address.</p>
+<div class="klass">
+<h4><code>PlentyClient::OrderSummary</code></h4>
+<table class="ep">
+<thead><tr><th class="c-m">Method</th><th class="c-p">Endpoint path</th><th class="c-r">Client call</th></tr></thead>
+<tbody>
+<tr><td class="c-m"><span class="verb v-get">GET</span></td><td class="c-p"><code>/rest/order_summaries</code></td><td class="c-r"><code>.list</code></td></tr>
+<tr><td class="c-m"><span class="verb v-post">POST</span></td><td class="c-p"><code>/rest/order_summaries</code></td><td class="c-r"><code>.create</code></td></tr>
+<tr><td class="c-m"><span class="verb v-get">GET</span></td><td class="c-p"><code>/rest/order_summaries/contacts/<span class="ph">{contactId}</span></code></td><td class="c-r"><code>.find_by_contact</code></td></tr>
+<tr><td class="c-m"><span class="verb v-get">GET</span></td><td class="c-p"><code>/rest/order_summaries/orders/<span class="ph">{addressId}</span></code></td><td class="c-r"><code>.find_by_address</code></td></tr>
+<tr><td class="c-m"><span class="verb v-delete">DELETE</span></td><td class="c-p"><code>/rest/order_summaries/<span class="ph">{orderSummaryId}</span></code></td><td class="c-r"><code>.destroy</code></td></tr>
+<tr><td class="c-m"><span class="verb v-get">GET</span></td><td class="c-p"><code>/rest/order_summaries/<span class="ph">{orderSummaryId}</span></code></td><td class="c-r"><code>.find</code></td></tr>
+<tr><td class="c-m"><span class="verb v-put">PUT</span></td><td class="c-p"><code>/rest/order_summaries/<span class="ph">{orderSummaryId}</span></code></td><td class="c-r"><code>.update</code></td></tr>
+</tbody>
+</table>
+</div>
+</section>
+<section class="resource">
+<h3 id="res-Payment"><span class="sn">8.15</span> Payment <span class="rcount">36 endpoints</span></h3>
+<p class="rdesc">Payments and their related records — methods, properties, property types, transactions, statuses and contact/order links.</p>
+<div class="klass">
+<h4><code>PlentyClient::Payment</code></h4>
+<table class="ep">
+<thead><tr><th class="c-m">Method</th><th class="c-p">Endpoint path</th><th class="c-r">Client call</th></tr></thead>
+<tbody>
+<tr><td class="c-m"><span class="verb v-get">GET</span></td><td class="c-p"><code>/rest/payments</code></td><td class="c-r"><code>.list</code></td></tr>
+<tr><td class="c-m"><span class="verb v-get">GET</span></td><td class="c-p"><code>/rest/payments/entrydate</code></td><td class="c-r"><code>.list_by_entry_date</code></td></tr>
+<tr><td class="c-m"><span class="verb v-get">GET</span></td><td class="c-p"><code>/rest/payments/importdate</code></td><td class="c-r"><code>.list_by_import_date</code></td></tr>
+<tr><td class="c-m"><span class="verb v-get">GET</span></td><td class="c-p"><code>/rest/payments/<span class="ph">{paymentId}</span></code></td><td class="c-r"><code>.find</code></td></tr>
+<tr><td class="c-m"><span class="verb v-put">PUT</span></td><td class="c-p"><code>/rest/payments/<span class="ph">{paymentId}</span></code></td><td class="c-r"><code>.update</code></td></tr>
+</tbody>
+</table>
+</div>
+<div class="klass">
+<h4><code>PlentyClient::Payment::Contact</code></h4>
+<table class="ep">
+<thead><tr><th class="c-m">Method</th><th class="c-p">Endpoint path</th><th class="c-r">Client call</th></tr></thead>
+<tbody>
+<tr><td class="c-m"><span class="verb v-delete">DELETE</span></td><td class="c-p"><code>/rest/payment/<span class="ph">{paymentId}</span>/contact</code></td><td class="c-r"><code>.destroy</code></td></tr>
+<tr><td class="c-m"><span class="verb v-post">POST</span></td><td class="c-p"><code>/rest/payment/<span class="ph">{paymentId}</span>/contact/<span class="ph">{contactId}</span></code></td><td class="c-r"><code>.create</code></td></tr>
+</tbody>
+</table>
+</div>
+<div class="klass">
+<h4><code>PlentyClient::Payment::Method</code></h4>
+<table class="ep">
+<thead><tr><th class="c-m">Method</th><th class="c-p">Endpoint path</th><th class="c-r">Client call</th></tr></thead>
+<tbody>
+<tr><td class="c-m"><span class="verb v-get">GET</span></td><td class="c-p"><code>/rest/payments/methods</code></td><td class="c-r"><code>.list</code></td></tr>
+<tr><td class="c-m"><span class="verb v-post">POST</span></td><td class="c-p"><code>/rest/payments/methods</code></td><td class="c-r"><code>.create</code></td></tr>
+<tr><td class="c-m"><span class="verb v-put">PUT</span></td><td class="c-p"><code>/rest/payments/methods</code></td><td class="c-r"><code>.update</code></td></tr>
+<tr><td class="c-m"><span class="verb v-get">GET</span></td><td class="c-p"><code>/rest/payments/methods/ebics</code></td><td class="c-r"><code>.list_ebics_accounts</code></td></tr>
+<tr><td class="c-m"><span class="verb v-post">POST</span></td><td class="c-p"><code>/rest/payments/methods/ebics</code></td><td class="c-r"><code>.create_ebics_account</code></td></tr>
+<tr><td class="c-m"><span class="verb v-get">GET</span></td><td class="c-p"><code>/rest/payments/methods/<span class="ph">{paymentMethodId}</span></code></td><td class="c-r"><code>.find</code></td></tr>
+<tr><td class="c-m"><span class="verb v-get">GET</span></td><td class="c-p"><code>/rest/payments/methods/<span class="ph">{pluginKey}</span></code></td><td class="c-r"><code>.find_by_plugin_key</code></td></tr>
+</tbody>
+</table>
+</div>
+<div class="klass">
+<h4><code>PlentyClient::Payment::MethodName</code></h4>
+<table class="ep">
+<thead><tr><th class="c-m">Method</th><th class="c-p">Endpoint path</th><th class="c-r">Client call</th></tr></thead>
+<tbody>
+<tr><td class="c-m"><span class="verb v-get">GET</span></td><td class="c-p"><code>/rest/payments/methodNames</code></td><td class="c-r"><code>.list_for_payment_method</code></td></tr>
+<tr><td class="c-m"><span class="verb v-get">GET</span></td><td class="c-p"><code>/rest/payments/methodNames</code></td><td class="c-r"><code>.list</code></td></tr>
+<tr><td class="c-m"><span class="verb v-get">GET</span></td><td class="c-p"><code>/rest/payments/methodNames/<span class="ph">{paymentMethodId}</span></code></td><td class="c-r"><code>.list_for_payment_method_by_lang</code></td></tr>
+</tbody>
+</table>
+</div>
+<div class="klass">
+<h4><code>PlentyClient::Payment::Order</code></h4>
+<table class="ep">
+<thead><tr><th class="c-m">Method</th><th class="c-p">Endpoint path</th><th class="c-r">Client call</th></tr></thead>
+<tbody>
+<tr><td class="c-m"><span class="verb v-delete">DELETE</span></td><td class="c-p"><code>/rest/payment/<span class="ph">{paymentId}</span>/order</code></td><td class="c-r"><code>.destroy</code></td></tr>
+<tr><td class="c-m"><span class="verb v-post">POST</span></td><td class="c-p"><code>/rest/payment/<span class="ph">{paymentId}</span>/order/<span class="ph">{orderId}</span></code></td><td class="c-r"><code>.create</code></td></tr>
+<tr><td class="c-m"><span class="verb v-get">GET</span></td><td class="c-p"><code>/rest/payments/orders/<span class="ph">{orderId}</span></code></td><td class="c-r"><code>.list</code></td></tr>
+</tbody>
+</table>
+</div>
+<div class="klass">
+<h4><code>PlentyClient::Payment::Property</code></h4>
+<table class="ep">
+<thead><tr><th class="c-m">Method</th><th class="c-p">Endpoint path</th><th class="c-r">Client call</th></tr></thead>
+<tbody>
+<tr><td class="c-m"><span class="verb v-get">GET</span></td><td class="c-p"><code>/rest/payments/properties</code></td><td class="c-r"><code>.list</code></td></tr>
+<tr><td class="c-m"><span class="verb v-post">POST</span></td><td class="c-p"><code>/rest/payments/properties</code></td><td class="c-r"><code>.create</code></td></tr>
+<tr><td class="c-m"><span class="verb v-put">PUT</span></td><td class="c-p"><code>/rest/payments/properties</code></td><td class="c-r"><code>.update</code></td></tr>
+<tr><td class="c-m"><span class="verb v-get">GET</span></td><td class="c-p"><code>/rest/payments/properties/<span class="ph">{propertyId}</span></code></td><td class="c-r"><code>.find</code></td></tr>
+<tr><td class="c-m"><span class="verb v-get">GET</span></td><td class="c-p"><code>/rest/payments/property/<span class="ph">{propertyTypeId}</span>/<span class="ph">{propertyValue}</span></code></td><td class="c-r"><code>.list_by_type_and_value</code></td></tr>
+<tr><td class="c-m"><span class="verb v-get">GET</span></td><td class="c-p"><code>/rest/payments/<span class="ph">{paymentId}</span>/properties</code></td><td class="c-r"><code>.list_by_payment_id</code></td></tr>
+</tbody>
+</table>
+</div>
+<div class="klass">
+<h4><code>PlentyClient::Payment::Property::Type</code></h4>
+<table class="ep">
+<thead><tr><th class="c-m">Method</th><th class="c-p">Endpoint path</th><th class="c-r">Client call</th></tr></thead>
+<tbody>
+<tr><td class="c-m"><span class="verb v-get">GET</span></td><td class="c-p"><code>/rest/payments/properties/types</code></td><td class="c-r"><code>.list</code></td></tr>
+<tr><td class="c-m"><span class="verb v-post">POST</span></td><td class="c-p"><code>/rest/payments/properties/types</code></td><td class="c-r"><code>.create</code></td></tr>
+<tr><td class="c-m"><span class="verb v-put">PUT</span></td><td class="c-p"><code>/rest/payments/properties/types</code></td><td class="c-r"><code>.update</code></td></tr>
+<tr><td class="c-m"><span class="verb v-get">GET</span></td><td class="c-p"><code>/rest/payments/properties/types/<span class="ph">{typeId}</span></code></td><td class="c-r"><code>.find</code></td></tr>
+</tbody>
+</table>
+</div>
+<div class="klass">
+<h4><code>PlentyClient::Payment::Property::Type::Name</code></h4>
+<table class="ep">
+<thead><tr><th class="c-m">Method</th><th class="c-p">Endpoint path</th><th class="c-r">Client call</th></tr></thead>
+<tbody>
+<tr><td class="c-m"><span class="verb v-post">POST</span></td><td class="c-p"><code>/rest/payments/properties/types/names</code></td><td class="c-r"><code>.create</code></td></tr>
+<tr><td class="c-m"><span class="verb v-put">PUT</span></td><td class="c-p"><code>/rest/payments/properties/types/names</code></td><td class="c-r"><code>.update</code></td></tr>
+<tr><td class="c-m"><span class="verb v-get">GET</span></td><td class="c-p"><code>/rest/payments/properties/types/names/<span class="ph">{lang}</span></code></td><td class="c-r"><code>.list</code></td></tr>
+<tr><td class="c-m"><span class="verb v-get">GET</span></td><td class="c-p"><code>/rest/payments/properties/types/names/<span class="ph">{nameId}</span></code></td><td class="c-r"><code>.find</code></td></tr>
+</tbody>
+</table>
+</div>
+<div class="klass">
+<h4><code>PlentyClient::Payment::Status</code></h4>
+<table class="ep">
+<thead><tr><th class="c-m">Method</th><th class="c-p">Endpoint path</th><th class="c-r">Client call</th></tr></thead>
+<tbody>
+<tr><td class="c-m"><span class="verb v-get">GET</span></td><td class="c-p"><code>/rest/payments/status/<span class="ph">{statusId}</span></code></td><td class="c-r"><code>.find</code></td></tr>
+</tbody>
+</table>
+</div>
+<div class="klass">
+<h4><code>PlentyClient::Payment::Transaction</code></h4>
+<table class="ep">
+<thead><tr><th class="c-m">Method</th><th class="c-p">Endpoint path</th><th class="c-r">Client call</th></tr></thead>
+<tbody>
+<tr><td class="c-m"><span class="verb v-get">GET</span></td><td class="c-p"><code>/rest/payments/transactions/<span class="ph">{transactionTypeId}</span></code></td><td class="c-r"><code>.find</code></td></tr>
+</tbody>
+</table>
+</div>
+</section>
+<section class="resource">
+<h3 id="res-SalesPrice"><span class="sn">8.16</span> SalesPrice <span class="rcount">23 endpoints</span></h3>
+<p class="rdesc">Sales prices and their relations: countries, currencies, customer classes, referrers and online stores.</p>
+<div class="klass">
+<h4><code>PlentyClient::SalesPrice::Account</code></h4>
+<table class="ep">
+<thead><tr><th class="c-m">Method</th><th class="c-p">Endpoint path</th><th class="c-r">Client call</th></tr></thead>
+<tbody>
+<tr><td class="c-m"><span class="verb v-get">GET</span></td><td class="c-p"><code>/rest/items/sales_prices/<span class="ph">{salesPriceId}</span>/accounts</code></td><td class="c-r"><code>.list</code></td></tr>
+<tr><td class="c-m"><span class="verb v-post">POST</span></td><td class="c-p"><code>/rest/items/sales_prices/<span class="ph">{salesPriceId}</span>/accounts</code></td><td class="c-r"><code>.activate</code></td></tr>
+<tr><td class="c-m"><span class="verb v-delete">DELETE</span></td><td class="c-p"><code>/rest/items/sales_prices/<span class="ph">{salesPriceId}</span>/accounts/<span class="ph">{accountType}</span>/<span class="ph">{accountId}</span></code></td><td class="c-r"><code>.deactivate</code></td></tr>
+</tbody>
+</table>
+</div>
+<div class="klass">
+<h4><code>PlentyClient::SalesPrice::Country</code></h4>
+<table class="ep">
+<thead><tr><th class="c-m">Method</th><th class="c-p">Endpoint path</th><th class="c-r">Client call</th></tr></thead>
+<tbody>
+<tr><td class="c-m"><span class="verb v-get">GET</span></td><td class="c-p"><code>/rest/items/sales_prices/<span class="ph">{salesPriceId}</span>/countries</code></td><td class="c-r"><code>.list</code></td></tr>
+<tr><td class="c-m"><span class="verb v-post">POST</span></td><td class="c-p"><code>/rest/items/sales_prices/<span class="ph">{salesPriceId}</span>/countries</code></td><td class="c-r"><code>.activate</code></td></tr>
+<tr><td class="c-m"><span class="verb v-delete">DELETE</span></td><td class="c-p"><code>/rest/items/sales_prices/<span class="ph">{salesPriceId}</span>/countries/<span class="ph">{countryId}</span></code></td><td class="c-r"><code>.deactivate</code></td></tr>
+</tbody>
+</table>
+</div>
+<div class="klass">
+<h4><code>PlentyClient::SalesPrice::Currency</code></h4>
+<table class="ep">
+<thead><tr><th class="c-m">Method</th><th class="c-p">Endpoint path</th><th class="c-r">Client call</th></tr></thead>
+<tbody>
+<tr><td class="c-m"><span class="verb v-get">GET</span></td><td class="c-p"><code>/rest/items/sales_prices/<span class="ph">{salesPriceId}</span>/currencies</code></td><td class="c-r"><code>.list</code></td></tr>
+<tr><td class="c-m"><span class="verb v-post">POST</span></td><td class="c-p"><code>/rest/items/sales_prices/<span class="ph">{salesPriceId}</span>/currencies</code></td><td class="c-r"><code>.activate</code></td></tr>
+<tr><td class="c-m"><span class="verb v-delete">DELETE</span></td><td class="c-p"><code>/rest/items/sales_prices/<span class="ph">{salesPriceId}</span>/currencies/<span class="ph">{currencyIso}</span></code></td><td class="c-r"><code>.deactivate</code></td></tr>
+</tbody>
+</table>
+</div>
+<div class="klass">
+<h4><code>PlentyClient::SalesPrice::CustomerClass</code></h4>
+<table class="ep">
+<thead><tr><th class="c-m">Method</th><th class="c-p">Endpoint path</th><th class="c-r">Client call</th></tr></thead>
+<tbody>
+<tr><td class="c-m"><span class="verb v-get">GET</span></td><td class="c-p"><code>/rest/items/sales_prices/<span class="ph">{salesPriceId}</span>/customer_classes</code></td><td class="c-r"><code>.list</code></td></tr>
+<tr><td class="c-m"><span class="verb v-post">POST</span></td><td class="c-p"><code>/rest/items/sales_prices/<span class="ph">{salesPriceId}</span>/customer_classes</code></td><td class="c-r"><code>.activate</code></td></tr>
+<tr><td class="c-m"><span class="verb v-delete">DELETE</span></td><td class="c-p"><code>/rest/items/sales_prices/<span class="ph">{salesPriceId}</span>/customer_classes/<span class="ph">{customerClassId}</span></code></td><td class="c-r"><code>.deactivate</code></td></tr>
+</tbody>
+</table>
+</div>
+<div class="klass">
+<h4><code>PlentyClient::SalesPrice::Name</code></h4>
+<table class="ep">
+<thead><tr><th class="c-m">Method</th><th class="c-p">Endpoint path</th><th class="c-r">Client call</th></tr></thead>
+<tbody>
+<tr><td class="c-m"><span class="verb v-get">GET</span></td><td class="c-p"><code>/rest/items/sales_prices/<span class="ph">{salesPriceId}</span>/names</code></td><td class="c-r"><code>.list</code></td></tr>
+<tr><td class="c-m"><span class="verb v-post">POST</span></td><td class="c-p"><code>/rest/items/sales_prices/<span class="ph">{salesPriceId}</span>/names</code></td><td class="c-r"><code>.create</code></td></tr>
+<tr><td class="c-m"><span class="verb v-delete">DELETE</span></td><td class="c-p"><code>/rest/items/sales_prices/<span class="ph">{salesPriceId}</span>/names/<span class="ph">{lang}</span></code></td><td class="c-r"><code>.destroy</code></td></tr>
+<tr><td class="c-m"><span class="verb v-get">GET</span></td><td class="c-p"><code>/rest/items/sales_prices/<span class="ph">{salesPriceId}</span>/names/<span class="ph">{lang}</span></code></td><td class="c-r"><code>.list_by_lang</code></td></tr>
+<tr><td class="c-m"><span class="verb v-post">POST</span></td><td class="c-p"><code>/rest/items/sales_prices/<span class="ph">{salesPriceId}</span>/names/<span class="ph">{lang}</span></code></td><td class="c-r"><code>.update</code></td></tr>
+</tbody>
+</table>
+</div>
+<div class="klass">
+<h4><code>PlentyClient::SalesPrice::OnlineStore</code></h4>
+<table class="ep">
+<thead><tr><th class="c-m">Method</th><th class="c-p">Endpoint path</th><th class="c-r">Client call</th></tr></thead>
+<tbody>
+<tr><td class="c-m"><span class="verb v-get">GET</span></td><td class="c-p"><code>/rest/items/sales_prices/<span class="ph">{salesPriceId}</span>/online_stores</code></td><td class="c-r"><code>.list</code></td></tr>
+<tr><td class="c-m"><span class="verb v-post">POST</span></td><td class="c-p"><code>/rest/items/sales_prices/<span class="ph">{salesPriceId}</span>/online_stores</code></td><td class="c-r"><code>.activate</code></td></tr>
+<tr><td class="c-m"><span class="verb v-delete">DELETE</span></td><td class="c-p"><code>/rest/items/sales_prices/<span class="ph">{salesPriceId}</span>/online_stores/<span class="ph">{webstoreId}</span></code></td><td class="c-r"><code>.deactivate</code></td></tr>
+</tbody>
+</table>
+</div>
+<div class="klass">
+<h4><code>PlentyClient::SalesPrice::Referrer</code></h4>
+<table class="ep">
+<thead><tr><th class="c-m">Method</th><th class="c-p">Endpoint path</th><th class="c-r">Client call</th></tr></thead>
+<tbody>
+<tr><td class="c-m"><span class="verb v-get">GET</span></td><td class="c-p"><code>/rest/items/sales_prices/<span class="ph">{salesPriceId}</span>/referrers</code></td><td class="c-r"><code>.list</code></td></tr>
+<tr><td class="c-m"><span class="verb v-post">POST</span></td><td class="c-p"><code>/rest/items/sales_prices/<span class="ph">{salesPriceId}</span>/referrers</code></td><td class="c-r"><code>.activate</code></td></tr>
+<tr><td class="c-m"><span class="verb v-delete">DELETE</span></td><td class="c-p"><code>/rest/items/sales_prices/<span class="ph">{salesPriceId}</span>/referrers/<span class="ph">{referrerId}</span></code></td><td class="c-r"><code>.deactivate</code></td></tr>
+</tbody>
+</table>
+</div>
+</section>
+<section class="resource">
+<h3 id="res-Stock"><span class="sn">8.17</span> Stock <span class="rcount">3 endpoints</span></h3>
+<p class="rdesc">Stock management: stock listings, redistribution and stock by type.</p>
+<div class="klass">
+<h4><code>PlentyClient::Stock</code></h4>
+<table class="ep">
+<thead><tr><th class="c-m">Method</th><th class="c-p">Endpoint path</th><th class="c-r">Client call</th></tr></thead>
+<tbody>
+<tr><td class="c-m"><span class="verb v-get">GET</span></td><td class="c-p"><code>/rest/stockmanagement/stock</code></td><td class="c-r"><code>.list</code></td></tr>
+<tr><td class="c-m"><span class="verb v-put">PUT</span></td><td class="c-p"><code>/rest/stockmanagement/stock/redistribute</code></td><td class="c-r"><code>.redistribute</code></td></tr>
+<tr><td class="c-m"><span class="verb v-get">GET</span></td><td class="c-p"><code>/rest/stockmanagement/stock/types/<span class="ph">{type}</span></code></td><td class="c-r"><code>.list_by_type</code></td></tr>
+</tbody>
+</table>
+</div>
+</section>
+<section class="resource">
+<h3 id="res-Warehouse"><span class="sn">8.18</span> Warehouse <span class="rcount">27 endpoints</span></h3>
+<p class="rdesc">Warehouses, storage locations (with dimensions and levels), warehouse management and warehouse stock.</p>
+<div class="klass">
+<h4><code>PlentyClient::Warehouse</code></h4>
+<table class="ep">
+<thead><tr><th class="c-m">Method</th><th class="c-p">Endpoint path</th><th class="c-r">Client call</th></tr></thead>
+<tbody>
+<tr><td class="c-m"><span class="verb v-get">GET</span></td><td class="c-p"><code>/rest/stockmanagement/warehouses</code></td><td class="c-r"><code>.list</code></td></tr>
+<tr><td class="c-m"><span class="verb v-post">POST</span></td><td class="c-p"><code>/rest/stockmanagement/warehouses</code></td><td class="c-r"><code>.create</code></td></tr>
+<tr><td class="c-m"><span class="verb v-get">GET</span></td><td class="c-p"><code>/rest/stockmanagement/warehouses/<span class="ph">{id}</span></code></td><td class="c-r"><code>.find</code></td></tr>
+</tbody>
+</table>
+</div>
+<div class="klass">
+<h4><code>PlentyClient::Warehouse::Location</code></h4>
+<table class="ep">
+<thead><tr><th class="c-m">Method</th><th class="c-p">Endpoint path</th><th class="c-r">Client call</th></tr></thead>
+<tbody>
+<tr><td class="c-m"><span class="verb v-post">POST</span></td><td class="c-p"><code>/rest/warehouses/locations</code></td><td class="c-r"><code>.create</code></td></tr>
+<tr><td class="c-m"><span class="verb v-delete">DELETE</span></td><td class="c-p"><code>/rest/warehouses/locations/<span class="ph">{id}</span></code></td><td class="c-r"><code>.destroy</code></td></tr>
+<tr><td class="c-m"><span class="verb v-get">GET</span></td><td class="c-p"><code>/rest/warehouses/locations/<span class="ph">{id}</span></code></td><td class="c-r"><code>.find</code></td></tr>
+<tr><td class="c-m"><span class="verb v-put">PUT</span></td><td class="c-p"><code>/rest/warehouses/locations/<span class="ph">{id}</span></code></td><td class="c-r"><code>.update</code></td></tr>
+<tr><td class="c-m"><span class="verb v-get">GET</span></td><td class="c-p"><code>/rest/warehouses/<span class="ph">{warehouseId}</span>/locations</code></td><td class="c-r"><code>.list</code></td></tr>
+</tbody>
+</table>
+</div>
+<div class="klass">
+<h4><code>PlentyClient::Warehouse::Location::Dimension</code></h4>
+<table class="ep">
+<thead><tr><th class="c-m">Method</th><th class="c-p">Endpoint path</th><th class="c-r">Client call</th></tr></thead>
+<tbody>
+<tr><td class="c-m"><span class="verb v-post">POST</span></td><td class="c-p"><code>/rest/warehouses/locations/dimensions</code></td><td class="c-r"><code>.create</code></td></tr>
+<tr><td class="c-m"><span class="verb v-delete">DELETE</span></td><td class="c-p"><code>/rest/warehouses/locations/dimensions/<span class="ph">{id}</span></code></td><td class="c-r"><code>.destroy</code></td></tr>
+<tr><td class="c-m"><span class="verb v-get">GET</span></td><td class="c-p"><code>/rest/warehouses/locations/dimensions/<span class="ph">{id}</span></code></td><td class="c-r"><code>.find</code></td></tr>
+<tr><td class="c-m"><span class="verb v-put">PUT</span></td><td class="c-p"><code>/rest/warehouses/locations/dimensions/<span class="ph">{id}</span></code></td><td class="c-r"><code>.update</code></td></tr>
+<tr><td class="c-m"><span class="verb v-get">GET</span></td><td class="c-p"><code>/rest/warehouses/<span class="ph">{warehouseId}</span>/locations/dimensions</code></td><td class="c-r"><code>.list</code></td></tr>
+</tbody>
+</table>
+</div>
+<div class="klass">
+<h4><code>PlentyClient::Warehouse::Location::Level</code></h4>
+<table class="ep">
+<thead><tr><th class="c-m">Method</th><th class="c-p">Endpoint path</th><th class="c-r">Client call</th></tr></thead>
+<tbody>
+<tr><td class="c-m"><span class="verb v-post">POST</span></td><td class="c-p"><code>/rest/warehouses/locations/levels</code></td><td class="c-r"><code>.create</code></td></tr>
+<tr><td class="c-m"><span class="verb v-delete">DELETE</span></td><td class="c-p"><code>/rest/warehouses/locations/levels/<span class="ph">{id}</span></code></td><td class="c-r"><code>.destroy</code></td></tr>
+<tr><td class="c-m"><span class="verb v-get">GET</span></td><td class="c-p"><code>/rest/warehouses/locations/levels/<span class="ph">{id}</span></code></td><td class="c-r"><code>.find</code></td></tr>
+<tr><td class="c-m"><span class="verb v-put">PUT</span></td><td class="c-p"><code>/rest/warehouses/locations/levels/<span class="ph">{id}</span></code></td><td class="c-r"><code>.update</code></td></tr>
+<tr><td class="c-m"><span class="verb v-get">GET</span></td><td class="c-p"><code>/rest/warehouses/<span class="ph">{warehouseId}</span>/locations/levels</code></td><td class="c-r"><code>.list</code></td></tr>
+</tbody>
+</table>
+</div>
+<div class="klass">
+<h4><code>PlentyClient::Warehouse::Management</code></h4>
+<table class="ep">
+<thead><tr><th class="c-m">Method</th><th class="c-p">Endpoint path</th><th class="c-r">Client call</th></tr></thead>
+<tbody>
+<tr><td class="c-m"><span class="verb v-get">GET</span></td><td class="c-p"><code>/rest/stockmanagement/warehouses/<span class="ph">{warehouseId}</span>/management/racks</code></td><td class="c-r"><code>.list_racks</code></td></tr>
+<tr><td class="c-m"><span class="verb v-get">GET</span></td><td class="c-p"><code>/rest/stockmanagement/warehouses/<span class="ph">{warehouseId}</span>/management/racks/<span class="ph">{rackId}</span></code></td><td class="c-r"><code>.find_racks</code></td></tr>
+<tr><td class="c-m"><span class="verb v-get">GET</span></td><td class="c-p"><code>/rest/stockmanagement/warehouses/<span class="ph">{warehouseId}</span>/management/storageLocations</code></td><td class="c-r"><code>.list_locations</code></td></tr>
+<tr><td class="c-m"><span class="verb v-get">GET</span></td><td class="c-p"><code>/rest/stockmanagement/warehouses/<span class="ph">{warehouseId}</span>/management/storageLocations/<span class="ph">{storageLocationId}</span></code></td><td class="c-r"><code>.find_location</code></td></tr>
+</tbody>
+</table>
+</div>
+<div class="klass">
+<h4><code>PlentyClient::Warehouse::Stock</code></h4>
+<table class="ep">
+<thead><tr><th class="c-m">Method</th><th class="c-p">Endpoint path</th><th class="c-r">Client call</th></tr></thead>
+<tbody>
+<tr><td class="c-m"><span class="verb v-get">GET</span></td><td class="c-p"><code>/rest/stockmanagement/warehouses/<span class="ph">{warehouseId}</span>/stock</code></td><td class="c-r"><code>.list</code></td></tr>
+<tr><td class="c-m"><span class="verb v-put">PUT</span></td><td class="c-p"><code>/rest/stockmanagement/warehouses/<span class="ph">{warehouseId}</span>/stock/bookIncomingItems</code></td><td class="c-r"><code>.book_incoming</code></td></tr>
+<tr><td class="c-m"><span class="verb v-put">PUT</span></td><td class="c-p"><code>/rest/stockmanagement/warehouses/<span class="ph">{warehouseId}</span>/stock/correction</code></td><td class="c-r"><code>.correction</code></td></tr>
+<tr><td class="c-m"><span class="verb v-get">GET</span></td><td class="c-p"><code>/rest/stockmanagement/warehouses/<span class="ph">{warehouseId}</span>/stock/movements</code></td><td class="c-r"><code>.list_movements</code></td></tr>
+<tr><td class="c-m"><span class="verb v-get">GET</span></td><td class="c-p"><code>/rest/stockmanagement/warehouses/<span class="ph">{warehouseId}</span>/stock/storageLocations</code></td><td class="c-r"><code>.list_by_location</code></td></tr>
+</tbody>
+</table>
+</div>
+</section>
+<section class="resource">
+<h3 id="res-Webstore"><span class="sn">8.19</span> Webstore <span class="rcount">1 endpoints</span></h3>
+<p class="rdesc">Webstore (online store) configuration.</p>
+<div class="klass">
+<h4><code>PlentyClient::Webstore</code></h4>
+<table class="ep">
+<thead><tr><th class="c-m">Method</th><th class="c-p">Endpoint path</th><th class="c-r">Client call</th></tr></thead>
+<tbody>
+<tr><td class="c-m"><span class="verb v-get">GET</span></td><td class="c-p"><code>/rest/webstores</code></td><td class="c-r"><code>.list</code></td></tr>
+</tbody>
+</table>
+</div>
+</section>
+<section class="resource">
+<h3 id="res-V2"><span class="sn">8.20</span> Properties &amp; Property Groups (API v2) <span class="rcount">18 endpoints</span></h3>
+<p class="rdesc">Version-2 PIM endpoints for properties and property groups, served under the /v2 path prefix.</p>
+<div class="klass">
+<h4><code>PlentyClient::V2::Item::Property</code></h4>
+<table class="ep">
+<thead><tr><th class="c-m">Method</th><th class="c-p">Endpoint path</th><th class="c-r">Client call</th></tr></thead>
+<tbody>
+<tr><td class="c-m"><span class="verb v-get">GET</span></td><td class="c-p"><code>/rest/v2/properties</code></td><td class="c-r"><code>.list</code></td></tr>
+<tr><td class="c-m"><span class="verb v-post">POST</span></td><td class="c-p"><code>/rest/v2/properties</code></td><td class="c-r"><code>.create</code></td></tr>
+<tr><td class="c-m"><span class="verb v-delete">DELETE</span></td><td class="c-p"><code>/rest/v2/properties/<span class="ph">{propertyId}</span></code></td><td class="c-r"><code>.destroy</code></td></tr>
+<tr><td class="c-m"><span class="verb v-get">GET</span></td><td class="c-p"><code>/rest/v2/properties/<span class="ph">{propertyId}</span></code></td><td class="c-r"><code>.find</code></td></tr>
+<tr><td class="c-m"><span class="verb v-put">PUT</span></td><td class="c-p"><code>/rest/v2/properties/<span class="ph">{propertyId}</span></code></td><td class="c-r"><code>.update</code></td></tr>
+</tbody>
+</table>
+</div>
+<div class="klass">
+<h4><code>PlentyClient::V2::Item::Property::Name</code></h4>
+<table class="ep">
+<thead><tr><th class="c-m">Method</th><th class="c-p">Endpoint path</th><th class="c-r">Client call</th></tr></thead>
+<tbody>
+<tr><td class="c-m"><span class="verb v-post">POST</span></td><td class="c-p"><code>/rest/v2/properties/names</code></td><td class="c-r"><code>.create</code></td></tr>
+<tr><td class="c-m"><span class="verb v-delete">DELETE</span></td><td class="c-p"><code>/rest/v2/properties/names/<span class="ph">{nameId}</span></code></td><td class="c-r"><code>.destroy</code></td></tr>
+<tr><td class="c-m"><span class="verb v-get">GET</span></td><td class="c-p"><code>/rest/v2/properties/names/<span class="ph">{nameId}</span></code></td><td class="c-r"><code>.find</code></td></tr>
+<tr><td class="c-m"><span class="verb v-put">PUT</span></td><td class="c-p"><code>/rest/v2/properties/names/<span class="ph">{nameId}</span></code></td><td class="c-r"><code>.update</code></td></tr>
+</tbody>
+</table>
+</div>
+<div class="klass">
+<h4><code>PlentyClient::V2::Item::PropertyGroup</code></h4>
+<table class="ep">
+<thead><tr><th class="c-m">Method</th><th class="c-p">Endpoint path</th><th class="c-r">Client call</th></tr></thead>
+<tbody>
+<tr><td class="c-m"><span class="verb v-get">GET</span></td><td class="c-p"><code>/rest/v2/properties/groups</code></td><td class="c-r"><code>.list</code></td></tr>
+<tr><td class="c-m"><span class="verb v-post">POST</span></td><td class="c-p"><code>/rest/v2/properties/groups</code></td><td class="c-r"><code>.create</code></td></tr>
+<tr><td class="c-m"><span class="verb v-delete">DELETE</span></td><td class="c-p"><code>/rest/v2/properties/groups/<span class="ph">{groupId}</span></code></td><td class="c-r"><code>.destroy</code></td></tr>
+<tr><td class="c-m"><span class="verb v-get">GET</span></td><td class="c-p"><code>/rest/v2/properties/groups/<span class="ph">{groupId}</span></code></td><td class="c-r"><code>.find</code></td></tr>
+<tr><td class="c-m"><span class="verb v-put">PUT</span></td><td class="c-p"><code>/rest/v2/properties/groups/<span class="ph">{groupId}</span></code></td><td class="c-r"><code>.update</code></td></tr>
+</tbody>
+</table>
+</div>
+<div class="klass">
+<h4><code>PlentyClient::V2::Item::PropertyGroup::Name</code></h4>
+<table class="ep">
+<thead><tr><th class="c-m">Method</th><th class="c-p">Endpoint path</th><th class="c-r">Client call</th></tr></thead>
+<tbody>
+<tr><td class="c-m"><span class="verb v-post">POST</span></td><td class="c-p"><code>/rest/v2/properties/groups/names</code></td><td class="c-r"><code>.create</code></td></tr>
+<tr><td class="c-m"><span class="verb v-delete">DELETE</span></td><td class="c-p"><code>/rest/v2/properties/groups/names/<span class="ph">{nameId}</span></code></td><td class="c-r"><code>.destroy</code></td></tr>
+<tr><td class="c-m"><span class="verb v-get">GET</span></td><td class="c-p"><code>/rest/v2/properties/groups/names/<span class="ph">{nameId}</span></code></td><td class="c-r"><code>.find</code></td></tr>
+<tr><td class="c-m"><span class="verb v-put">PUT</span></td><td class="c-p"><code>/rest/v2/properties/groups/names/<span class="ph">{nameId}</span></code></td><td class="c-r"><code>.update</code></td></tr>
+</tbody>
+</table>
+</div>
+</section>
+<section class="resource">
+<h3 id="res-Rest"><span class="sn">8.21</span> PIM Variations (bulk, /pim) <span class="rcount">4 endpoints</span></h3>
+<p class="rdesc">PIM bulk variation endpoints served under the /pim path prefix (bulk update and bulk delete of markets, properties and sales prices).</p>
+<div class="klass">
+<h4><code>PlentyClient::Rest::Pim::Variations</code></h4>
+<table class="ep">
+<thead><tr><th class="c-m">Method</th><th class="c-p">Endpoint path</th><th class="c-r">Client call</th></tr></thead>
+<tbody>
+<tr><td class="c-m"><span class="verb v-put">PUT</span></td><td class="c-p"><code>/rest/pim/variations</code></td><td class="c-r"><code>.update</code></td></tr>
+</tbody>
+</table>
+</div>
+<div class="klass">
+<h4><code>PlentyClient::Rest::Pim::Variations::Markets</code></h4>
+<table class="ep">
+<thead><tr><th class="c-m">Method</th><th class="c-p">Endpoint path</th><th class="c-r">Client call</th></tr></thead>
+<tbody>
+<tr><td class="c-m"><span class="verb v-delete">DELETE</span></td><td class="c-p"><code>/rest/pim/variations/markets</code></td><td class="c-r"><code>.delete</code></td></tr>
+</tbody>
+</table>
+</div>
+<div class="klass">
+<h4><code>PlentyClient::Rest::Pim::Variations::Properties</code></h4>
+<table class="ep">
+<thead><tr><th class="c-m">Method</th><th class="c-p">Endpoint path</th><th class="c-r">Client call</th></tr></thead>
+<tbody>
+<tr><td class="c-m"><span class="verb v-delete">DELETE</span></td><td class="c-p"><code>/rest/pim/variations/properties</code></td><td class="c-r"><code>.delete</code></td></tr>
+</tbody>
+</table>
+</div>
+<div class="klass">
+<h4><code>PlentyClient::Rest::Pim::Variations::SalesPrices</code></h4>
+<table class="ep">
+<thead><tr><th class="c-m">Method</th><th class="c-p">Endpoint path</th><th class="c-r">Client call</th></tr></thead>
+<tbody>
+<tr><td class="c-m"><span class="verb v-delete">DELETE</span></td><td class="c-p"><code>/rest/pim/variations/sales_prices</code></td><td class="c-r"><code>.delete</code></td></tr>
+</tbody>
+</table>
+</div>
+</section>
+
+</section>
+
+<!-- ============ 9 ============ -->
+<section id="s9">
+  <h2><span class="sn">9</span>Client configuration reference</h2>
+  <p>The client is configured through <code>PlentyClient::Config</code>. The settings relevant to integration behaviour:</p>
+  <dl class="cfg">
+    <dt><code>site_url</code></dt><dd>Base URL of the PlentyMarkets instance. The host is reused and paths are mounted under <code>/rest</code>.</dd>
+    <dt><code>api_user</code> / <code>api_password</code></dt><dd>Credentials used for <code>POST /rest/login</code>.</dd>
+    <dt><code>plenty_id</code></dt><dd>PlentyMarkets client (tenant) identifier.</dd>
+    <dt><code>attempt_count</code></dt><dd>Maximum HTTP attempts for retryable responses (default 3).</dd>
+    <dt><code>open_timeout</code> / <code>timeout</code></dt><dd>Connection-open and total request timeouts in seconds (defaults 5 / 30).</dd>
+    <dt><code>log</code></dt><dd>When enabled, requests are logged with the password field filtered out.</dd>
+  </dl>
+</section>
+
+<!-- ============ APPENDIX A ============ -->
+<section id="sa">
+  <h2><span class="sn">A</span>Appendix A — API surface at a glance</h2>
+  <p class="small">Endpoint counts per resource area and HTTP verb.</p>
+  <table class="summary">
+    <thead><tr><th>Resource area</th><th class="num">Classes</th><th class="num">GET</th><th class="num">POST</th>
+      <th class="num">PUT</th><th class="num">DELETE</th><th class="num">Total</th></tr></thead>
+    <tbody>
+      <tr><td><a href="#res-Authentication">Authentication</a></td><td class="num">1</td><td class="num">1</td><td class="num">4</td><td class="num">0</td><td class="num">0</td><td class="num total">5</td></tr>
+<tr><td><a href="#res-Authorization">Authorization</a></td><td class="num">1</td><td class="num">2</td><td class="num">0</td><td class="num">0</td><td class="num">0</td><td class="num total">2</td></tr>
+<tr><td><a href="#res-Account">Account</a></td><td class="num">6</td><td class="num">11</td><td class="num">9</td><td class="num">7</td><td class="num">6</td><td class="num total">33</td></tr>
+<tr><td><a href="#res-Accounting">Accounting</a></td><td class="num">1</td><td class="num">4</td><td class="num">0</td><td class="num">0</td><td class="num">0</td><td class="num total">4</td></tr>
+<tr><td><a href="#res-Basket">Basket</a></td><td class="num">2</td><td class="num">2</td><td class="num">1</td><td class="num">0</td><td class="num">0</td><td class="num total">3</td></tr>
+<tr><td><a href="#res-Category">Category</a></td><td class="num">3</td><td class="num">5</td><td class="num">1</td><td class="num">3</td><td class="num">4</td><td class="num total">13</td></tr>
+<tr><td><a href="#res-Comment">Comment</a></td><td class="num">1</td><td class="num">2</td><td class="num">1</td><td class="num">0</td><td class="num">1</td><td class="num total">4</td></tr>
+<tr><td><a href="#res-Document">Document</a></td><td class="num">3</td><td class="num">7</td><td class="num">2</td><td class="num">0</td><td class="num">1</td><td class="num total">10</td></tr>
+<tr><td><a href="#res-Item">Item</a></td><td class="num">38</td><td class="num">77</td><td class="num">43</td><td class="num">33</td><td class="num">39</td><td class="num total">192</td></tr>
+<tr><td><a href="#res-ItemSet">ItemSet</a></td><td class="num">3</td><td class="num">5</td><td class="num">2</td><td class="num">7</td><td class="num">2</td><td class="num total">16</td></tr>
+<tr><td><a href="#res-Listing">Listing</a></td><td class="num">11</td><td class="num">19</td><td class="num">10</td><td class="num">6</td><td class="num">7</td><td class="num total">42</td></tr>
+<tr><td><a href="#res-Market">Market</a></td><td class="num">4</td><td class="num">7</td><td class="num">2</td><td class="num">3</td><td class="num">2</td><td class="num total">14</td></tr>
+<tr><td><a href="#res-Order">Order</a></td><td class="num">16</td><td class="num">26</td><td class="num">7</td><td class="num">4</td><td class="num">5</td><td class="num total">42</td></tr>
+<tr><td><a href="#res-OrderSummary">OrderSummary</a></td><td class="num">1</td><td class="num">4</td><td class="num">1</td><td class="num">1</td><td class="num">1</td><td class="num total">7</td></tr>
+<tr><td><a href="#res-Payment">Payment</a></td><td class="num">10</td><td class="num">22</td><td class="num">7</td><td class="num">5</td><td class="num">2</td><td class="num total">36</td></tr>
+<tr><td><a href="#res-SalesPrice">SalesPrice</a></td><td class="num">7</td><td class="num">8</td><td class="num">8</td><td class="num">0</td><td class="num">7</td><td class="num total">23</td></tr>
+<tr><td><a href="#res-Stock">Stock</a></td><td class="num">1</td><td class="num">2</td><td class="num">0</td><td class="num">1</td><td class="num">0</td><td class="num total">3</td></tr>
+<tr><td><a href="#res-Warehouse">Warehouse</a></td><td class="num">6</td><td class="num">15</td><td class="num">4</td><td class="num">5</td><td class="num">3</td><td class="num total">27</td></tr>
+<tr><td><a href="#res-Webstore">Webstore</a></td><td class="num">1</td><td class="num">1</td><td class="num">0</td><td class="num">0</td><td class="num">0</td><td class="num total">1</td></tr>
+<tr><td><a href="#res-V2">Properties &amp; Property Groups (API v2)</a></td><td class="num">4</td><td class="num">6</td><td class="num">4</td><td class="num">4</td><td class="num">4</td><td class="num total">18</td></tr>
+<tr><td><a href="#res-Rest">PIM Variations (bulk, /pim)</a></td><td class="num">4</td><td class="num">0</td><td class="num">0</td><td class="num">1</td><td class="num">3</td><td class="num total">4</td></tr>
+
+    </tbody>
+    <tfoot><tr><td>All resources</td><td class="num">125</td>
+      <td class="num">227</td><td class="num">108</td>
+      <td class="num">81</td><td class="num">87</td>
+      <td class="num total">503</td></tr></tfoot>
+  </table>
+  <p class="small">Total includes 0 PATCH endpoint(s) where applicable.
+     Counts reflect <code>plenty_client</code> v0.1.3.</p>
+</section>
+
+</body>
+</html>
