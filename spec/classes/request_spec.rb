@@ -165,8 +165,8 @@ RSpec.describe PlentyClient::Request::ClassMethods do
             stub_api_tokens
             stub_request(:get, /example/)
               .to_return do |r|
-              query = CGI.parse(r.uri.query)
-              page = query['page'][0].to_i
+              query = URI.decode_www_form(r.uri.query).to_h
+              page = query['page'].to_i
               {
                 body: {
                   page: page,
@@ -202,7 +202,7 @@ RSpec.describe PlentyClient::Request::ClassMethods do
         )
         request_client.request(:delete, '/index.php', [{ 'variationId' => 1942909 }])
         expect(WebMock).to have_requested(:delete, %r{/rest/index\.php})
-                            .with(body: '[{"variationId":1942909}]')
+          .with(body: '[{"variationId":1942909}]')
       end
 
       it 'leaves Hash bodies untouched (preserves legacy query-param behavior)' do
@@ -211,7 +211,7 @@ RSpec.describe PlentyClient::Request::ClassMethods do
         )
         request_client.request(:delete, '/index.php', { 'force' => 'true' })
         expect(WebMock).not_to have_requested(:delete, %r{/rest/index\.php})
-                                .with(body: '{"force":"true"}')
+          .with(body: '{"force":"true"}')
       end
     end
   end
@@ -231,7 +231,7 @@ RSpec.describe PlentyClient::Request::ClassMethods do
       end
     end
 
-      context 'when API responds with an empty text/html response' do
+    context 'when API responds with an empty text/html response' do
       it 'does not raises PlentyClient::ResponseError' do
         stub_request(:post, /index\.html/)
           .to_return(headers: response_headers('text/html'),
@@ -313,13 +313,12 @@ RSpec.describe PlentyClient::Request::ClassMethods do
         PlentyClient::Config.expiry_date = nil
         @login_request = stub_request(:post, /login/)
                          .to_return(body: {
-                                      'tokenType' => 'Bearer',
-                                      'expiresIn' => 86400,
-                                      'accessToken' => 'foo_access_token',
-                                      'refreshToken' => 'foo_refresh_token'
-                                    }.to_json,
-                                    headers: response_headers
-                                   )
+                           'tokenType' => 'Bearer',
+                           'expiresIn' => 86400,
+                           'accessToken' => 'foo_access_token',
+                           'refreshToken' => 'foo_refresh_token'
+                         }.to_json,
+                                    headers: response_headers)
         @actual_request = stub_request(:post, /index\.html/)
                           .to_return(body: {}.to_json, headers: response_headers)
       end
@@ -396,10 +395,9 @@ RSpec.describe PlentyClient::Request::ClassMethods do
 
           describe 'handling' do
             before(:each) do
-              begin
-                request_client.request(:post, '/index.html')
-              rescue PlentyClient::Config::InvalidCredentials
-              end
+              request_client.request(:post, '/index.html')
+            rescue PlentyClient::Config::InvalidCredentials
+              # the examples below are about what did not happen before the raise
             end
 
             it 'does not perform the actual request' do
@@ -433,8 +431,7 @@ RSpec.describe PlentyClient::Request::ClassMethods do
         'accessToken' => 'new_token',
         'refreshToken' => 'new_refresh_token'
       }.to_json, headers: response_headers)
-      @actual_request = stub_request(:post, /index\.html/).to_return(body: {
-      }.to_json, headers: response_headers)
+      @actual_request = stub_request(:post, /index\.html/).to_return(body: {}.to_json, headers: response_headers)
     end
 
     context 'when expiry_date is in the past' do
