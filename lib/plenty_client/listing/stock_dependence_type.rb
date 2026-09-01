@@ -11,11 +11,11 @@ module PlentyClient
 
       class << self
         def find(type_id, headers = {}, &block)
-          GET(BUILD_ENDPOINT(FIND_LISTINGS_STOCK_DEPENCENCE_TYPE, type: type_id), headers, &block)
+          get(build_endpoint(FIND_LISTINGS_STOCK_DEPENCENCE_TYPE, type: type_id), headers, &block)
         end
 
         def list(headers = {}, &block)
-          GET(BUILD_ENDPOINT(LIST_LISTINGS_STOCK_DEPENCENCE_TYPES), headers, &block)
+          get(build_endpoint(LIST_LISTINGS_STOCK_DEPENCENCE_TYPES), headers, &block)
         end
       end
     end

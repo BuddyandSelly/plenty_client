@@ -8,8 +8,8 @@ module PlentyClient
         include PlentyClient::Request
 
         BASE_PATH     = '/items/{itemId}/variations/{variationId}'
-        PLURAL_PATH   = BASE_PATH + '/variation_sales_prices'
-        SINGULAR_PATH = PLURAL_PATH + '/{priceId}'
+        PLURAL_PATH   = "#{BASE_PATH}/variation_sales_prices".freeze
+        SINGULAR_PATH = "#{PLURAL_PATH}/{priceId}".freeze
         BULK_PATH     = '/items/variations/variation_sales_prices'
 
         class << self

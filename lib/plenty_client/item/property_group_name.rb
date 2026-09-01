@@ -15,8 +15,10 @@ module PlentyClient
       DELETE_PROPERTY_GROUP_NAMES     = '/names/{lang}'
 
       class << self
-        def list(headers = {}, &block)
-          get(build_endpoint("#{PROPERTY_GROUP_BASE_PATH}#{LIST_ALL_PROPERTY_GROUP_NAMES}"), headers, &block)
+        def list(property_group_id, headers = {}, &block)
+          get(build_endpoint("#{PROPERTY_GROUP_BASE_PATH}#{LIST_ALL_PROPERTY_GROUP_NAMES}",
+                             property_group: property_group_id),
+              headers, &block)
         end
 
         def find(property_group_id, lang, headers = {}, &block)
@@ -25,8 +27,10 @@ module PlentyClient
               headers, &block)
         end
 
-        def create(headers = {})
-          post(build_endpoint("#{PROPERTY_GROUP_BASE_PATH}#{CREATE_PROPERTY_GROUP_NAMES}"), headers)
+        def create(property_group_id, headers = {})
+          post(build_endpoint("#{PROPERTY_GROUP_BASE_PATH}#{CREATE_PROPERTY_GROUP_NAMES}",
+                              property_group: property_group_id),
+               headers)
         end
 
         def update(property_group_id, lang, headers = {})

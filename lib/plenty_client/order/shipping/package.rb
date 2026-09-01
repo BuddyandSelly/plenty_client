@@ -34,7 +34,7 @@ module PlentyClient
           end
 
           def update(order_id, package_id, body = {})
-            put(build_endpoint("#{BASE_ORDERS_SHIPPING_PATH}#{CREATE_ORDER_SHIPPING_PACKAGE}",
+            put(build_endpoint("#{BASE_ORDERS_SHIPPING_PATH}#{UPDATE_ORDER_SHIPPING_PACKAGE}",
                                order: order_id,
                                shipping_package: package_id), body)
           end

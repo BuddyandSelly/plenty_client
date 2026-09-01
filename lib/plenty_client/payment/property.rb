@@ -29,8 +29,8 @@ module PlentyClient
               headers, &block)
         end
 
-        def find(payment_id, headers = {}, &block)
-          get(build_endpoint(FIND_PLUGIN_PAYMENT_PROPERTY, payment: payment_id), headers, &block)
+        def find(property_id, headers = {}, &block)
+          get(build_endpoint(FIND_PLUGIN_PAYMENT_PROPERTY, property: property_id), headers, &block)
         end
 
         def create(body = {})

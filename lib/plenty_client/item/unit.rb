@@ -8,7 +8,7 @@ module PlentyClient
 
       CREATE_ITEMS_UNITS = '/items/units'
       LIST_ITEM_UNITS    = '/items/units'
-      GET_ITEMS_UNIT     = '/items/units'
+      GET_ITEMS_UNIT     = '/items/units/{unitId}'
       UPDATE_ITEM_UNIT   = '/items/units/{unitId}'
       DELETE_ITEMS_UNIT  = '/items/units/{unitId}'
 

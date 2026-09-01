@@ -36,7 +36,7 @@ module PlentyClient
           end
 
           def update(item_id, variation_id, warehouse_id, body = {})
-            put(build_endpoint("#{ITEM_VARIATION_WAREHOUSE_PATH}#{CREATE_ITEM_VARIATIONS_WAREHOUSE}",
+            put(build_endpoint("#{ITEM_VARIATION_WAREHOUSE_PATH}#{UPDATE_ITEM_VARIATIONS_WAREHOUSE}",
                                item: item_id,
                                variation: variation_id,
                                warehouse: warehouse_id), body)

@@ -42,7 +42,7 @@ module PlentyClient
                 body, &block)
           end
 
-          def destroy(attribute_value_id, _value_id)
+          def destroy(attribute_value_id, lang)
             delete(build_endpoint("#{ITEM_ATTRIBUTE_PATH}#{DELETE_ITEMS_ATTRIBUTE_VALUE}",
                                   attribute_value: attribute_value_id,
                                   lang: lang))
