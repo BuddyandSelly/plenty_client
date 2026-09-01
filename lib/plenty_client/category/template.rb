@@ -12,7 +12,7 @@ module PlentyClient
 
       class << self
         def list(cat_id, headers = {}, &block)
-          get(build_endpoint(LIST_BASKET_ITEMS,
+          get(build_endpoint(FIND_CATEGORY_TEMPLATE,
                              cat: cat_id), headers, &block)
         end
 

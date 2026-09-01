@@ -30,7 +30,7 @@ module PlentyClient
         end
 
         def destroy(attribute_id)
-          delete(build_endpoint(DELETE_attribute, attribute: attribute_id))
+          delete(build_endpoint(DELETE_ATTRIBUTE, attribute: attribute_id))
         end
       end
     end

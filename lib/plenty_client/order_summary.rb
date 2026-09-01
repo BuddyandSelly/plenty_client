@@ -31,7 +31,7 @@ module PlentyClient
       end
 
       def find_by_address(address_id, headers = {}, &block)
-        get(build_endpoint(LIST_ORDER_SUMMARYS_PACKAGE_NUMBERS, address: address_id), headers, &block)
+        get(build_endpoint(FIND_ORDER_SUMMARY_BY_ADDRESS, address: address_id), headers, &block)
       end
 
       def update(order_summary_id, body = {})

@@ -10,7 +10,7 @@ module PlentyClient
 
     class << self
       def list(headers = {}, &block)
-        get(build_endpoint(AUTH_TOKEN), headers, &block)
+        get(build_endpoint(AUTH_USER), headers, &block)
       end
 
       def list_with_ui_config(headers = {}, &block)

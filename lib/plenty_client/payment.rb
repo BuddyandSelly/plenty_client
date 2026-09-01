@@ -14,7 +14,7 @@ module PlentyClient
 
     class << self
       def list(headers = {}, &block)
-        get(build_endpoint(LIST_PAYMENT), headers, &block)
+        get(build_endpoint(LIST_PAYMENTS), headers, &block)
       end
 
       def find(payment_id, headers = {}, &block)
@@ -22,7 +22,7 @@ module PlentyClient
       end
 
       def update(payment_id, body = {})
-        put(build_endpoint(FIND_PAYMENT, payment: payment_id), body)
+        put(build_endpoint(UPDATE_PAYMENT, payment: payment_id), body)
       end
 
       def list_by_entry_date(headers = {}, &block)

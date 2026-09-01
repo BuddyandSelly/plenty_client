@@ -20,7 +20,7 @@ module PlentyClient
         end
 
         def destroy(item_id, profile_id)
-          delete(build_endpoint(DELETE_ITEMS_SHIPPING_PROFILE, item: item_id, profile: profile_id))
+          delete(build_endpoint(DELETE_ITEMS_SHIPPING_PROFILE, item: item_id, shipping_profile: profile_id))
         end
       end
     end

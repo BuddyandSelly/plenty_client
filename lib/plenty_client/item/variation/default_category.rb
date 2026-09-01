@@ -34,11 +34,11 @@ module PlentyClient
                                 variation: variation_id), body)
           end
 
-          def destroy(item_id, variation_id, marketplace_id)
+          def destroy(item_id, variation_id, plenty_id)
             delete(build_endpoint("#{ITEM_VARIATION_DEFAULT_CATEGORY_PATH}#{DELETE_ITEM_VARIATIONS_DEFAULT_CATEGORY}",
                                   item: item_id,
                                   variation: variation_id,
-                                  marketplace: marketplace_id))
+                                  plenty: plenty_id))
           end
         end
       end

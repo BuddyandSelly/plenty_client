@@ -1,11 +1,15 @@
+require 'faraday'
 require 'typhoeus'
-require 'typhoeus/adapters/faraday'
+# The retry middleware moved out of faraday core in 2.0, and the typhoeus
+# adapter out of typhoeus itself.
+require 'faraday/retry'
+require 'faraday/typhoeus'
 
 module PlentyClient
   module Request
     module ClassMethods
       def request(http_method, path, params = {})
-        raise ArgumentError, "http_method or path is missing" if http_method.nil? || path.nil?
+        raise ArgumentError, 'http_method or path is missing' if http_method.nil? || path.nil?
         unless %w[post put patch delete get].include?(http_method.to_s)
           raise ArgumentError, "unsupported http_method: #{http_method}"
         end
@@ -43,12 +47,14 @@ module PlentyClient
             response = request(:get, path, params.merge('page' => page))
             yield response['entries']
             break if response['isLastPage'] == true
+
             page += 1
           end
         else
           rval_array = request(:get, path, { 'page' => page }.merge(params))
         end
         return rval_array.flatten if rval_array.is_a?(Array)
+
         rval_array
       end
 
@@ -149,19 +155,21 @@ module PlentyClient
         return if Time.now > delay_time
 
         wait_until = (delay_time - Time.now)
-        STDOUT.write "Plenty client => delaying request:  #{wait_until} seconds"
+        $stdout.write "Plenty client => delaying request:  #{wait_until} seconds"
         sleep(wait_until.round)
       end
 
       def parse_body(response)
-        return nil if response.body.strip == ""
+        return nil if response.body.strip == ''
+
         content_type = response.env.response_headers['Content-Type']
         case content_type
         when %r{(?:application|text)/json}
           json = JSON.parse(response.body)
           errors = error_check(json)
           raise PlentyClient::NotFound, errors if errors.is_a?(String) && errors =~ /no query results/i
-          raise PlentyClient::ResponseError, errors if errors && !errors&.empty?
+          raise PlentyClient::ResponseError, errors if errors && !errors.empty?
+
           json
         when %r{application/pdf}
           response.body
@@ -173,9 +181,11 @@ module PlentyClient
       end
 
       def error_check(response)
-        return if response.nil? || response&.empty?
+        return if response.nil? || response.empty?
+
         response = response.first if response.is_a?(Array)
-        return unless response&.key?('error')
+        return unless response.is_a?(Hash) && response.key?('error')
+
         check_for_invalid_credentials(response)
         extract_message(response)
       end
@@ -185,14 +195,17 @@ module PlentyClient
       end
 
       def extract_message(response)
-        if response.key?('validation_errors') && response['validation_errors'] && !response['validation_errors']&.empty?
-          errors = response['validation_errors']
-          rval = errors.values         if response['validation_errors'].is_a?(Hash)
-          rval = errors.flatten.values if response['validation_errors'].is_a?(Array)
-          rval.flatten.join(', ')
-        else
-          response.dig('error', 'message')
-        end
+        errors = response['validation_errors']
+        return response.dig('error', 'message') if errors.nil? || errors.empty?
+
+        # Plenty sends validation errors either keyed by field or as a list, and
+        # a list can hold the same per-field hashes or plain messages.
+        messages = case errors
+                   when Hash then errors.values
+                   when Array then errors.map { |error| error.is_a?(Hash) ? error.values : error }
+                   else [errors]
+                   end
+        messages.flatten.join(', ')
       end
 
       def assert_success_status_code(response)

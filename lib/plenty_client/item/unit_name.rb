@@ -1,18 +1,16 @@
 # frozen_string_literal: true
 
-# frozen_string_literal: true
-
 module PlentyClient
   module Item
     class UnitName
       include PlentyClient::Endpoint
       include PlentyClient::Request
 
-      LIST_ITEM_UNIT_NAMES    = '/item/units/{unitID}/names'
-      FIND_ITEM_UNIT_NAME     = '/item/units/{unitID}/names/{lang}'
-      CREATE_ITEMS_UNIT_NAME  = '/item/units/{unitID}/names'
-      UPDATE_ITEMS_UNIT_NAME  = '/item/units/{unitID}/names/{lang}'
-      DELETE_ITEMS_UNIT_NAME  = '/item/units/{unitID}/names/{lang}'
+      LIST_ITEM_UNIT_NAMES    = '/item/units/{unitId}/names'
+      FIND_ITEM_UNIT_NAME     = '/item/units/{unitId}/names/{lang}'
+      CREATE_ITEMS_UNIT_NAME  = '/item/units/{unitId}/names'
+      UPDATE_ITEMS_UNIT_NAME  = '/item/units/{unitId}/names/{lang}'
+      DELETE_ITEMS_UNIT_NAME  = '/item/units/{unitId}/names/{lang}'
 
       class << self
         def list(unit_id, headers = {}, &block)

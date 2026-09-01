@@ -19,8 +19,10 @@ module PlentyClient
           post(build_endpoint(ACTIVATE_SALES_PRICE_REFERRER, sales_price: sales_price_id), headers)
         end
 
-        def deactivate(sales_price_id, country_id)
-          delete(build_endpoint(DEACTIVATE_SALES_PRICE_REFERRER, sales_price: sales_price_id, country: country_id))
+        def deactivate(sales_price_id, referrer_id)
+          delete(build_endpoint(DEACTIVATE_SALES_PRICE_REFERRER,
+                                sales_price: sales_price_id,
+                                referrer: referrer_id))
         end
       end
     end
