@@ -1,4 +1,6 @@
-lib = File.expand_path('../lib', __FILE__)
+# frozen_string_literal: true
+
+lib = File.expand_path('lib', __dir__)
 $LOAD_PATH.unshift(lib) unless $LOAD_PATH.include?(lib)
 require 'plenty_client/version'
 
@@ -20,15 +22,22 @@ Gem::Specification.new do |spec|
   spec.executables   = spec.files.grep(%r{^exe/}) { |f| File.basename(f) }
   spec.require_paths = ['lib']
 
-  spec.add_development_dependency 'bundler', '~> 1.16'
-  spec.add_development_dependency 'rake', '~> 12.0'
-  spec.add_development_dependency 'rspec', '~> 3.0'
-  spec.add_development_dependency 'webmock', '~> 3.0'
-  spec.add_development_dependency 'guard-rspec', '~> 4.7'
-  spec.add_development_dependency 'pry', '~> 0.11'
-  spec.add_development_dependency 'byebug'
+  spec.required_ruby_version = '>= 3.2'
 
-  spec.add_runtime_dependency 'json', '>= 1.8.0'
-  spec.add_runtime_dependency 'faraday', '>= 0.9'
-  spec.add_runtime_dependency 'typhoeus', '>= 1.3.0'
+  spec.add_dependency 'faraday', '>= 2.0'
+  # The retry middleware moved out of faraday core in 2.0, and the typhoeus
+  # adapter out of typhoeus itself.
+  spec.add_dependency 'faraday-retry', '>= 2.0'
+  spec.add_dependency 'faraday-typhoeus', '>= 2.0'
+  spec.add_dependency 'json', '>= 2.0'
+  spec.add_dependency 'typhoeus', '>= 1.4'
+
+  spec.add_development_dependency 'bundler', '>= 2.4'
+  spec.add_development_dependency 'guard-rspec', '~> 4.7'
+  spec.add_development_dependency 'pry', '~> 0.15'
+  spec.add_development_dependency 'rake', '~> 13.0'
+  spec.add_development_dependency 'rspec', '~> 3.13'
+  spec.add_development_dependency 'rubocop', '~> 1.90'
+  spec.add_development_dependency 'simplecov', '~> 1.1'
+  spec.add_development_dependency 'webmock', '~> 3.26'
 end

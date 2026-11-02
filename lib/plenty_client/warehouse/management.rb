@@ -32,9 +32,10 @@ module PlentyClient
               headers, &block)
         end
 
-        def find_racks(warehouse_id, headers = {}, &block)
+        def find_racks(warehouse_id, rack_id, headers = {}, &block)
           get(build_endpoint("#{WM_STORAGE_LOCATION_BASE_PATH}#{WM_FIND_RACKS}",
-                             warehouse: warehouse_id),
+                             warehouse: warehouse_id,
+                             rack: rack_id),
               headers, &block)
         end
       end

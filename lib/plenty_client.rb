@@ -1,5 +1,7 @@
 require 'json'
 
+require 'plenty_client/version'
+
 module PlentyClient
   class ConnectionError < StandardError; end
   class ClientError < ConnectionError; end
@@ -12,7 +14,6 @@ module PlentyClient
   autoload :Constants,    'plenty_client/constants'
   autoload :Endpoint,     'plenty_client/endpoint'
   autoload :Request,      'plenty_client/request'
-  autoload :Version,      'plenty_client/version'
 
   autoload :Account,        'plenty_client/account'
   autoload :Accounting,     'plenty_client/accounting'
@@ -25,10 +26,12 @@ module PlentyClient
   autoload :Item,           'plenty_client/item'
   autoload :ItemSet,        'plenty_client/item_set'
   autoload :Listing,        'plenty_client/listing'
+  autoload :Market,         'plenty_client/market'
   autoload :Order,          'plenty_client/order'
   autoload :OrderSummary,   'plenty_client/order_summary'
   autoload :Payment,        'plenty_client/payment'
   autoload :Stock,          'plenty_client/stock'
+  autoload :Ticket,         'plenty_client/ticket'
   autoload :Warehouse,      'plenty_client/warehouse'
   autoload :Webstore,       'plenty_client/webstore'
 
@@ -71,7 +74,6 @@ module PlentyClient
     autoload :PropertyGroup,              'plenty_client/item/property_group'
     autoload :PropertyGroupName,          'plenty_client/item/property_group_name'
     autoload :SalesPrice,                 'plenty_client/item/sales_price'
-    autoload :SalesPriceShippingProfile,  'plenty_client/item/sales_price_shipping_profile'
     autoload :ShippingProfile,            'plenty_client/item/shipping_profile'
     autoload :Unit,                       'plenty_client/item/unit'
     autoload :UnitName,                   'plenty_client/item/unit_name'
@@ -85,11 +87,11 @@ module PlentyClient
 
     module Image
       autoload :Availability, 'plenty_client/item/image/availability'
-      autoload :Name,         'plenty_client/item/attribute/name'
+      autoload :Name,         'plenty_client/item/image/name'
     end
 
     module Manufacturer
-      autoload :Commission, 'plenty_client/item/image/commission'
+      autoload :Commission, 'plenty_client/item/manufacturer/commission'
     end
 
     module Property
@@ -130,7 +132,7 @@ module PlentyClient
     autoload :Market,               'plenty_client/listing/market'
     autoload :OptionTemplate,       'plenty_client/listing/option_template'
     autoload :ShippingProfile,      'plenty_client/listing/shipping_profile'
-    autoload :StockDependenceType,  'plenty_client/listing/stock_dependencetype'
+    autoload :StockDependenceType,  'plenty_client/listing/stock_dependence_type'
     autoload :Type,                 'plenty_client/listing/type'
 
     module Market
@@ -152,6 +154,7 @@ module PlentyClient
   end
 
   module Order
+    autoload :ContactWish,      'plenty_client/order/contact_wish'
     autoload :CouponCode,       'plenty_client/order/coupon_code'
     autoload :Currency,         'plenty_client/order/currency'
     autoload :Date,             'plenty_client/order/date'
@@ -160,6 +163,11 @@ module PlentyClient
     autoload :Referrer,         'plenty_client/order/referrer'
     autoload :Shipping,         'plenty_client/order/shipping'
     autoload :StatusHistory,    'plenty_client/order/status_history'
+
+    module CouponCode
+      autoload :Contact,    'plenty_client/order/coupon_code/contact'
+      autoload :Validation, 'plenty_client/order/coupon_code/validation'
+    end
 
     module Item
       autoload :Date,         'plenty_client/order/item/date'

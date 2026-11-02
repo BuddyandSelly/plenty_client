@@ -22,7 +22,7 @@ module PlentyClient
                                variation: variation_id), headers, &block)
           end
 
-          def find(item_id, variation_id, lang, headers = {})
+          def find(item_id, variation_id, lang, headers = {}, &block)
             get(build_endpoint("#{ITEM_VARIATION_DESCRIPTION_BASE_PATH}#{GET_ITEM_VARIATIONS_DESCRIPTION}",
                                item: item_id,
                                variation: variation_id,

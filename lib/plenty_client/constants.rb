@@ -1,6 +1,6 @@
 module PlentyClient
   class Constants
-    AVAILABLE_LANGS = %w(de en bg fr it es tr nl pl pt nn ro da se cz ru sk cn vn).freeze
+    AVAILABLE_LANGS = %w[de en bg fr it es tr nl pl pt nn ro da se cz ru sk cn vn].freeze
 
     PAYMENT_STATUS_IDS = [
       1, # Awaiting approval
@@ -12,7 +12,7 @@ module PlentyClient
       7, # Awaiting renewal
       8, # Expired
       9, # Refunded
-      10, # Partially refunded
+      10 # Partially refunded
     ].freeze
 
     AVAILABLE_CURRENCYS = [
@@ -44,7 +44,7 @@ module PlentyClient
       'TRY', # Turkish lira
       'USD', # United States dollar
       'VND', # Vietnamese dong
-      'ZAR', # South African rand
+      'ZAR' # South African rand
     ].freeze
 
     AVAILABLE_UNITS = {
@@ -54,50 +54,50 @@ module PlentyClient
       'MGM' => 4, # Milligram
       'LTR' => 5, # Litre
       'DPC' => 6, # 12 pieces/dozen
-      'OP'  => 7, # Two pack
-      'BL'  => 8, # Bale
-      'DI'  => 9, # Dispenser
-      'BG'  => 10, # Bag
-      'ST'  => 11, # Sheet
+      'OP' => 7, # Two pack
+      'BL' => 8, # Bale
+      'DI' => 9, # Dispenser
+      'BG' => 10, # Bag
+      'ST' => 11, # Sheet
       'D64' => 12, # Block
-      'PD'  => 13, # Block
-      'QR'  => 14, # Quire
-      'BX'  => 15, # Box
-      'CL'  => 16, # Coil
-      'CH'  => 17, # Container
-      'TN'  => 18, # Tin
-      'CA'  => 19, # Can
+      'PD' => 13, # Block
+      'QR' => 14, # Quire
+      'BX' => 15, # Box
+      'CL' => 16, # Coil
+      'CH' => 17, # Container
+      'TN' => 18, # Tin
+      'CA' => 19, # Can
       'DZN' => 20, # Dozen
-      'BJ'  => 21, # Bucket
-      'CS'  => 22, # Case
-      'Z3'  => 23, # Cask
-      'BO'  => 24, # Bottle
+      'BJ' => 21, # Bucket
+      'CS' => 22, # Case
+      'Z3' => 23, # Cask
+      'BO' => 24, # Bottle
       'OZA' => 25, # Fluid ounce
-      'JR'  => 26, # Jar
-      'CG'  => 27, # Cardboard box
-      'CT'  => 28, # Carton
-      'KT'  => 29, # Kit
-      'AA'  => 30, # Ball
+      'JR' => 26, # Jar
+      'CG' => 27, # Cardboard box
+      'CT' => 28, # Carton
+      'KT' => 29, # Kit
+      'AA' => 30, # Ball
       'MTR' => 31, # Metre
       'MLT' => 32, # Millilitre
       'MMT' => 33, # Millimetre
-      'PR'  => 34, # Pair
-      'PA'  => 35, # Packet
-      'PK'  => 36, # Bundle
+      'PR' => 34, # Pair
+      'PA' => 35, # Packet
+      'PK' => 36, # Bundle
       'D97' => 37, # Pallet/unit load
       'MTK' => 38, # Square metre
       'CMK' => 39, # Square centimetre
       'MMK' => 40, # Square millimetre
       'SCM' => 41, # Square centimetre (non-standard)
       'SMM' => 42, # Square millimetre (non-standard)
-      'RO'  => 43, # Role
-      'SA'  => 44, # Sack
+      'RO' => 43, # Role
+      'SA' => 44, # Sack
       'SET' => 45, # Set
-      'RL'  => 46, # Reel
-      'EA'  => 47, # Each
-      'TU'  => 48, # Tube
-      'OZ'  => 49, # Ounce
-      'WE'  => 50, # Wet ton
+      'RL' => 46, # Reel
+      'EA' => 47, # Each
+      'TU' => 48, # Tube
+      'OZ' => 49, # Ounce
+      'WE' => 50, # Wet ton
       'CMT' => 51, # Centimetre
       'INH' => 52 # Inch
     }.freeze
@@ -358,7 +358,7 @@ module PlentyClient
       # 'DE' => 256, # Buesingen
       # 'CUW' => 258, # Curacao
       'SXM' => 259, # Sint Maarten
-      'BES' => 260, # BES Islands
+      'BES' => 260 # BES Islands
     }.freeze
   end
 end

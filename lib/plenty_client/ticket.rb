@@ -9,6 +9,7 @@ module PlentyClient
     CREATE_TICKET = '/tickets'
     ADD_MESSAGE   = '/tickets/{ticketId}'
     GET_TICKET    = '/tickets/{ticketId}'
+    UPDATE_TICKET = '/tickets/{ticketId}'
 
     class << self
       def list(headers = {}, &block)

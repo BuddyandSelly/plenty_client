@@ -1,8 +1,5 @@
 # PlentyClient
-[![Code Climate](https://codeclimate.com/github/Dariusch/plenty_client/badges/gpa.svg)](https://codeclimate.com/github/Dariusch/plenty_client)
-[![Issue Count](https://codeclimate.com/github/Dariusch/plenty_client/badges/issue_count.svg)](https://codeclimate.com/github/Dariusch/plenty_client)
-[![Test Coverage](https://codeclimate.com/github/Dariusch/plenty_client/badges/coverage.svg)](https://codeclimate.com/github/Dariusch/plenty_client/coverage)
-[![Build Status](https://travis-ci.org/Dariusch/plenty_client.svg?branch=master)](https://travis-ci.org/Dariusch/plenty_client)
+[![CI](https://github.com/BuddyandSelly/plenty_client/actions/workflows/ci.yml/badge.svg)](https://github.com/BuddyandSelly/plenty_client/actions/workflows/ci.yml)
 [![Gem Version](https://badge.fury.io/rb/plenty_client.svg)](https://badge.fury.io/rb/plenty_client)
 
 This Client is a ruby wrapper around the PlentyMarkets REST API.  
@@ -115,6 +112,28 @@ PlentyClient::Item::Variation.routes
 - missing [OrderItem OrderItemProperty ](https://developers.plentymarkets.com/rest-doc/order_order_item_order_item_property/details#get-all-order-item-propertys-for-one-order-item-by-its-order-item-id) - its just a mess
 - update all modules to classes and make it inherit from a base class to remove `extend PlentyClient::Request` etc
 - create a configure block to set authentication parameters
+
+## Development
+
+The gem is developed and tested against the Ruby version in
+[.ruby-version](.ruby-version) and supports Ruby >= 3.2.
+
+```bash
+bundle install
+bundle exec rspec    # specs, including the coverage check
+bundle exec rubocop  # style
+```
+
+The specs are measured with [SimpleCov](https://github.com/simplecov-ruby/simplecov): line and
+branch coverage of everything in `lib/` have to stay at 100%, and the suite fails otherwise. The
+HTML report is written to `coverage/index.html`, and CI comments both percentages on every pull
+request.
+
+Most of the gem is a table of PlentyMarkets routes, so most of the suite is one too:
+[spec/support/endpoint_routes.rb](spec/support/endpoint_routes.rb) lists every endpoint method with
+the verb it sends and the path it builds, and
+[spec/endpoint_routes_spec.rb](spec/endpoint_routes_spec.rb) calls each of them and checks it. A new
+endpoint module has to be added to that table - one example there fails otherwise.
 
 ## Testing with Docker
 

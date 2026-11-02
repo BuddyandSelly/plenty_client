@@ -10,8 +10,8 @@ module PlentyClient
         SINGLE_PATH               = '/orders/{orderId}/shipping/shipping_information'
         MULTIPLE_PATH             = '/orders/shipping/shipping_information'
 
-        UPDATE_STATUS             = SINGLE_PATH + '/status'
-        UPDATE_ADDITIONAL_DATA    = SINGLE_PATH + '/additional_data'
+        UPDATE_STATUS             = "#{SINGLE_PATH}/status".freeze
+        UPDATE_ADDITIONAL_DATA    = "#{SINGLE_PATH}/additional_data".freeze
 
         class << self
           def list(order_id, headers = {}, &block)

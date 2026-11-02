@@ -21,11 +21,12 @@ module PlentyClient
         end
 
         def upload(category_id, body = {})
-          post(build_endpoint(CREATE_CATEGORY_DOCUMENTS, category: category_id), body)
+          post(build_endpoint(UPLOAD_CATEGORY_DOCUMENT, category: category_id), body)
         end
 
-        def destroy(category_id, body = {})
-          delete(build_endpoint(DELTE_LISTINGS_category, category: category_id), body)
+        def destroy(category_id, document_id, body = {})
+          delete(build_endpoint(DELTE_CATEGORY_DOCUMENTS, category: category_id, document: document_id),
+                 body)
         end
       end
     end
